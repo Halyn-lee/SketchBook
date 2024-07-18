@@ -2,6 +2,7 @@ package com.app.sketchbook.post.controller;
 
 import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
+import com.app.sketchbook.post.repository.PostRepository;
 import com.app.sketchbook.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,15 +13,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
+    private final PostRepository postRepository;
 
     @GetMapping("/main")
-    public String main(Model model, Post post) {
+    public String main(Model model) {
+        List<Post> postList =  this.postRepository.findAll();
+        model.addAttribute("postList", postList);
         model.addAttribute("post", new Post()); // 임시
         return "main";
     }

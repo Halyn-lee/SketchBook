@@ -43,6 +43,27 @@
     </div>
 </div>
 
+<hr>
+
+<table>
+    <thead>
+    <tr>
+        <th>내용</th>
+        <th>이미지</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${postList}">
+        <td th:text="${post.content}"></td>
+        <td>
+            <div th:each="image : ${post.image_list}">
+                <img th:src="@{/images/{filename}(filename=${#strings.substring(image.file_path, image.file_path.lastIndexOf('/') + 1)})}" alt="이미지" />
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 <script src="/js/post.js"></script>
 
 </body>
