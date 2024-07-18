@@ -4,8 +4,8 @@ let canvas;
 document.addEventListener("DOMContentLoaded", function () {
     // 지정된 크기와 초기 설정으로 Fabric.js 캔버스를 생성
     canvas = new fabric.Canvas("canvas", {
-        width: 400,
-        height: 400,
+        width: 200,
+        height: 200,
         isDrawingMode: true, // 그리기 모드 활성화
         backgroundColor: "white", // 캔버스 배경색을 흰색으로 설정
     });
@@ -41,52 +41,48 @@ document.addEventListener("DOMContentLoaded", function () {
     // "첨부" 버튼 클릭에 대한 이벤트 리스너
     document.getElementById("attach").addEventListener("click", () => {
         // Canvas 내용을 데이터 URL로 변환
-        var dataURL = canvas.toDataURL({format: 'png'});
+        let dataURL = canvas.toDataURL({ format: 'png' });
 
-        // 첫 번째 모달에 이미지를 표시
-        var attachedImage = document.getElementById('attachedImage');
+        // 여러 이미지 처리
+        let attachedImagesContainer = document.getElementById('attachedImagesContainer');
+        let attachedImage = document.createElement('img');
         attachedImage.src = dataURL;
-        attachedImage.style.display = 'block';
+        attachedImage.style.maxWidth = '100%';
+        attachedImage.style.height = 'auto';
+        attachedImagesContainer.appendChild(attachedImage);
 
-        // 이미지 데이터 URL을 숨겨진 input 필드에 설정
-        document.getElementById('imageData').value = dataURL;
+        // 기존 값과 새 이미지를 결합하여 hidden input 필드에 설정
+        let imageDataInput = document.getElementById('imageData');
+        let currentData = imageDataInput.value ? imageDataInput.value + "base64," + dataURL.split("base64,")[1] : dataURL;
+        imageDataInput.value = currentData;
 
         // 두 번째 모달을 close
         modal2.style.display = 'none';
     });
 
-// 첫 번째 모달 관련 설정
-var modal1 = document.getElementById("modal1");
-var btn1 = document.getElementsByClassName("btn")[0];
-var span1 = document.getElementById("close1");
+    // 첫 번째 모달 관련 설정
+    let modal1 = document.getElementById("modal1");
+    let btn1 = document.getElementsByClassName("btn")[0];
+    let span1 = document.getElementById("close1");
 
-btn1.onclick = function () {
-    modal1.style.display = "block";
-}
+    btn1.onclick = function () {
+        modal1.style.display = "block";
+    }
 
-span1.onclick = function () {
-    modal1.style.display = "none";
-}
+    span1.onclick = function () {
+        modal1.style.display = "none";
+    }
 
-// 두 번째 모달 관련 설정
-var modal2 = document.getElementById("modal2");
-var btn2 = document.getElementsByClassName("btn2")[0];
-var span2 = document.getElementById("close2");
+    // 두 번째 모달 관련 설정
+    let modal2 = document.getElementById("modal2");
+    let btn2 = document.getElementsByClassName("btn2")[0];
+    let span2 = document.getElementById("close2");
 
-btn2.onclick = function () {
-    modal2.style.display = "block";
-}
+    btn2.onclick = function () {
+        modal2.style.display = "block";
+    }
 
-span2.onclick = function () {
-    modal2.style.display = "none";
-}
+    span2.onclick = function () {
+        modal2.style.display = "none";
+    }
 });
-
-// // Modal 영역 밖 클릭시 Modal close
-// window.onclick = function (event) {
-//     if (event.target == modal1) {
-//         modal1.style.display = "none";
-//     } else if (event.target == modal2) {
-//         modal2.style.display = "none";
-//     }
-// };
