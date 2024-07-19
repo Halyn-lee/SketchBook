@@ -1,5 +1,6 @@
 package com.app.sketchbook.post.entity;
 
+import com.app.sketchbook.reply.entity.Reply;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,6 +26,10 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> image_list = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("no asc") // 댓글 정렬
+    private List<Reply> reply_list;
 
 //    @ManyToOne
 //    private Member id; 회원기능 연동 후 추가할 것

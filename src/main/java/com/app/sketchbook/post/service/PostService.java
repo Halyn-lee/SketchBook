@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,14 @@ public class PostService {
 
     public void saveImages(List<Image> images) {
         imageRepository.saveAll(images);
+    }
+
+    public Post getPost(Integer no) {
+        Optional<Post> post = this.postRepository.findById(no);
+        if (post.isPresent()) {
+            return post.get();
+        } else {
+            throw new RuntimeException("해당 게시글 찾을 수 없음");
+        }
     }
 }

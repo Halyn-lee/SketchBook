@@ -4,6 +4,9 @@ import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.PostRepository;
 import com.app.sketchbook.post.service.PostService;
+import com.app.sketchbook.reply.entity.Reply;
+import com.app.sketchbook.reply.repository.ReplyRepository;
+import com.app.sketchbook.reply.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +26,14 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepository postRepository;
+    private final ReplyRepository replyRepository;
 
     @GetMapping("/main")
     public String main(Model model) {
         List<Post> postList =  this.postRepository.findAll();
+        List<Reply> replyList = this.replyRepository.findAll();
         model.addAttribute("postList", postList);
+        model.addAttribute("replyList", replyList);
         model.addAttribute("post", new Post()); // 임시
         return "main";
     }

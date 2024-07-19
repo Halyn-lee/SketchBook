@@ -55,6 +55,17 @@
             </div>
         </td>
         <td th:text="${post.created_date}"></td>
+        <td>
+            <h3>댓글을 써보세요</h3>
+            <div th:each="reply : ${post.reply_list}">
+                <p th:text="${reply.content}">Reply Content</p>
+            </div>
+
+            <form th:action="@{/reply/create/{no}(no=${post.no})}" method="post">
+                <textarea name="content"></textarea>
+                <button type="submit">Reply</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
