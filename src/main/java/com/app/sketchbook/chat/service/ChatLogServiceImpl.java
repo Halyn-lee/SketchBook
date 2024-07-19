@@ -28,4 +28,10 @@ public class ChatLogServiceImpl implements ChatLogService {
         Date startDate = cal.getTime();
         return chatRepository.findAllByRoomAndSendTimeAfterOrderBySendTimeAsc(room, startDate);
     }
+
+    @Override
+    public void cacheChatLog(ReceivedChat chat) {
+        ChatLog chatLog = new ChatLog(chat);
+        
+    }
 }
