@@ -28,11 +28,11 @@ public class ChatController {
         producer.sendMessage(chat); // Kafka에 메시지 전송
     }
 
-//    @MessageMapping("/history/{room}")
-//    @SendTo("/topic/history/{room}")
-//    public List<ChatLog> fetchChatLog(@DestinationVariable String room){
-//        // TODO: MongoDB 또는 Redis에서 기록 얻어오기
-//        return chatLogService.getRecentLogs(room);
-//    }
+    @MessageMapping("/history/{room}")
+    @SendTo("/topic/history/{room}")
+    public List<ChatLog> fetchChatLog(@DestinationVariable String room){
+        // TODO: MongoDB 또는 Redis에서 기록 얻어오기
+        return chatLogService.getRecentLogs(room);
+    }
 
 }

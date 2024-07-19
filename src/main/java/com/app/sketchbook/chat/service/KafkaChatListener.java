@@ -27,14 +27,14 @@ public class KafkaChatListener {
         messagingTemplate.convertAndSend("/topic/receive/"+chat.getRoom(), receivedChat);
 
         // MongoDB에 저장
-//        try{
-//            chatLogService.insertChatLog(receivedChat);
-//        } catch (DuplicateKeyException ignored){
-//            // 중복 키 존재할 때 발생하기 때문에 예외를 무시
-//            // MongoDB에 중복 데이터가 발생하지 않도록 한 조치
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
+        try{
+            chatLogService.insertChatLog(receivedChat);
+        } catch (DuplicateKeyException ignored){
+            // 중복 키 존재할 때 발생하기 때문에 예외를 무시
+            // MongoDB에 중복 데이터가 발생하지 않도록 한 조치
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 }
