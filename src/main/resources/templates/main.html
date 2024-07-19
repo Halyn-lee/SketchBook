@@ -16,7 +16,7 @@
     <div class="modal-content">
         <form action="/post/create" method="post" th:object="${post}">
             <textarea th:field="*{content}">여기는 글을 작성할 공간</textarea>
-            <img id="attachedImage" style="display:none; max-width:100%; height:auto;">
+            <div id="attachedImagesContainer"></div>
             <input id="imageData" name="imageData" type="hidden">
             <input class="btn btn-primary my-2" type="submit" value="저장!">
         </form>
@@ -42,6 +42,22 @@
         <canvas id="canvas" style="border: 2px dashed black;"></canvas>
     </div>
 </div>
+
+<hr>
+
+<table>
+    <tbody>
+    <tr th:each="post : ${postList}">
+        <td th:text="${post.content}"></td>
+        <td>
+            <div th:each="image : ${post.image_list}">
+                <img th:src="@{/images/{filename}(filename=${#strings.substring(image.file_path, image.file_path.lastIndexOf('/') + 1)})}" alt="이미지" />
+            </div>
+        </td>
+        <td th:text="${post.created_date}"></td>
+    </tr>
+    </tbody>
+</table>
 
 <script src="/js/post.js"></script>
 
