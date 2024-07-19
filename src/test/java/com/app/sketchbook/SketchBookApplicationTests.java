@@ -19,7 +19,7 @@ class SketchBookApplicationTests {
         SketchUser sketchUser = new SketchUser();
         sketchUser.setUsername("TEST");
         sketchUser.setPassword("test");
-        sketchUser.setJoinDate(LocalDateTime.now());
+        sketchUser.setRole("ROLE_ADMIN");
         this.userRepository.save(sketchUser);
     }
 

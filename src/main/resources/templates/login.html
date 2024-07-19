@@ -2,3 +2,11 @@
 <hr>
 <a href="/oauth2/authorization/naver">naver login</a><br>
 <a href="/oauth2/authorization/google">google login</a>
+
+<button id="logoutButton">로그아웃</button>
+
+<script>
+    document.getElementById('logoutButton').addEventListener('click', function() {
+      window.location.href = 'https://nid.naver.com/nidlogin.logout';
+    });
+</script>
