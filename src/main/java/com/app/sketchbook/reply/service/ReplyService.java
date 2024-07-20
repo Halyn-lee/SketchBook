@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,5 +21,15 @@ public class ReplyService {
         reply.setCreated_date(LocalDateTime.now());
         reply.setPost(post);
         replyRepository.save(reply);
+    }
+
+    public void reply_modify(Reply reply) {
+        reply.setModified_date(LocalDateTime.now());
+        replyRepository.save(reply);
+    }
+
+    public Reply getReply(Integer no) {
+        Optional<Reply> reply = replyRepository.findById(no);
+        return reply.orElse(null);
     }
 }
