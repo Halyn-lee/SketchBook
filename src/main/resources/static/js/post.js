@@ -1,8 +1,9 @@
-let canvas;
 
 // HTML 문서가 완전히 로드될 때까지 기다린 후 코드를 실행
 document.addEventListener("DOMContentLoaded", function () {
     // 지정된 크기와 초기 설정으로 Fabric.js 캔버스를 생성
+    let canvas;
+
     canvas = new fabric.Canvas("canvas", {
         width: 200,
         height: 200,
@@ -58,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 두 번째 모달을 close
         modal2.style.display = 'none';
+        canvas.dispose();
     });
 
     // 첫 번째 모달 관련 설정
