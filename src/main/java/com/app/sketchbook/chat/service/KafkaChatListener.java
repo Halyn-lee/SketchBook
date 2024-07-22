@@ -19,7 +19,7 @@ public class KafkaChatListener {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatLogService chatLogService;
 
-    @KafkaListener(topics = "chat", groupId = "chat-group", containerFactory = "kafkaChatContainerFactory")
+    @KafkaListener(topics = "chat", groupId = "chat-group", containerFactory = "kafkaChatContainerFactory", autoStartup = "false")
     public void listen(Chat chat) {
         ReceivedChat receivedChat = new ReceivedChat(chat, new Date());
 

@@ -1,5 +1,6 @@
 let historyFetched = false;
 
+let receiveQueue = [];
 
 // 웹 소켓 생성, localhost:8080 부분이 Spring 서버 IP
 const stompClient = new StompJs.Client({
@@ -10,14 +11,18 @@ stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
     stompClient.subscribe('/topic/receive/'+$("#room").val(), (chat) => {
-        showMessage(JSON.parse(chat.body));
+        if(historyFetched) {
+            showMessage(JSON.parse(chat.body));
+        } else {
+            receiveQueue.push(JSON.parse(chat.body));
+        }
     });
 
     stompClient.subscribe('/topic/history/'+$("#room").val(), (history) => {
-        showRecentMessage(history);
+        showRecentMessage(JSON.parse(history.body));
     });
 
-    //fetchPreviousMessages();
+    fetchPreviousMessages();
 };
 
 stompClient.onWebSocketError = (error) => {
@@ -30,15 +35,9 @@ stompClient.onStompError = (frame) => {
 };
 
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
+    $("#content").html("");
+    historyFetched = false;
 }
 
 function connect() {
@@ -51,32 +50,51 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
+function sendChat() {
     stompClient.publish({
         destination: "/app/send",
         body: JSON.stringify({
-            'room' : '1',
-            'user' : 'temp',
-            'content' : $("#name").val()
+            'room' : $("#room").val(),
+            'user' : $("#user").val(),
+            'content' : $("#chat").val()
         })
     });
 }
 
 function fetchPreviousMessages() {
-      stompClient.send("/app/history/"+$("#room").val(), {}, {});
+      stompClient.publish({
+        destination: "/app/history/"+$("#room").val()
+      });
 }
 
 function showMessage(message) {
-    $("#greetings").append("<tr><td>" + message.content + "</td></tr>");
+    if($("#user").val()==message.user){
+        console.log(message);
+        $("#content").append("<tr><td class=\"bg-primary\">" + message.content + "</td></tr>");
+    } else {
+
+        $("#content").append("<tr><td class=\"bg-secondary\">" + message.content + "</td></tr>");
+    }
 }
 
 function showRecentMessage(history) {
+    history.forEach(item=>showMessage(item)); // 채팅 내역 출력
+    receiveQueue.forEach(item=>showMessage(item)); // 채팅 로딩 중 수신내용 출력
+    receiveQueue = [];
     historyFetched = true;
 }
 
 $(function () {
     $("form").on('submit', (e) => e.preventDefault());
-    $( "#connect" ).click(() => connect());
     $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendName());
+    $( "#send" ).click(() => sendChat());
+    $("#chat").keypress((e) => sendChat())
+});
+
+$(window).on("load", function(){
+    connect();
+});
+
+$(window).on("beforeunload", function(){
+    disconnect();
 });

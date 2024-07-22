@@ -31,7 +31,7 @@ public class ChatController {
     @MessageMapping("/history/{room}")
     @SendTo("/topic/history/{room}")
     public List<ChatLog> fetchChatLog(@DestinationVariable String room){
-        // TODO: MongoDB 또는 Redis에서 기록 얻어오기
+        // MongoDB에서 기록 얻어오기
         return chatLogService.getRecentLogs(room);
     }
 
