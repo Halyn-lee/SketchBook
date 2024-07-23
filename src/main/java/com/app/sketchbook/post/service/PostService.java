@@ -29,7 +29,6 @@ public class PostService {
     private final ReplyService replyService;
 
     public Post post_create(Post post) {
-        post.set_deleted(false);
         post.setCreated_date(LocalDateTime.now());
         return postRepository.save(post);
     }

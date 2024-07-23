@@ -24,6 +24,7 @@ public class Reply {
 
     private LocalDateTime modified_date;
 
+    @Column(columnDefinition = "number default 0")
     private boolean is_deleted;
 
     @ManyToOne

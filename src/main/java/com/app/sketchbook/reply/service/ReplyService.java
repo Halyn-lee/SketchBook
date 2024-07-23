@@ -17,7 +17,6 @@ public class ReplyService {
     public void reply_create(Post post, String content) {
         Reply reply = new Reply();
         reply.setContent(content);
-        reply.set_deleted(false);
         reply.setCreated_date(LocalDateTime.now());
         reply.setPost(post);
         replyRepository.save(reply);

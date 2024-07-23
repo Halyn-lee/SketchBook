@@ -2,9 +2,14 @@ package com.app.sketchbook.post.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Where(clause = "is_deleted = false")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,4 +19,7 @@ public class Image {
     private Post post;
 
     private String file_path;
+
+    @Column(columnDefinition = "number default 0")
+    private boolean is_deleted;
 }
