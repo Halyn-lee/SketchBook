@@ -3,15 +3,18 @@ package com.app.sketchbook.post.entity;
 import com.app.sketchbook.reply.entity.Reply;
 import com.app.sketchbook.user.entity.SketchUser;
 import jakarta.persistence.*;
-import lombok.Data;
-import org.hibernate.annotations.DialectOverride;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Where(clause = "is_deleted = false")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

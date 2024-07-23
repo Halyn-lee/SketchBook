@@ -1,5 +1,6 @@
-<div class="card text-center mb-5" th:each="post : ${postList}">
+<div class="card text-center mb-5" th:each="post : ${postList}" th:id="'post-container-' + ${post.no}">
     <div class="card-header">
+        <button th:onclick="'deletePost(' + ${post.no} + ')'">삭제</button>
         프사 / <span th:text="${post.sketchUser.username}"></span>
     </div>
     <div class="card-body">

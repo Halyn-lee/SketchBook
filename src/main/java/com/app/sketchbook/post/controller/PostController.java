@@ -2,14 +2,16 @@ package com.app.sketchbook.post.controller;
 
 import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
-import com.app.sketchbook.post.repository.PostRepository;
 import com.app.sketchbook.post.service.PostService;
-import com.app.sketchbook.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,8 +26,6 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
-    private final PostRepository postRepository;
-    private final ReplyRepository replyRepository;
 
     @GetMapping("/main")
     public String main(Model model) {
@@ -43,7 +43,7 @@ public class PostController {
     }
 
     @PostMapping("/post/create")
-    public String post_create(Post post, @RequestParam("imageData") String imageDataList) {
+    public String create_post(Post post, @RequestParam("imageData") String imageDataList) {
         // Post 엔티티에 저장
         Post savedPost = postService.post_create(post);
 
@@ -82,5 +82,14 @@ public class PostController {
 
         postService.saveImages(images);
         return "redirect:/main";
+    }
+
+    @PostMapping("/post/delete/{no}")
+    public ResponseEntity<?> delete_post(@PathVariable Long no) {
+        if (no != null) {
+            postService.post_delete(no);
+            return ResponseEntity.ok().body("{\"success\": true}");
+        }
+        return ResponseEntity.status(400).body("{\"success\": false}");
     }
 }

@@ -4,12 +4,16 @@ import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.repository.PostRepository;
+import com.app.sketchbook.reply.entity.Reply;
+import com.app.sketchbook.reply.repository.ReplyRepository;
+import com.app.sketchbook.reply.service.ReplyService;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +25,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
+    private final ReplyRepository replyRepository;
+    private final ReplyService replyService;
 
     public Post post_create(Post post) {
         post.set_deleted(false);
@@ -48,5 +54,16 @@ public class PostService {
         PageRequest pageRequest = PageRequest.of(pageNumber, 3);
         Slice<Post> posts = postRepository.findBySketchUser(userEntity, pageRequest);
         return posts;
+    }
+
+    @Transactional
+    public void post_delete(Long no) {
+        Post post = postRepository.getReferenceById(no.intValue()); // 범위에 대한 예외처리 필요
+        List<Reply> replyList = replyRepository.findByPostNo(post.getNo());
+        for (Reply reply : replyList) {
+            replyService.reply_delete(reply);
+        }
+        post.set_deleted(true);
+        postRepository.save(post);
     }
 }

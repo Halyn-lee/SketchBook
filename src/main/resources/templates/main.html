@@ -68,6 +68,25 @@
 
 <script src="/js/post.js"></script>
 <script>
+    function deletePost(postNo) {
+        const post = document.getElementById(`post-container-${postNo}`);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `/post/delete/${postNo}`, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    post.remove();
+                } else {
+                    alert("게시글 삭제 실패!");
+                }
+            }
+        };
+        xhr.send();
+    }
+
     function modifyReply(replyNo) {
         const replyContent = document.getElementById(`reply-content-${replyNo}`);
         const currentContent = replyContent.innerText;

@@ -2,13 +2,15 @@ package com.app.sketchbook.reply.entity;
 
 import com.app.sketchbook.post.entity.Post;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Where(clause = "is_deleted = false")
 public class Reply {
     @Id
