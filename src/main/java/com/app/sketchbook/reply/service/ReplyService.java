@@ -32,4 +32,9 @@ public class ReplyService {
         Optional<Reply> reply = replyRepository.findById(no);
         return reply.orElse(null);
     }
+
+    public void reply_delete(Reply reply) {
+        reply.set_deleted(true);
+        replyRepository.save(reply);
+    }
 }

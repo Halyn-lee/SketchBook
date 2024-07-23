@@ -3,11 +3,13 @@ package com.app.sketchbook.reply.entity;
 import com.app.sketchbook.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Where(clause = "is_deleted = false")
 public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

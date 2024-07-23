@@ -1,8 +1,10 @@
 package com.app.sketchbook.post.entity;
 
 import com.app.sketchbook.reply.entity.Reply;
+import com.app.sketchbook.user.entity.SketchUser;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DialectOverride;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,10 +29,11 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> image_list = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("no asc") // 댓글 정렬
     private List<Reply> reply_list;
 
-//    @ManyToOne
-//    private Member id; 회원기능 연동 후 추가할 것
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private SketchUser sketchUser;
 }

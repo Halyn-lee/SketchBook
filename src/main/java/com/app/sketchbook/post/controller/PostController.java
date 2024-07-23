@@ -4,10 +4,9 @@ import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.PostRepository;
 import com.app.sketchbook.post.service.PostService;
-import com.app.sketchbook.reply.entity.Reply;
 import com.app.sketchbook.reply.repository.ReplyRepository;
-import com.app.sketchbook.reply.service.ReplyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,12 +29,17 @@ public class PostController {
 
     @GetMapping("/main")
     public String main(Model model) {
-        List<Post> postList =  this.postRepository.findAll();
-        List<Reply> replyList = this.replyRepository.findAll();
-        model.addAttribute("postList", postList);
-        model.addAttribute("replyList", replyList);
-        model.addAttribute("post", new Post()); // 임시
         return "main";
+    }
+
+    @GetMapping("/getpost/{pageNumber}")
+    public String post_list(Model model, @PathVariable int pageNumber) {
+        Slice<Post> posts = postService.fetchPostsByPage(pageNumber);
+        if (posts.hasNext()) {
+            model.addAttribute("nextPageNumber", pageNumber + 1);
+        }
+        model.addAttribute("postList", posts.getContent());
+        return "post";
     }
 
     @PostMapping("/post/create")
