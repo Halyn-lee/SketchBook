@@ -39,4 +39,9 @@ public class SketchUser {
 //
     private String password;
 
+    private String gender;
+
+    private String authCode;
+
+    private Boolean enabled;
 }

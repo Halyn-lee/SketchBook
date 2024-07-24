@@ -3,7 +3,9 @@ package com.app.sketchbook.post.controller;
 import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
 
+@Log4j2
 @Controller
 @RequiredArgsConstructor
 public class PostController {
@@ -20,7 +23,10 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/main")
-    public String main(Model model, Post post) {
+    public String main(HttpSession session, Model model, Post post) {
+        String username = session.getAttribute("username").toString();
+        log.info(username);
+        //System.out.print(username);
         model.addAttribute("post", new Post()); // 임시
         return "main";
     }
