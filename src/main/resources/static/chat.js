@@ -1,6 +1,8 @@
 let historyFetched = false;
+let isBottom = true;
 
 let receiveQueue = [];
+let start = 0;
 
 // 웹 소켓 생성, localhost:8080 부분이 Spring 서버 IP
 const stompClient = new StompJs.Client({
@@ -51,14 +53,16 @@ function disconnect() {
 }
 
 function sendChat() {
-    stompClient.publish({
-        destination: "/app/send",
-        body: JSON.stringify({
-            'room' : $("#room").val(),
-            'user' : $("#user").val(),
-            'content' : $("#chat").val()
-        })
-    });
+    if($("#chat").val()){
+        stompClient.publish({
+                destination: "/app/send",
+                body: JSON.stringify({
+                    'room' : $("#room").val(),
+                    'user' : $("#user").val(),
+                    'content' : $("#chat").val()
+            })
+        });
+    }
 }
 
 function fetchPreviousMessages() {
@@ -69,11 +73,16 @@ function fetchPreviousMessages() {
 
 function showMessage(message) {
     if($("#user").val()==message.user){
-        console.log(message);
-        $("#content").append("<tr><td class=\"bg-primary\">" + message.content + "</td></tr>");
+        $("#content").append("<div class=\"w-100 d-flex justify-content-end mb-2\"><div class=\"bg-warning-subtle p-1 rounded\">" + message.content + "</div></div>");
     } else {
 
-        $("#content").append("<tr><td class=\"bg-secondary\">" + message.content + "</td></tr>");
+        $("#content").append("<div class=\"w-100 d-flex justify-content-end mb-2\"><div class=\"bg-light p-1 rounded\">" + message.content + "</div></div>");
+    }
+
+    // 최하단일 경우 스크롤 고정
+    if(isBottom) {
+        const frame = $("#content-frame")[0];
+        frame.scrollTop = frame.scrollHeight;
     }
 }
 
@@ -88,7 +97,21 @@ $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $( "#disconnect" ).click(() => disconnect());
     $( "#send" ).click(() => sendChat());
-    $("#chat").keypress((e) => sendChat())
+    $("#chat").keypress((e) => {
+        if(e.code == "Enter"){
+            sendChat();
+        }
+    });
+
+    // 스크롤 최하단 체크
+    $("#content-frame").on("scroll", ()=>{
+        const frame = $("#content-frame")[0];
+        if(frame.scrollTop == frame.scrollHeight-frame.clientHeight){
+            isBottom = true;
+        } else {
+            isBottom = false;
+        }
+    });
 });
 
 $(window).on("load", function(){
