@@ -28,7 +28,7 @@ public class SecurityConfig {
 
 
     private final OAuth2UserService oAuth2UserService;
-
+    private final CustomLoginSuccessHandler customLoginSuccessHandler;
 
 
     @Bean
@@ -52,7 +52,7 @@ public class SecurityConfig {
         http
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/login")
-                        .successHandler(new CustomLoginSuccessHandler())
+                        .successHandler(customLoginSuccessHandler)
                         .failureHandler(new CustomLoginFailHandler())) // 로그인 실패 시 CustomAuthenticationFailureHandler 사용
 
                 .logout((logout) -> logout
@@ -63,7 +63,11 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login","/join","/join_success","/verify","/verify-success","/verify-failure","/check-email","/resend-activation-email").permitAll()
+                        .requestMatchers("/login","/join","/join_success","/verify","/verify-success","/verify-failure","/check-email","/resend-activation-email"
+                        ,"/find-account"
+                        ,"/find-password"
+                        ,"/updatepassword"
+                        ,"/send-pass-email").permitAll()
                         //.requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
 

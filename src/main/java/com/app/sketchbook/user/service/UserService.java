@@ -10,9 +10,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -84,5 +86,62 @@ public class UserService {
             return null;
         else
             return user;
+    }
+    //비밀번호 찾기
+
+    public void findPassword(String email){
+        SketchUser user = userRepository.findByEmail(email);
+        if(user!=null){
+            String tempPassword = generateTempPassword();
+            user.setPassword(passwordEncoder.encode(tempPassword));
+            user.setUpdate_pw(true);
+            userRepository.save(user);
+            sendTempPwEmail(email,tempPassword);
+
+        }
+
+
+    }
+    //비밀번호 변경
+
+    public boolean updatePassword(String email, String newPass){
+        SketchUser user = userRepository.findByEmail(email);
+        if(user!=null){
+            user.setPassword(passwordEncoder.encode(newPass));
+            user.setUpdate_pw(false);
+            userRepository.save(user);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    private String generateTempPassword() {
+        int length = 10;
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder tempPassword = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            tempPassword.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return tempPassword.toString();
+    }
+
+    public void sendTempPwEmail(String email, String tempPassword) {
+        String subject = "Temp Password";
+        String message = "Your verification code is: " + tempPassword;
+        SketchUser user = userRepository.findByEmail(email);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(message, true);
+            helper.setFrom("mailsender123@naver.com");
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

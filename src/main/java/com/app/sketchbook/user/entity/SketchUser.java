@@ -44,4 +44,6 @@ public class SketchUser {
     private String authCode;
 
     private Boolean enabled;
+
+    private Boolean update_pw;
 }

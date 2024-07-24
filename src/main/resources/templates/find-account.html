@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/find-account}" method="post">
+    <div class="mb-3">
+        <label for="email" class="form-label">이메일</label>
+        <input type="email" name="email" id="email" class="form-control">
+        <span id="emailError" style="color: red;"></span>
+    </div>
+    <button type="submit" id="submitBtn" class="btn btn-primary">찾기</button>
+</form>
+</body>
+</html>
