@@ -1,31 +1,28 @@
 package com.app.sketchbook.post.controller;
 
+import com.app.sketchbook.post.DTO.ImageRequestDTO;
 import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
+import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
+    private final ImageRepository imageRepository;
 
     @GetMapping("/main")
     public String main(Model model) {
@@ -91,5 +88,33 @@ public class PostController {
             return ResponseEntity.ok().body("{\"success\": true}");
         }
         return ResponseEntity.status(400).body("{\"success\": false}");
+    }
+
+    @PostMapping("/post/modify/{no}")
+    public String modify_post(@PathVariable Long no, Post post) {
+        if (no != null) {
+            return "redirect:/main";
+        }
+        return "redirect:/main";
+    }
+
+    // 이미지 리스트만 삭제
+    @PostMapping("/images/delete")
+    public ResponseEntity<String> deleteImages(@RequestBody ImageRequestDTO imageRequestDTO) {
+        List<Long> selectedImageIds = imageRequestDTO.getSelectedImageIds();
+
+        if (selectedImageIds != null && !selectedImageIds.isEmpty()) {
+            selectedImageIds.forEach(id -> {
+                Optional<Image> optionalImage = imageRepository.findById(id);
+                optionalImage.ifPresent(image -> {
+                    image.set_deleted(true);
+                    imageRepository.save(image);
+                });
+            });
+
+            return ResponseEntity.ok().body("{\"success\": true}");
+        } else {
+            return ResponseEntity.status(400).body("{\"success\": false}");
+        }
     }
 }

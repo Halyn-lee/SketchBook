@@ -1,5 +1,29 @@
 <div class="card text-center mb-5" th:each="post : ${postList}" th:id="'post-container-' + ${post.no}">
+
+    <!-- 세 번째 Modal -->
+    <div class="modal" th:id="'modal-container-' + ${post.no}">
+        <!-- 세 번째 모달 내용 -->
+        <div class="modal-content">
+            <textarea th:id="'content-' + ${post.no}" th:text="${post.content}"></textarea>
+            <div th:each="image : ${post.image_list}">
+<!--                <div th:each="image : ${post.image_list}" th:id="'image-container' + ${post.no}">-->
+                <img alt="이미지"
+                     class="d-block w-10"
+                     th:id="'image-' + ${image.no}"
+                     th:src="@{/images/{filename}(filename=${#strings.substring(image.file_path, image.file_path.lastIndexOf('/') + 1)})}">
+            </div>
+            <button th:id="'deletebtn-' + ${post.no}">삭제</button>
+            <button th:id="'modifybtn2-' + ${post.no}">수정</button>
+
+            <!-- 그림판 영역 -->
+            <!--        <canvas id="canvas" style="border: 2px dashed black;"></canvas>-->
+        <span class="close" th:id="'close-' + ${post.no}">&times;</span>
+        </div>
+
+    </div>
+
     <div class="card-header">
+        <button th:class="modifybtn" th:data-post-id="${post.no}" th:id="'modifybtn-' + ${post.no}">수정</button>
         <button th:onclick="'deletePost(' + ${post.no} + ')'">삭제</button>
         프사 / <span th:text="${post.sketchUser.username}"></span>
     </div>
@@ -48,7 +72,7 @@
 
     </div>
     <div class="card-footer text-body-secondary">
-        <div th:id="'reply-container-'+${reply.no}" th:each="reply : ${post.reply_list}">
+        <div th:each="reply : ${post.reply_list}" th:id="'reply-container-'+${reply.no}">
             <p th:attr="data-reply-id=${reply.no}" th:id="'reply-content-' + ${reply.no}" th:text="${reply.content}">
                 Reply Content</p>
             <button th:onclick="'modifyReply(' + ${reply.no} + ')'" type="button">수정!</button>

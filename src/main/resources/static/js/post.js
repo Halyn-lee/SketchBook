@@ -98,4 +98,92 @@ document.addEventListener("DOMContentLoaded", function () {
             e.target.removeEventListener("click");
         });
     }
+
+    document.body.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modifybtn')) {
+            let postId = e.target.getAttribute('data-post-id'); // 게시글 ID 추출
+            let imageId = e.target.getAttribute('data-image-id'); // 이미지 ID 추출
+            let modalId = `modal-container-${postId}`;
+            let modal = document.getElementById(modalId);
+            let modifyBtn2Id = `modifybtn2-${postId}`;
+            let modifyBtn2 = document.getElementById(modifyBtn2Id);
+            let deleteBtnId = `deletebtn-${postId}`;
+            let deleteBtn = document.getElementById(deleteBtnId);
+            let closeBtnId = `close-${postId}`
+            let closeBtn = document.getElementById(closeBtnId);
+
+            if (!modal) {
+                console.error(`Modal with id ${modalId} not found.`);
+                return;
+            }
+
+            modal.style.display = "block";
+
+            if (deleteBtn) {
+                deleteBtn.onclick = function () {
+                    deleteBtn.style.display = 'none';
+
+                    // 각 이미지에 체크박스 생성
+                    let images = modal.querySelectorAll("img");
+                    images.forEach(image => {
+                        let imageId = image.id.split('-')[1];
+                        if (!document.getElementById(`checkbox-${imageId}`)) {
+                            let checkbox = document.createElement("input");
+                            checkbox.type = "checkbox";
+                            checkbox.id = `checkbox-${imageId}`;
+                            image.after(checkbox);
+                        }
+                    });
+
+                    // 모달창 안에 삭제 확인 버튼 생성
+                    let modalContent = modal.querySelector('.modal-content');
+                    let confirmDeleteBtn = document.createElement("button");
+                    confirmDeleteBtn.innerText = "확인";
+                    confirmDeleteBtn.id = 'confirm-delete-btn';
+                    modalContent.appendChild(confirmDeleteBtn); // modal-content 안에 생성
+
+                    // 이미지 삭제 확인 버튼 핸들러
+                    confirmDeleteBtn.onclick = function() {
+                        let selectedImageIds = Array.from(images).filter(img => document.getElementById(`checkbox-${img.id.split('-')[1]}`).checked).map(img => img.id.split('-')[1]);
+
+                        if (selectedImageIds.length > 0) {
+                            deleteSelectedImages(selectedImageIds);
+                        } else {
+                            alert("이미지가 선택되지 않았어요.");
+                        }
+                    };
+                };
+            } else {
+                console.error(` ${deleteBtnId} 없음`);
+            }
+
+            function deleteSelectedImages(imageIds) {
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/images/delete", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            // 응답 결과로 화면에서 제거
+                            imageIds.forEach(id => {
+                                let checkbox = document.getElementById(`checkbox-${id}`);
+                                if (checkbox) checkbox.remove();
+                                let image = document.getElementById(`image-${id}`);
+                                if (image) image.remove();
+                            });
+                        } else {
+                            alert("이미지 삭제 실패");
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify({ selectedImageIds: imageIds }));
+            }
+
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            }
+
+        }
+    });
 });
