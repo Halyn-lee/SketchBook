@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+    <link href="/css/post.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<h1 class="btn">무슨 생각 하세요?</h1>
+
+<!-- 첫 번째 Modal -->
+<div class="modal" id="modal1">
+    <!-- 첫 번째 모달 내용 -->
+    <div class="modal-content">
+        <form action="/post/create" method="post" th:object="${post}">
+            <textarea th:field="*{content}">여기는 글을 작성할 공간</textarea>
+            <div id="attachedImagesContainer"></div>
+            <input id="imageData" name="imageData" type="hidden">
+            <input class="btn btn-primary my-2" type="submit" value="저장!">
+        </form>
+        <button class="btn2">🖌</button>
+        <span class="close" id="close1">&times;</span>
+    </div>
+</div>
+
+<!-- 두 번째 Modal -->
+<div class="modal" id="modal2">
+    <!-- 두 번째 모달 내용 -->
+    <div class="modal-content">
+        <button id="black">검</button>
+        <button id="red">빨</button>
+        <button id="blue">파</button>
+        <button id="erase">지우개</button>
+        <button id="attach">그림 첨부</button>
+        <br>
+        그림판 기능 추후 업데이트 할 것임
+        <span class="close" id="close2">&times;</span>
+
+        <!-- 그림판 영역 -->
+        <canvas id="canvas" style="border: 2px dashed black;"></canvas>
+    </div>
+</div>
+
+<hr>
+
+<table>
+    <tbody>
+    <tr th:each="post : ${postList}">
+        <td th:text="${post.content}"></td>
+        <td>
+            <div th:each="image : ${post.image_list}">
+                <img th:src="@{/images/{filename}(filename=${#strings.substring(image.file_path, image.file_path.lastIndexOf('/') + 1)})}" alt="이미지" />
+            </div>
+        </td>
+        <td th:text="${post.created_date}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<script src="/js/post.js"></script>
+
+</body>
+</html>
