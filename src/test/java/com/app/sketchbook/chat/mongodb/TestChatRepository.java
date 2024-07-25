@@ -1,6 +1,6 @@
 package com.app.sketchbook.chat.mongodb;
 
-import com.app.sketchbook.chat.dto.ChatLog;
+import com.app.sketchbook.chat.entity.ChatLog;
 import com.app.sketchbook.chat.repository.ChatRepository;
 
 import java.util.Date;

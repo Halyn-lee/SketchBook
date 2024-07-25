@@ -18,6 +18,7 @@ public class KafkaChatListener {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatLogService chatLogService;
+    private final ChatNotifyService chatNotifyService;
 
     @KafkaListener(topics = "chat", groupId = "chat-group", containerFactory = "kafkaChatContainerFactory", autoStartup = "true")
     public void listen(Chat chat) {
@@ -25,6 +26,9 @@ public class KafkaChatListener {
 
         // Kafka에서 메시지를 받아서 WebSocket을 통해 클라이언트에게 전송
         messagingTemplate.convertAndSend("/topic/receive/"+chat.getRoom(), receivedChat);
+
+        // 메시지 수신 시 알림 전송
+        // chatNotifyService.notifyChat(chat.getRoom(), chat.getUser());
 
         // MongoDB에 저장
         try{
