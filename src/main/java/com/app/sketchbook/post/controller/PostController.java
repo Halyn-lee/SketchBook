@@ -169,10 +169,21 @@ public class PostController {
         Post post = postService.getPost(no.intValue());
         // 세션의 username 가져와서 유저엔티티에서 사용자 get
         // CustomOAuth2User user = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        user = userRepository.getReferenceById(1L); //임시
+        user = userRepository.getReferenceById(2L); //임시
 
         if (no != null) {
             postService.like_post(no, user);
+            return ResponseEntity.ok().body("{\"success\": true}");
+        }
+        return ResponseEntity.status(400).body("{\"success\": false}");
+    }
+
+    @PostMapping("/post/cancel-like/{no}")
+    public ResponseEntity<?> cancel_like_post(@PathVariable Long no, SketchUser user) {
+        user = userRepository.getReferenceById(1L); // post/cancel-like/1 요청시 1번 게시글 좋아요의 1번 사용자 좋아요를 취소
+
+        if (no != null) {
+            postService.cancel_post_like(no, user);
             return ResponseEntity.ok().body("{\"success\": true}");
         }
         return ResponseEntity.status(400).body("{\"success\": false}");
