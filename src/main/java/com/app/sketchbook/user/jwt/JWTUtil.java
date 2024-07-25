@@ -1,5 +1,7 @@
 package com.app.sketchbook.user.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -33,8 +35,11 @@ public class JWTUtil {
     }
 
     public Boolean isExpired(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public String createJwt(String username, String role, Long expiredMs) {
@@ -46,5 +51,19 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public String refreshToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            return createJwt((String)claims.get("username"), (String)claims.get("role"), 60*60*60L);
+        } catch (ExpiredJwtException e) {
+            Claims claims = e.getClaims();
+            return createJwt((String)claims.get("username"), (String)claims.get("role"), 60*60*60L);
+        }
     }
 }

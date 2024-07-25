@@ -66,12 +66,20 @@ public class MongoDBTests {
     @Test
     public void testGetChatsByRoom(){
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE,-75);
+        cal.add(Calendar.MINUTE,-240);
         Date date = cal.getTime();
         long startTime = System.currentTimeMillis();
-        var list = chatRepository.findAllByRoomAndSendTimeAfterOrderBySendTimeAsc("123", date);
+        var list = chatRepository.findAllByRoomAndSendTimeAfterOrderBySendTimeAsc("1", date);
         log.info("Search Time : "+(System.currentTimeMillis()-startTime));
         log.info(""+list.size());
+    }
+
+    @Test
+    public void testGetChatCountByRoom() {
+        long startTime = System.currentTimeMillis();
+        long count = chatRepository.countByRoom("123");
+        log.info("Search Time : "+(System.currentTimeMillis()-startTime));
+        log.info(""+count);
     }
 
 }

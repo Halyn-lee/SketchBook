@@ -1,18 +1,17 @@
 package com.app.sketchbook.chat.controller;
 
 import com.app.sketchbook.chat.dto.Chat;
-import com.app.sketchbook.chat.dto.ChatLog;
+import com.app.sketchbook.chat.entity.ChatLog;
 import com.app.sketchbook.chat.service.ChatLogService;
 import com.app.sketchbook.chat.service.KafkaChatProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Log
@@ -22,6 +21,11 @@ public class ChatController {
 
     private final KafkaChatProducer producer;
     private final ChatLogService chatLogService;
+
+    @GetMapping("/chat")
+    public String chat() {
+        return "chat";
+    }
 
     @MessageMapping("/send")
     public void sendMessage(Chat chat) {

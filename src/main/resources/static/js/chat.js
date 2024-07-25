@@ -62,6 +62,7 @@ function sendChat() {
                     'content' : $("#chat").val()
             })
         });
+        $("#chat").val("");
     }
 }
 

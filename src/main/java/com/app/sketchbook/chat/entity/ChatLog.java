@@ -1,5 +1,6 @@
-package com.app.sketchbook.chat.dto;
+package com.app.sketchbook.chat.entity;
 
+import com.app.sketchbook.chat.dto.ReceivedChat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
