@@ -52,6 +52,21 @@
     </div>
 </div>
 
+<!--게시물 수정 Modal -->
+<div class="modal modal-container" id="postModalContainer">
+    <!-- 게시물 수정 모달 내용 -->
+    <div class="modal-content" id="postModalBody">
+        <form id="modForm" method="post">
+            <textarea name="content"></textarea>
+            <div class="post-image-list" id="postAttachedImagesContainer"></div>
+            <input id="postImageData" name="postImageData" type="hidden">
+            <button id="postModBtn" type="submit">수정 완료</button>
+        </form>
+        <button id="postAddBtn">그림 추가</button>
+        <button id="postDelBtn">삭제</button>
+        <span class="close" id="postModalClose">&times;</span>
+    </div>
+</div>
 
 
 <hr>
@@ -75,6 +90,11 @@
     }
 
     function deletePost(postNo) {
+        if(!confirm("정말 삭제하실래요?")){
+            return;
+        }
+
+
         const post = document.getElementById(`post-container-${postNo}`);
 
         const xhr = new XMLHttpRequest();

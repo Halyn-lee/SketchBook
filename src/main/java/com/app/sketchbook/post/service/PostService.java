@@ -28,7 +28,7 @@ public class PostService {
     private final ReplyRepository replyRepository;
     private final ReplyService replyService;
 
-    public Post post_create(Post post) {
+    public Post create_post(Post post) {
         post.setCreated_date(LocalDateTime.now());
         return postRepository.save(post);
     }
@@ -56,7 +56,7 @@ public class PostService {
     }
 
     @Transactional
-    public void post_delete(Long no) {
+    public void delete_post(Long no) {
         Post post = postRepository.getReferenceById(no.intValue()); // 범위에 대한 예외처리 필요
         List<Reply> replyList = replyRepository.findByPostNo(post.getNo());
         for (Reply reply : replyList) {
@@ -64,5 +64,12 @@ public class PostService {
         }
         post.set_deleted(true);
         postRepository.save(post);
+    }
+
+    public Post modify_post(Long no, String content) {
+        Post post = postRepository.getReferenceById(no.intValue());
+        post.setContent(content);
+        post.setModified_date(LocalDateTime.now());
+        return postRepository.save(post);
     }
 }

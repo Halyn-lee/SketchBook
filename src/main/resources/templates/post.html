@@ -1,34 +1,10 @@
 <div class="card text-center mb-5" th:each="post : ${postList}" th:id="'post-container-' + ${post.no}">
-
-    <!-- 세 번째 Modal -->
-    <div class="modal" th:id="'modal-container-' + ${post.no}">
-        <!-- 세 번째 모달 내용 -->
-        <div class="modal-content">
-            <textarea th:id="'content-' + ${post.no}" th:text="${post.content}"></textarea>
-            <div th:each="image : ${post.image_list}">
-<!--                <div th:each="image : ${post.image_list}" th:id="'image-container' + ${post.no}">-->
-                <img alt="이미지"
-                     class="d-block w-10"
-                     th:id="'image-' + ${image.no}"
-                     th:src="@{/images/{filename}(filename=${#strings.substring(image.file_path, image.file_path.lastIndexOf('/') + 1)})}">
-            </div>
-            <button th:id="'deletebtn-' + ${post.no}">삭제</button>
-            <button th:id="'modifybtn2-' + ${post.no}">수정</button>
-
-            <!-- 그림판 영역 -->
-            <!--        <canvas id="canvas" style="border: 2px dashed black;"></canvas>-->
-        <span class="close" th:id="'close-' + ${post.no}">&times;</span>
-        </div>
-
-    </div>
-
     <div class="card-header">
-        <button th:class="modifybtn" th:data-post-id="${post.no}" th:id="'modifybtn-' + ${post.no}">수정</button>
+        <button th:class="modifybtn" th:data-post-id="${post.no}">수정</button>
         <button th:onclick="'deletePost(' + ${post.no} + ')'">삭제</button>
         프사 / <span th:text="${post.sketchUser.username}"></span>
     </div>
     <div class="card-body">
-
         <!--        캐러셀 시작-->
         <div class="sample mx-auto p-5" style="width: 300px; height: 300px;">
             <div class="carousel slide" th:id="'carousel-' + ${post.no}">
@@ -48,6 +24,7 @@
                         <div class="carousel-item" th:classappend="${imageStat.index == 0} ? 'active'">
                             <img alt="이미지"
                                  class="d-block w-100"
+                                 th:data-id="${image.no}"
                                  th:src="@{/images/{filename}(filename=${#strings.substring(image.file_path, image.file_path.lastIndexOf('/') + 1)})}">
                         </div>
                     </div>
@@ -67,7 +44,7 @@
         <!--        캐러셀 끝-->
 
 
-        <div class="fw-bold fs-5" th:text="${post.content}"></div>
+        <div class="fw-bold fs-5" th:text="${post.content}" th:data-content="${post.content}"></div>
 
 
     </div>
