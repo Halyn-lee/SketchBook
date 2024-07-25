@@ -11,6 +11,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,11 @@ public class ChatController {
 
     private final KafkaChatProducer producer;
     private final ChatLogService chatLogService;
+
+    @GetMapping("/chat")
+    public String chat() {
+        return "chat";
+    }
 
     @MessageMapping("/send")
     public void sendMessage(Chat chat) {
