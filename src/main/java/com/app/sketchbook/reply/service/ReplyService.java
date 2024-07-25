@@ -3,6 +3,7 @@ package com.app.sketchbook.reply.service;
 import com.app.sketchbook.reply.entity.Reply;
 import com.app.sketchbook.reply.repository.ReplyRepository;
 import com.app.sketchbook.post.entity.Post;
+import com.app.sketchbook.user.entity.SketchUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,12 @@ public class ReplyService {
 
     public void reply_delete(Reply reply) {
         reply.set_deleted(true);
+        replyRepository.save(reply);
+    }
+
+    public void like_reply(Long no, SketchUser user) { // 임시
+        Reply reply = replyRepository.getReferenceById(no.intValue()); // 범위에 대한 예외처리 필요
+        reply.getLike().add(user);
         replyRepository.save(reply);
     }
 }
