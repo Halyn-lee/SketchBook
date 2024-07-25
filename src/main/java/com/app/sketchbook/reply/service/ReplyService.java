@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,14 @@ public class ReplyService {
     public void like_reply(Long no, SketchUser user) { // 임시
         Reply reply = replyRepository.getReferenceById(no.intValue()); // 범위에 대한 예외처리 필요
         reply.getLike().add(user);
+        replyRepository.save(reply);
+    }
+
+    public void cancel_reply_like(Long no, SketchUser user) {
+        Reply reply = replyRepository.getReferenceById(no.intValue());
+        Set<SketchUser> likedUser = reply.getLike();
+        likedUser.remove(user);
+        reply.setLike(likedUser);
         replyRepository.save(reply);
     }
 }

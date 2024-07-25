@@ -70,4 +70,15 @@ public class ReplyController {
         }
         return ResponseEntity.status(400).body("{\"success\": false}");
     }
+
+    @PostMapping("/cancel-like/{no}")
+    public ResponseEntity<?> cancel_like_reply(@PathVariable Long no, SketchUser user) {
+        user = userRepository.getReferenceById(1L);
+
+        if (no != null) {
+            replyService.cancel_reply_like(no, user);
+            return ResponseEntity.ok().body("{\"success\": true}");
+        }
+        return ResponseEntity.status(400).body("{\"success\": false}");
+    }
 }
