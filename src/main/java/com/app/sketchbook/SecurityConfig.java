@@ -49,7 +49,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
 
         //세션 설정 : STATELESS

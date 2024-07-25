@@ -1,25 +1,32 @@
-package com.app.sketchbook.post.entity;
+package com.app.sketchbook.reply.entity;
 
+import com.app.sketchbook.post.entity.Post;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @Where(clause = "is_deleted = false")
-public class Image {
+public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
 
-    @ManyToOne
-    private Post post;
+    @Column(length = 4000)
+    private String content;
 
-    private String file_path;
+    private LocalDateTime created_date;
+
+    private LocalDateTime modified_date;
 
     @Column(columnDefinition = "number default 0")
     private boolean is_deleted;
+
+    @ManyToOne
+    private Post post;
 }

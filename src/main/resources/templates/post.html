@@ -1,0 +1,66 @@
+<div class="card text-center mb-5" th:each="post : ${postList}" th:id="'post-container-' + ${post.no}">
+    <div class="card-header">
+        <button th:class="modifybtn" th:data-post-id="${post.no}">수정</button>
+        <button th:onclick="'deletePost(' + ${post.no} + ')'">삭제</button>
+        프사 / <span th:text="${post.sketchUser.username}"></span>
+    </div>
+    <div class="card-body">
+        <!--        캐러셀 시작-->
+        <div class="sample mx-auto p-5" style="width: 300px; height: 300px;">
+            <div class="carousel slide" th:id="'carousel-' + ${post.no}">
+                <div class="carousel-indicators">
+                    <div th:each="image, imageStat : ${post.image_list}">
+                        <button th:aria-current="${imageStat.index == 0} ? 'true' : 'false'"
+                                th:aria-label="'Slide ' + ${imageStat.index + 1}"
+                                th:classappend="${imageStat.index == 0} ? 'active'"
+                                th:data-bs-slide-to="${imageStat.index}"
+                                th:data-bs-target="'#carousel-' + ${post.no}"
+                                type="button"></button>
+                    </div>
+                </div>
+                <div class="carousel-inner">
+                    <div th:classappend="${imageStat.index == 0} ? 'active'"
+                         th:each="image, imageStat : ${post.image_list}">
+                        <div class="carousel-item" th:classappend="${imageStat.index == 0} ? 'active'">
+                            <img alt="이미지"
+                                 class="d-block w-100"
+                                 th:data-id="${image.no}"
+                                 th:src="@{/images/{filename}(filename=${#strings.substring(image.file_path, image.file_path.lastIndexOf('/') + 1)})}">
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" data-bs-slide="prev" th:data-bs-target="'#carousel-' + ${post.no}"
+                        type="button">
+                    <span aria-hidden="true" class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" data-bs-slide="next" th:data-bs-target="'#carousel-' + ${post.no}"
+                        type="button">
+                    <span aria-hidden="true" class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <!--        캐러셀 끝-->
+
+
+        <div class="fw-bold fs-5" th:text="${post.content}" th:data-content="${post.content}"></div>
+
+
+    </div>
+    <div class="card-footer text-body-secondary">
+        <div th:each="reply : ${post.reply_list}" th:id="'reply-container-'+${reply.no}">
+            <p th:attr="data-reply-id=${reply.no}" th:id="'reply-content-' + ${reply.no}" th:text="${reply.content}">
+                Reply Content</p>
+            <button th:onclick="'modifyReply(' + ${reply.no} + ')'" type="button">수정!</button>
+            <button th:onclick="'deleteReply(' + ${reply.no} + ')'" type="button">삭제!</button>
+        </div>
+
+        <form method="post" th:action="@{/reply/create/{no}(no=${post.no})}">
+            <textarea name="content"></textarea>
+            <button type="submit">Reply</button>
+        </form>
+    </div>
+</div>
+<div th:attr="hx-get='/getpost/'+ ${nextPageNumber}, hx-swap='afterend', hx-trigger='revealed'"
+     th:if="${nextPageNumber} != null"></div>

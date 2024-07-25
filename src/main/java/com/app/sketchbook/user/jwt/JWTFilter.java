@@ -1,10 +1,7 @@
 package com.app.sketchbook.user.jwt;
 
 import com.app.sketchbook.user.DTO.CustomOAuth2User;
-import com.app.sketchbook.user.DTO.NaverResponse;
-import com.app.sketchbook.user.DTO.OAuth2Response;
 import com.app.sketchbook.user.DTO.UserDTO;
-import com.app.sketchbook.user.entity.SketchUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,9 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -44,6 +38,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 if (cookie.getName().equals("Authorization")) {
 
                     authorization = cookie.getValue();
+                    break;
                 }
             }
         }

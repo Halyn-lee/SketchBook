@@ -1,14 +1,20 @@
 package com.app.sketchbook.post.entity;
 
+import com.app.sketchbook.reply.entity.Reply;
+import com.app.sketchbook.user.entity.SketchUser;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Where(clause = "is_deleted = false")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +27,17 @@ public class Post {
 
     private LocalDateTime modified_date;
 
+    @Column(columnDefinition = "number default 0")
     private boolean is_deleted;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> image_list = new ArrayList<>();
 
-//    @ManyToOne
-//    private Member id; 회원기능 연동 후 추가할 것
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OrderBy("no asc") // 댓글 정렬
+    private List<Reply> reply_list;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private SketchUser sketchUser;
 }
