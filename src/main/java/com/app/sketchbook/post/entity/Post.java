@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -40,4 +41,7 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "id")
     private SketchUser sketchUser;
+
+    @ManyToMany
+    private Set<SketchUser> like;
 }

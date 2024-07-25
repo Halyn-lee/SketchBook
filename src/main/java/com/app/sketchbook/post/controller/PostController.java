@@ -5,9 +5,13 @@ import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.service.PostService;
+import com.app.sketchbook.user.DTO.CustomOAuth2User;
+import com.app.sketchbook.user.entity.SketchUser;
+import com.app.sketchbook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -23,6 +28,7 @@ public class PostController {
 
     private final PostService postService;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/main")
     public String main(Model model) {
@@ -40,9 +46,10 @@ public class PostController {
     }
 
     @PostMapping("/post/create")
-    public String create_post(Post post, @RequestParam("imageData") String imageDataList) {
+    public String create_post(Post post, @RequestParam("imageData") String imageDataList/*, Principal principal*/) {
         // Post 엔티티에 저장
-        Post savedPost = postService.create_post(post);
+        SketchUser user = userRepository.getReferenceById(1L); // 임시
+        Post savedPost = postService.create_post(post, user);
 
         List<Image> images = new ArrayList<>();
         String[] imageDataArray = imageDataList.split("base64,");
@@ -155,5 +162,19 @@ public class PostController {
         } else {
             return ResponseEntity.status(400).body("{\"success\": false}");
         }
+    }
+
+    @PostMapping("/post/like/{no}")
+    public ResponseEntity<?> like_post(@PathVariable Long no, SketchUser user) {
+        Post post = postService.getPost(no.intValue());
+        // 세션의 username 가져와서 유저엔티티에서 사용자 get
+        // CustomOAuth2User user = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user = userRepository.getReferenceById(1L); //임시
+
+        if (no != null) {
+            postService.like_post(no, user);
+            return ResponseEntity.ok().body("{\"success\": true}");
+        }
+        return ResponseEntity.status(400).body("{\"success\": false}");
     }
 }
