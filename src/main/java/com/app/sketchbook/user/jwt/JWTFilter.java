@@ -30,14 +30,19 @@ public class JWTFilter extends OncePerRequestFilter {
         String authorization = null;
         Cookie[] cookies = request.getCookies();
 
-        if (cookies != null) {
+        // 쿠키가 없으면 getCookies가 null을 반환하기 때문에 null 체크 필요
+        if(cookies != null){
             for (Cookie cookie : cookies) {
-                if ("Authorization".equals(cookie.getName())) {
+
+                System.out.println(cookie.getName());
+                if (cookie.getName().equals("Authorization")) {
+
                     authorization = cookie.getValue();
                     break;
                 }
             }
         }
+
 
         //Authorization 헤더 검증
         if (authorization == null) {
