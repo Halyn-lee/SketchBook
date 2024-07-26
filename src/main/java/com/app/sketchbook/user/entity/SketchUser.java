@@ -39,4 +39,5 @@ public class SketchUser {
 //
     private String password;
 
+    private boolean profile_public = true;
 }
