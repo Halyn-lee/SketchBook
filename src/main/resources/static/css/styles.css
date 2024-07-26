@@ -1,0 +1,116 @@
+/* Reset some basic elements */
+body, h1, p, a {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fffaf0; /* Soft warm background color */
+    color: #5a4636; /* Darker brown for text */
+    margin: 0;
+    padding: 0;
+}
+
+.header-container {
+    background-color: #f7e7d1; /* Warm light brown */
+    padding: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5c29f;
+}
+
+.header-container h1 {
+    margin: 0;
+    color: #5a4636; /* Darker brown for text */
+}
+
+.header-container nav a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: #d88c46; /* Warm orange */
+    font-weight: bold;
+}
+
+.header-container nav a:hover {
+    color: #b87232; /* Darker warm orange */
+}
+
+.content {
+    padding: 2em;
+    background-color: #fffaf0; /* Matching the body background */
+    min-height: 70vh;
+}
+
+.footer-container {
+    background-color: #f7e7d1; /* Warm light brown */
+    padding: 1em;
+    text-align: center;
+    border-top: 1px solid #e5c29f;
+    color: #5a4636; /* Darker brown for text */
+}
+
+.alert {
+    color: #8a5a44; /* Softer brown */
+    background-color: #f8d7da;
+    padding: 1em;
+    margin-bottom: 1em;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #5a4636; /* Darker brown for text */
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #f7f3e9; /* Very light warm brown */
+}
+
+.btn {
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #d88c46; /* Warm orange */
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #b87232; /* Darker warm orange */
+}
+
+a {
+    color: #d88c46; /* Warm orange */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #b87232; /* Darker warm orange */
+}
+
+h1 {
+    margin-bottom: 1em;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+input, button {
+    outline: none;
+}
