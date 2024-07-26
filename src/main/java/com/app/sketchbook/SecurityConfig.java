@@ -1,10 +1,7 @@
 package com.app.sketchbook;
 
 
-import com.app.sketchbook.user.service.CustomLoginFailHandler;
-import com.app.sketchbook.user.service.CustomLoginSuccessHandler;
-import com.app.sketchbook.user.service.CustomOAuth2LoginSuccessHandler;
-import com.app.sketchbook.user.service.OAuth2UserService;
+import com.app.sketchbook.user.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +26,8 @@ public class SecurityConfig {
 
     private final OAuth2UserService oAuth2UserService;
     private final CustomLoginSuccessHandler customLoginSuccessHandler;
+    private final UserService userService;
+    private final ConnectionLogService connectionLogService;
 
 
     @Bean
@@ -46,7 +45,7 @@ public class SecurityConfig {
         http
                 .oauth2Login((oauth2) -> oauth2
                         .loginPage("/login")
-                        .successHandler(new CustomOAuth2LoginSuccessHandler())
+                        .successHandler(new CustomOAuth2LoginSuccessHandler(connectionLogService, userService))
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(oAuth2UserService)));
         http

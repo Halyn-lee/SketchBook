@@ -11,15 +11,19 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Autowired
-    private ConnectionLogService connectionLogService;
-    @Autowired
-    private UserService userService;
+    private final ConnectionLogService connectionLogService;
+    private final UserService userService;
+
+    public CustomOAuth2LoginSuccessHandler(ConnectionLogService connectionLogService, UserService userService){
+        this.connectionLogService = connectionLogService;
+        this.userService = userService;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
