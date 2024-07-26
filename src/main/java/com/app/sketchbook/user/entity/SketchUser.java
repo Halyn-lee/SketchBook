@@ -45,5 +45,5 @@ public class SketchUser {
 
     private Boolean enabled;
 
-    private Boolean update_pw;
+    private Boolean update_pw=false;
 }
