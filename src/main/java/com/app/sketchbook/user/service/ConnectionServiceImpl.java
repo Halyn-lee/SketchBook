@@ -1,5 +1,6 @@
 package com.app.sketchbook.user.service;
 
+import com.app.sketchbook.user.DTO.ConnectionLogDTO;
 import com.app.sketchbook.user.entity.ConnectionLog;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.ConnectionLogRepository;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.InetAddress;
 import java.net.http.HttpRequest;
 import java.util.Date;
+import java.util.List;
 
 @Log
 @Service
@@ -36,6 +38,11 @@ public class ConnectionServiceImpl implements ConnectionLogService{
         connectionLog.setRegion(result);
 
         connectionLogRepository.save(connectionLog);
+    }
+
+    @Override
+    public List<ConnectionLogDTO> findAllLogsByUser(SketchUser user) {
+        return connectionLogRepository.findAllByUser(user);
     }
 
     private String getBrowser(String agent){
