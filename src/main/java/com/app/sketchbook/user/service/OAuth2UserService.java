@@ -23,12 +23,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
     private CustomOAuth2User returnOauthUser;
+
     //Social
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println("oauth2 attribute : "+oAuth2User.getAttributes());
+        System.out.println("oauth2 attribute : " + oAuth2User.getAttributes());
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
@@ -46,28 +47,30 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         String social = oAuth2Response.getProvider();
 
         //DB저장
-        SketchUser existData = userRepository.findByEmailAndSocial(email, social);
+        //SketchUser existData = userRepository.findByEmailAndSocial(email, social);
+        SketchUser existData = userRepository.findByEmail(email);
         log.info(existData);
         String role = "ROLE_USER";
-        if (existData == null) {
 
-            SketchUser sketchUser = new SketchUser();
-            sketchUser.setUsername(oAuth2Response.getName());
-            sketchUser.setEmail(oAuth2Response.getEmail());
-            sketchUser.setRole(role);
-            sketchUser.setPassword(null);
-            sketchUser.setSocial(oAuth2Response.getProvider());
+            if (existData == null) {
 
-            userRepository.save(sketchUser);
+                SketchUser sketchUser = new SketchUser();
+                sketchUser.setUsername(oAuth2Response.getName());
+                sketchUser.setEmail(oAuth2Response.getEmail());
+                sketchUser.setRole(role);
+                sketchUser.setPassword(null);
+                sketchUser.setSocial(oAuth2Response.getProvider());
 
-//            UserDTO userDTO = new UserDTO();
-//            userDTO.setUsername(username);
-//            userDTO.setName(oAuth2Response.getName());
-//            userDTO.setRole("ROLE_USER");
-//
-        }
+                userRepository.save(sketchUser);
 
-        returnOauthUser = new CustomOAuth2User(oAuth2Response, role);
-        return returnOauthUser;
+            }
+            else if(existData!=null && existData.getSocial()==null){
+                throw new OAuth2AuthenticationException("User already exists");
+            }
+
+            returnOauthUser = new CustomOAuth2User(oAuth2Response, role);
+            return returnOauthUser;
+
+
     }
 }
