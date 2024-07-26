@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Success</title>
+</head>
+<body>
+<h1>Registration Successful</h1>
+<p>Please check your email for the verification code.</p>
+<a th:href = "@{/verify(email=${email})}">인증 하기</a>
+</form>
+</body>
+</html>

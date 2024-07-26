@@ -1,6 +1,6 @@
 package com.app.sketchbook.chat.service;
 
-import com.app.sketchbook.chat.dto.ChatLog;
+import com.app.sketchbook.chat.entity.ChatLog;
 import com.app.sketchbook.chat.dto.ReceivedChat;
 
 import java.util.List;

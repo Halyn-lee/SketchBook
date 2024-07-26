@@ -5,6 +5,7 @@ import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import com.app.sketchbook.user.DTO.CustomOAuth2User;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.UserRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.io.OutputStream;
 import java.security.Principal;
 import java.util.*;
 
+@Log4j2
 @Controller
 @RequiredArgsConstructor
 public class PostController {
