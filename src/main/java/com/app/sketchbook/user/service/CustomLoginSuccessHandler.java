@@ -15,6 +15,7 @@ import java.io.IOException;
 @Component
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final UserService userService;
+    private final ConnectionLogService connectionLogService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -22,6 +23,10 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         String isFindUser = authentication.getName();
         SketchUser user = this.userService.findUser(isFindUser);
+
+        // 접속 로그 기록
+        connectionLogService.insertConnection(request, user);
+
         if(user.getUpdate_pw()) {
             request.getSession().setAttribute("username", authentication.getName());
             response.sendRedirect("/updatepassword");

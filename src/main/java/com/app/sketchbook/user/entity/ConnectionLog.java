@@ -19,8 +19,6 @@ public class ConnectionLog {
     @JoinColumn(referencedColumnName = "id")
     private SketchUser user;
 
-    @Column(columnDefinition = "NUMBER(1)")
-    private boolean success;
     private Date connectedTime;
     private String ip;
     private String region;

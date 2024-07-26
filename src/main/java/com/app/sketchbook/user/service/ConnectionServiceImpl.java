@@ -1,6 +1,7 @@
 package com.app.sketchbook.user.service;
 
 import com.app.sketchbook.user.entity.ConnectionLog;
+import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.ConnectionLogRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,10 @@ public class ConnectionServiceImpl implements ConnectionLogService{
     private final ConnectionLogRepository connectionLogRepository;
 
     @Override
-    public void insertConnection(HttpServletRequest request, boolean success) {
+    public void insertConnection(HttpServletRequest request, SketchUser user) {
         var connectionLog = new ConnectionLog();
 
-        connectionLog.setSuccess(success);
+        connectionLog.setUser(user);
         connectionLog.setConnectedTime(new Date());
         connectionLog.setBrowser(getBrowser(request.getHeader("User-Agent")));
         String ip = getIp(request);
@@ -34,7 +35,7 @@ public class ConnectionServiceImpl implements ConnectionLogService{
 
         connectionLog.setRegion(result);
 
-        //connectionLogRepository.save(connectionLog);
+        connectionLogRepository.save(connectionLog);
     }
 
     private String getBrowser(String agent){
