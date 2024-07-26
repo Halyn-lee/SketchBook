@@ -15,9 +15,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,8 @@ public class PostService {
     private final ReplyRepository replyRepository;
     private final ReplyService replyService;
 
-    public Post create_post(Post post) {
+    public Post create_post(Post post, SketchUser user/*Principal principal*/) {
+        post.setSketchUser(user);
         post.setCreated_date(LocalDateTime.now());
         return postRepository.save(post);
     }
@@ -71,5 +74,19 @@ public class PostService {
         post.setContent(content);
         post.setModified_date(LocalDateTime.now());
         return postRepository.save(post);
+    }
+
+    public void like_post(Long no, SketchUser user) { // 임시
+        Post post = postRepository.getReferenceById(no.intValue()); // 범위에 대한 예외처리 필요
+        post.getLike().add(user);
+        postRepository.save(post);
+    }
+
+    public void cancel_post_like(Long no, SketchUser user) {
+        Post post = postRepository.getReferenceById(no.intValue());
+        Set<SketchUser> likedUser = post.getLike();
+        likedUser.remove(user);
+        post.setLike(likedUser);
+        postRepository.save(post);
     }
 }

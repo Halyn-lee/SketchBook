@@ -1,12 +1,14 @@
 package com.app.sketchbook.reply.entity;
 
 import com.app.sketchbook.post.entity.Post;
+import com.app.sketchbook.user.entity.SketchUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,4 +31,7 @@ public class Reply {
 
     @ManyToOne
     private Post post;
+
+    @ManyToMany
+    private Set<SketchUser> like;
 }
