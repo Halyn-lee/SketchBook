@@ -46,4 +46,6 @@ public class SketchUser {
     private Boolean enabled;
 
     private Boolean update_pw=false;
+
+    private boolean profile_public = true;
 }
