@@ -1,5 +1,6 @@
 package com.app.sketchbook;
 
+import com.app.sketchbook.user.jwt.CustomFailureHandler;
 import com.app.sketchbook.user.jwt.CustomSuccessHandler;
 import com.app.sketchbook.user.jwt.JWTFilter;
 import com.app.sketchbook.user.jwt.JWTUtil;
@@ -21,6 +22,7 @@ public class SecurityConfig {
 
     private final OAuth2UserService oAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final CustomFailureHandler customFailureHandler;
     private final JWTUtil jwtUtil;
 
     @Bean
@@ -45,6 +47,7 @@ public class SecurityConfig {
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(oAuth2UserService))
                         .successHandler(customSuccessHandler)
+                        .failureHandler(customFailureHandler)
                 );
 
         http

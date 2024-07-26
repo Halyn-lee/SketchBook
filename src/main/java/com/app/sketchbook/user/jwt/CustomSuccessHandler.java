@@ -1,11 +1,13 @@
 package com.app.sketchbook.user.jwt;
 
 import com.app.sketchbook.user.DTO.CustomOAuth2User;
+import com.app.sketchbook.user.service.ConnectionLogService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -19,6 +21,8 @@ import java.util.Iterator;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
+    @Autowired
+    private ConnectionLogService connectionLogService;
 
     public CustomSuccessHandler(JWTUtil jwtUtil) {
 
