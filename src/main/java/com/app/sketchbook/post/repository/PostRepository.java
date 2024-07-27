@@ -7,7 +7,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    Slice<Post> findBySketchUser(SketchUser sketchUser, Pageable pageable);
+    Slice<Post> findBySketchUserId(Long user_id, Pageable pageable);
+    Slice<Post> findBySketchUserIn(Set<SketchUser> sketchUsers, Pageable pageable);
 }

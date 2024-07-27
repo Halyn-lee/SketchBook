@@ -1,5 +1,8 @@
 package com.app.sketchbook.post.service;
 
+import com.app.sketchbook.friend.entity.Friend;
+import com.app.sketchbook.friend.entity.FriendStatus;
+import com.app.sketchbook.friend.repository.FriendRepository;
 import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.ImageRepository;
@@ -9,28 +12,29 @@ import com.app.sketchbook.reply.repository.ReplyRepository;
 import com.app.sketchbook.reply.service.ReplyService;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.UserRepository;
+import com.app.sketchbook.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
-    private final UserRepository userRepository;
     private final ReplyRepository replyRepository;
+    private final FriendRepository friendRepository;
     private final ReplyService replyService;
+    private final UserService userService;
 
-    public Post create_post(Post post, SketchUser user/*Principal principal*/) {
+    public Post create_post(Post post, SketchUser user) {
         post.setSketchUser(user);
         post.setCreated_date(LocalDateTime.now());
         return postRepository.save(post);
@@ -49,12 +53,37 @@ public class PostService {
         }
     }
 
+    // 마이 페이지 - 내 게시물만 출력
     public Slice<Post> fetchPostsByPage(int pageNumber) {
-//        CustomOAuth2User user = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        SketchUser userEntity = userRepository.findByUsername(user.getUsername());
-        SketchUser userEntity = userRepository.getReferenceById(1L); // 임시
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         PageRequest pageRequest = PageRequest.of(pageNumber, 3);
-        Slice<Post> posts = postRepository.findBySketchUser(userEntity, pageRequest);
+        Slice<Post> posts = postRepository.findBySketchUserId(user.getId(), pageRequest);
+        return posts;
+    }
+
+    // 메인 페이지 - 내 게시물 및 친구 게시물 출력
+    public Slice<Post> fetchPostsByPageAndFriendStatus(int pageNumber) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+
+        // 로그인한 사용자와 친구인 사용자들 조회
+        List<Friend> friendsFrom = friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
+
+        Set<SketchUser> friendUsers = new HashSet<>();
+        for (Friend friend : friendsFrom) {
+            if (friend.getFrom().equals(user)) {
+                friendUsers.add(friend.getTo());
+            } else if (friend.getTo().equals(user)) {
+                friendUsers.add(friend.getFrom());
+            }
+        }
+
+        // 로그인한 사용자 자신의 게시물 추가
+        friendUsers.add(user);
+
+        // 로그인한 사용자와 친구인 사용자들의 게시물 조회
+        PageRequest pageRequest = PageRequest.of(pageNumber, 3);
+        Slice<Post> posts = postRepository.findBySketchUserIn(friendUsers, pageRequest);
+
         return posts;
     }
 

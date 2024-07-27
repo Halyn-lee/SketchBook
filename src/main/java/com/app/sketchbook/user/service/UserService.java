@@ -1,5 +1,6 @@
 package com.app.sketchbook.user.service;
 
+import com.app.sketchbook.user.DTO.CustomOAuth2User;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -8,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -143,5 +147,20 @@ public class UserService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public SketchUser principalUser(Authentication authentication){
+        Object principal = authentication.getPrincipal();
+        String email =null;
+        if(principal instanceof UserDetails) {
+            UserDetails user = (UserDetails) principal;
+            email = user.getUsername();
+        } else if(principal instanceof OAuth2User){
+            OAuth2User userprin =(OAuth2User) principal;
+            CustomOAuth2User user = (CustomOAuth2User) userprin;
+            email =user.getEmail();
+        }
+        return userRepository.findByEmail(email);
     }
 }

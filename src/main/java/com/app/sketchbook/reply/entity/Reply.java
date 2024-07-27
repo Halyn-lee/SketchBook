@@ -32,6 +32,10 @@ public class Reply {
     @ManyToOne
     private Post post;
 
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private SketchUser user;
+
     @ManyToMany
     private Set<SketchUser> like;
 }
