@@ -16,18 +16,24 @@
     <link href="/css/post.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+
 <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
 <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
 <a th:href="@{/join}">회원가입</a>
 
 <span class="border-bottom py-2" th:text="${user.username}"></span>
 
-<h1 class="btn">무슨 생각 하세요?</h1>
+<div class="card">
+    <div class="card-body text-center">
+        <div class="btn">무슨 생각 하세요?</div>
+    </div>
+</div>
 
 <!-- 첫 번째 Modal -->
 <div class="modal" id="modal1">
     <!-- 첫 번째 모달 내용 -->
     <div class="modal-content">
+        <span class="close" id="close1">&times;</span>
         <form action="/post/create" method="post">
             <textarea name="content"></textarea>
             <div id="attachedImagesContainer"></div>
@@ -35,25 +41,38 @@
             <input class="btn btn-primary my-2" type="submit" value="저장!">
         </form>
         <button class="btn2">🖌</button>
-        <span class="close" id="close1">&times;</span>
     </div>
 </div>
 
-<!-- 두 번째 Modal -->
+<!-- 그림판 Modal -->
 <div class="modal" id="modal2">
-    <!-- 두 번째 모달 내용 -->
+    <!-- 그림판 모달 내용 -->
     <div class="modal-content">
-        <button id="black">검</button>
-        <button id="red">빨</button>
-        <button id="blue">파</button>
-        <button id="erase">지우개</button>
-        <button id="attach">그림 첨부</button>
-        <br>
-        그림판 기능 추후 업데이트 할 것임
+
         <span class="close" id="close2">&times;</span>
 
+        <!-- 색상 선택기 -->
+        <input type="color" id="color-picker" value="#000000">
+
+        <!-- 브러시 크기 조절 -->
+        <label for="brush-size">브러시 크기:</label>
+        <input type="range" id="brush-size" min="1" max="50" value="5">
+
+        <!-- 지우개 크기 조절 -->
+        <label for="eraser-size">지우개 크기:</label>
+        <input type="range" id="eraser-size" min="5" max="100" value="50">
+
+        <button id="erase">지우개</button>
+        <input id="filereader" type="file" accept="image/*" style="display:none;" />
+        <button id="add-image">이미지 추가</button>
+        <button id="select-element">선택</button>
+        <button id="delete-canvas-element">선택 요소 삭제</button>
+        <br>
+
         <!-- 그림판 영역 -->
-        <canvas id="canvas" style="border: 2px dashed black;"></canvas>
+        <canvas id="canvas" width="800" height="600" style="border: 2px dashed black;"></canvas>
+
+        <button id="attach">그림 첨부</button>
     </div>
 </div>
 
@@ -61,6 +80,7 @@
 <div class="modal modal-container" id="postModalContainer">
     <!-- 게시물 수정 모달 내용 -->
     <div class="modal-content" id="postModalBody">
+        <span class="close" id="postModalClose">&times;</span>
         <form id="modForm" method="post">
             <textarea name="content"></textarea>
             <div class="post-image-list" id="postAttachedImagesContainer"></div>
@@ -69,7 +89,6 @@
         </form>
         <button id="postAddBtn">그림 추가</button>
         <button id="postDelBtn">삭제</button>
-        <span class="close" id="postModalClose">&times;</span>
     </div>
 </div>
 

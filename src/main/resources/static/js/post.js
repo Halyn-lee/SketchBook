@@ -1,6 +1,7 @@
 // HTML 문서가 완전히 로드될 때까지 기다린 후 코드를 실행
 document.addEventListener("DOMContentLoaded", function () {
     let canvas;
+    let canvasIsModify = document.getElementById("canvas").dataset.ismodify === "true"; // 수정용 여부 확인
 
     // modal1 : 게시글 작성 모달
     let modal1 = document.getElementById("modal1");
@@ -21,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let span2 = document.getElementById("close2");
 
     btn2.onclick = function () {
-        if (canvas == null) {
-            console.log("init canvas")
+        if (!canvas) {
+            console.log("init canvas");
             canvasInit();
         }
         modal2.style.display = "block";
@@ -33,43 +34,39 @@ document.addEventListener("DOMContentLoaded", function () {
         modal2.style.display = "none";
     }
 
-    // false면 새 게시글, true면 수정용
-    let canvasIsModify = document.getElementById("canvas").dataset.ismodify === "false";
-
     function canvasInit() {
         canvas = new fabric.Canvas("canvas", {
-            width: 200,
-            height: 200,
-            isDrawingMode: true, // 그리기 모드 활성화
-            backgroundColor: "white", // 캔버스 배경색을 흰색으로 설정
+            width: 800,
+            height: 600,
+            isDrawingMode: true,
+            backgroundColor: "white",
         });
 
         // 기본 그리기 브러시 너비와 색상을 검정으로 설정
         canvas.freeDrawingBrush.width = 5;
         canvas.freeDrawingBrush.color = "black";
 
-        // "검정" 버튼 클릭에 대한 이벤트 리스너
-        document.getElementById("black").addEventListener("click", () => {
-            canvas.freeDrawingBrush.width = 5;
-            canvas.freeDrawingBrush.color = "black";
-        });
-
-        // "빨강" 버튼 클릭에 대한 이벤트 리스너
-        document.getElementById("red").addEventListener("click", () => {
-            canvas.freeDrawingBrush.width = 5;
-            canvas.freeDrawingBrush.color = "red";
-        });
-
-        // "파랑" 버튼 클릭에 대한 이벤트 리스너
-        document.getElementById("blue").addEventListener("click", () => {
-            canvas.freeDrawingBrush.width = 5;
-            canvas.freeDrawingBrush.color = "blue";
-        });
-
-        // "지우개" 버튼 클릭에 대한 이벤트 리스너
+        // 버튼 클릭 이벤트 리스너
+        
+        // 지우개
         document.getElementById("erase").addEventListener("click", () => {
-            canvas.freeDrawingBrush.width = 50;
+            canvas.freeDrawingBrush.width = parseInt(document.getElementById('eraser-size').value, 10);
             canvas.freeDrawingBrush.color = canvas.backgroundColor;
+        });
+
+        // 브러시 크기 조절
+        document.getElementById('brush-size').addEventListener('input', (e) => {
+            canvas.freeDrawingBrush.width = parseInt(e.target.value, 10);
+        });
+
+        // 지우개 크기 조절
+        document.getElementById('eraser-size').addEventListener('input', (e) => {
+            canvas.freeDrawingBrush.width = parseInt(e.target.value, 10);
+        });
+
+        // 색상 선택기
+        document.getElementById('color-picker').addEventListener('input', (e) => {
+            canvas.freeDrawingBrush.color = e.target.value;
         });
 
         // "첨부" 버튼 클릭에 대한 이벤트 리스너
@@ -83,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let attachedImagesContainer;
             let attachedImage = document.createElement('img');
             attachedImage.src = dataURL;
-            attachedImage.style.maxWidth = '100%';
+            attachedImage.style.maxWidth = '40%';
             attachedImage.style.height = 'auto';
 
             if (!canvasIsModify) {
@@ -104,7 +101,86 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(canvas);
             e.target.removeEventListener("click");
         });
+
+        // "이미지 추가" 버튼 클릭 이벤트 리스너
+        document.getElementById("add-image").addEventListener("click", () => {
+            document.getElementById("filereader").click(); // 파일 선택기 열기
+        });
+
+        // 파일 선택기 변경 이벤트 리스너
+        document.getElementById("filereader").addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const fabricImage = new fabric.Image(img, {
+                            left: 100,
+                            top: 100,
+                            scaleX: 1,
+                            scaleY: 1
+                        });
+
+                        canvas.add(fabricImage);
+                        canvas.setActiveObject(fabricImage);
+                        canvas.renderAll();
+
+                        // 사이즈 조정용
+                        fabricImage.setControlsVisibility({
+                            mt: true, // middle top
+                            mb: true, // middle bottom
+                            ml: true, // middle left
+                            mr: true, // middle right
+                            bl: true, // bottom left
+                            br: true, // bottom right
+                            tr: true, // top right
+                            tl: true  // top left
+                        });
+
+                        // 크기 조절하는 동안에는 브러쉬모드 off
+                        canvas.isDrawingMode = false;
+                        
+                        canvas.renderAll();
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('color-picker').addEventListener('click', () => {
+            canvas.selection = false; // 선택 모드 비활성화
+            canvas.isDrawingMode = true;
+            document.getElementById('color-picker').enabled = true;
+        });
+
+        // 요소 선택 모드 버튼 클릭
+        document.getElementById('select-element').addEventListener('click', () => {
+            canvas.selection = true; // 선택 모드 활성화
+            canvas.isDrawingMode = false; // 드로잉 모드 비활성화
+            document.getElementById('color-picker').disabled = false; // 선택 모드일 때 색상 선택기 활성화
+        });
+
+        // 삭제 버튼 클릭 시 선택된 요소 삭제
+        document.getElementById("delete-canvas-element").addEventListener("click", () => {
+            // 선택된 모든 개체 get
+            const activeObjects = canvas.getActiveObjects();
+
+            if (activeObjects.length > 0) {
+                activeObjects.forEach(obj => {
+                    canvas.remove(obj);
+                });
+
+                // 선택된 객체 모두 삭제한 뒤 렌더링
+                canvas.discardActiveObject();
+                canvas.renderAll();
+            } else {
+                alert("삭제할 요소가 선택되지 않았어요.");
+            }
+        });
     }
+
 
     // 게시물 수정 버튼 이벤트 리스너
     document.body.addEventListener('click', function (e) {
