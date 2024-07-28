@@ -1,5 +1,6 @@
 <div class="card text-center mb-5" th:each="post : ${postList}" th:id="'post-container-' + ${post.no}">
     <div class="card-header">
+
         프사 / <span th:text="${post.sketchUser.username}"></span>
 
         <button sec:authorize="isAuthenticated()"
@@ -78,5 +79,5 @@
         </form>
     </div>
 </div>
-<div th:attr="hx-get='/getpost/'+ ${nextPageNumber}, hx-swap='afterend', hx-trigger='revealed'"
+<div th:attr="hx-get='/getmypost/'+ ${nextPageNumber}, hx-swap='afterend', hx-trigger='revealed'"
      th:if="${nextPageNumber} != null"></div>

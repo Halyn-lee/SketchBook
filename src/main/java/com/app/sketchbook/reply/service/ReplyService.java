@@ -1,10 +1,13 @@
 package com.app.sketchbook.reply.service;
 
+import com.app.sketchbook.post.repository.PostRepository;
 import com.app.sketchbook.reply.entity.Reply;
 import com.app.sketchbook.reply.repository.ReplyRepository;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.user.entity.SketchUser;
+import com.app.sketchbook.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,12 +18,15 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ReplyService {
     private final ReplyRepository replyRepository;
+    private final UserService userService;
 
     public void reply_create(Post post, String content) {
         Reply reply = new Reply();
+        SketchUser id = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         reply.setContent(content);
         reply.setCreated_date(LocalDateTime.now());
         reply.setPost(post);
+        reply.setUser(id);
         replyRepository.save(reply);
     }
 

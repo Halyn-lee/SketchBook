@@ -33,7 +33,7 @@
 <div class="modal" id="modal1">
     <!-- 첫 번째 모달 내용 -->
     <div class="modal-content">
-    <span class="close" id="close1">&times;</span>
+        <span class="close" id="close1">&times;</span>
         <form action="/post/create" method="post">
             <textarea name="content"></textarea>
             <div id="attachedImagesContainer"></div>
@@ -79,8 +79,8 @@
 <!--게시물 수정 Modal -->
 <div class="modal modal-container" id="postModalContainer">
     <!-- 게시물 수정 모달 내용 -->
-    <span class="close" id="postModalClose">&times;</span>
     <div class="modal-content" id="postModalBody">
+        <span class="close" id="postModalClose">&times;</span>
         <form id="modForm" method="post">
             <textarea name="content"></textarea>
             <div class="post-image-list" id="postAttachedImagesContainer"></div>
@@ -100,7 +100,7 @@
         <div class="col-3"></div>
         <div class="col-6">
             <div id="postContainer" class="py-3">
-                <div hx-get="/getpost/0" hx-swap="outerHTML" hx-trigger="revealed"></div>
+                <div hx-get="/getmypost/0" hx-swap="outerHTML" hx-trigger="revealed"></div>
             </div>
         </div>
         <div class="col-3"></div>

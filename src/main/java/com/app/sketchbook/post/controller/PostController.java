@@ -5,15 +5,13 @@ import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.service.PostService;
-import jakarta.servlet.http.HttpSession;
-import com.app.sketchbook.user.DTO.CustomOAuth2User;
 import com.app.sketchbook.user.entity.SketchUser;
-import com.app.sketchbook.user.repository.UserRepository;
+import com.app.sketchbook.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.security.Principal;
 import java.util.*;
 
 @Log4j2
@@ -31,27 +28,58 @@ public class PostController {
 
     private final PostService postService;
     private final ImageRepository imageRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/main")
     public String main(Model model) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        model.addAttribute("user", user);
         return "main";
     }
 
+    @GetMapping("/mypage")
+    public String my(Model model) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        model.addAttribute("user", user);
+
+        return "my";
+    }
+
+    // 메인 페이지 게시글 로드 요청 경로
     @GetMapping("/getpost/{pageNumber}")
-    public String post_list(Model model, @PathVariable int pageNumber) {
+    public String main_post_list(Model model, @PathVariable int pageNumber) {
+        Slice<Post> posts = postService.fetchPostsByPageAndFriendStatus(pageNumber);
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+
+        if (posts.hasNext()) {
+            model.addAttribute("nextPageNumber", pageNumber + 1);
+        }
+
+        model.addAttribute("postList", posts.getContent());
+        model.addAttribute("user", user);
+
+        return "post";
+    }
+
+    // 마이 페이지 게시글 로드 요청 경로
+    @GetMapping("/getmypost/{pageNumber}")
+    public String my_post_list(Model model, @PathVariable int pageNumber) {
         Slice<Post> posts = postService.fetchPostsByPage(pageNumber);
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+
         if (posts.hasNext()) {
             model.addAttribute("nextPageNumber", pageNumber + 1);
         }
         model.addAttribute("postList", posts.getContent());
-        return "post";
+        model.addAttribute("user", user);
+
+        return "mypost";
     }
 
     @PostMapping("/post/create")
-    public String create_post(Post post, @RequestParam("imageData") String imageDataList/*, Principal principal*/) {
+    public String create_post(Post post, @RequestParam("imageData") String imageDataList) {
         // Post 엔티티에 저장
-        SketchUser user = userRepository.getReferenceById(1L); // 임시
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         Post savedPost = postService.create_post(post, user);
 
         List<Image> images = new ArrayList<>();
@@ -168,11 +196,8 @@ public class PostController {
     }
 
     @PostMapping("/post/like/{no}")
-    public ResponseEntity<?> like_post(@PathVariable Long no, SketchUser user) {
-        Post post = postService.getPost(no.intValue());
-        // 세션의 username 가져와서 유저엔티티에서 사용자 get
-        // CustomOAuth2User user = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        user = userRepository.getReferenceById(2L); //임시
+    public ResponseEntity<?> like_post(@PathVariable Long no) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
 
         if (no != null) {
             postService.like_post(no, user);
@@ -182,8 +207,9 @@ public class PostController {
     }
 
     @PostMapping("/post/cancel-like/{no}")
-    public ResponseEntity<?> cancel_like_post(@PathVariable Long no, SketchUser user) {
-        user = userRepository.getReferenceById(1L); // post/cancel-like/1 요청시 1번 게시글 좋아요의 1번 사용자 좋아요를 취소
+    public ResponseEntity<?> cancel_like_post(@PathVariable Long no) {
+//      user = userRepository.getReferenceById(1L); // post/cancel-like/1 요청시 1번 게시글 좋아요의 1번 사용자 좋아요를 취소
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
 
         if (no != null) {
             postService.cancel_post_like(no, user);
