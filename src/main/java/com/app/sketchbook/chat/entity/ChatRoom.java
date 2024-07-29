@@ -1,22 +1,28 @@
 package com.app.sketchbook.chat.entity;
 
+import com.app.sketchbook.friend.entity.Friend;
 import com.app.sketchbook.user.entity.SketchUser;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 public class ChatRoom {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
-    private SketchUser requester;
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
-    private SketchUser receiver;
+    @OneToOne
+    @MapsId
+    @JoinColumn(referencedColumnName = "no")
+    private Friend friend;
+
+    private Date fromDisconnection;
+    private Date toDisconnection;
+    private Date lastSend;
 }

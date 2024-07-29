@@ -34,17 +34,19 @@ public class ChatNotifyServiceImpl implements ChatNotifyService {
     @Override
     public void notifyChat(String room, String sender) {
 
-        var users = chatRoomRepository.findById(Long.parseLong(room));
+        var foundRoom = chatRoomRepository.findById(Long.parseLong(room));
 
-        if(users.isEmpty()){
+        if(foundRoom.isEmpty()){
             return;
         }
 
         try{
-            if(users.get().getRequester().getId() == Integer.parseInt(sender)){
-                emitters.get(users.get().getReceiver().getId().toString()).send(SseEmitter.event().name("chat").data(room));
+            var friend = foundRoom.get().getFriend();
+
+            if(friend.getFrom().getId() == Integer.parseInt(sender)){
+                emitters.get(friend.getTo().getId().toString()).send(SseEmitter.event().name("chat").data(room));
             } else {
-                emitters.get(users.get().getReceiver().getId().toString()).send(SseEmitter.event().name("chat").data(room));
+                emitters.get(friend.getFrom().getId().toString()).send(SseEmitter.event().name("chat").data(room));
             }
         } catch (IOException e){
             log.info(e.getMessage());

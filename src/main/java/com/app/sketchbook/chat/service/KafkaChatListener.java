@@ -18,6 +18,7 @@ public class KafkaChatListener {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatLogService chatLogService;
+    private final ChatRoomService chatRoomService;
     private final ChatNotifyService chatNotifyService;
 
     @KafkaListener(topics = "chat", groupId = "chat-group", containerFactory = "kafkaChatContainerFactory", autoStartup = "false")
@@ -28,7 +29,7 @@ public class KafkaChatListener {
         messagingTemplate.convertAndSend("/topic/receive/"+chat.getRoom(), receivedChat);
 
         // 메시지 수신 시 알림 전송
-        // chatNotifyService.notifyChat(chat.getRoom(), chat.getUser());
+        // chatNotifyService.notifyChat(receivedChat.getRoom(), receivedChat.getUser());
 
         // MongoDB에 저장
         try{
@@ -40,5 +41,7 @@ public class KafkaChatListener {
             e.printStackTrace();
         }
 
+        // 채팅방 정보 갱신
+        chatRoomService.updateLastSend(Long.parseLong(receivedChat.getRoom()), receivedChat.getSendTime());
     }
 }
