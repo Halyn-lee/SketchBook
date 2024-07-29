@@ -3,6 +3,7 @@ package com.app.sketchbook.chat.controller;
 import com.app.sketchbook.chat.dto.Chat;
 import com.app.sketchbook.chat.entity.ChatLog;
 import com.app.sketchbook.chat.service.ChatLogService;
+import com.app.sketchbook.chat.service.ChatRoomService;
 import com.app.sketchbook.chat.service.KafkaChatProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -21,6 +22,7 @@ public class ChatController {
 
     private final KafkaChatProducer producer;
     private final ChatLogService chatLogService;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("/chat")
     public String chat() {
@@ -37,6 +39,11 @@ public class ChatController {
     public List<ChatLog> fetchChatLog(@DestinationVariable String room){
         // MongoDB에서 기록 얻어오기
         return chatLogService.getRecentLogs(room);
+    }
+
+    @MessageMapping("/disconnect/{room}")
+    public void updateDisconnectTime(String user, @DestinationVariable String room){
+        chatRoomService.updateDisconnectTime(Long.parseLong(room), Long.parseLong(user));
     }
 
 }

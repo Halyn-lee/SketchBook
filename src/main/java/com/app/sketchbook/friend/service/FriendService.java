@@ -227,4 +227,8 @@ public class FriendService {
         }
         return profileOwner;
     }
+
+    public Optional<Friend> findById(Long friendNo) {
+        return friendRepository.findById(friendNo);
+    }
 }

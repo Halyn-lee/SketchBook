@@ -9,6 +9,36 @@ const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/chat-socket'
 });
 
+$(function () {
+    $("form").on('submit', (e) => e.preventDefault());
+    $( "#disconnect" ).click(() => disconnect());
+    $( "#send" ).click(() => sendChat());
+    $("#chat").keypress((e) => {
+        if(e.code == "Enter"){
+            sendChat();
+        }
+    });
+
+    // 스크롤 최하단 체크
+    $("#content-frame").on("scroll", ()=>{
+        const frame = $("#content-frame")[0];
+        if(frame.scrollTop == frame.scrollHeight-frame.clientHeight){
+            isBottom = true;
+        } else {
+            isBottom = false;
+        }
+    });
+});
+
+$(window).on("load", function(){
+    stompClient.connectHeaders.room = $("#room").val();
+    connect();
+});
+
+$(window).on("beforeunload", function(){
+    disconnect();
+});
+
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
@@ -47,6 +77,10 @@ function connect() {
 }
 
 function disconnect() {
+    stompClient.publish({
+    destination: "/app/disconnect/"+$("#room").val(),
+    body: $("#user").val()
+    });
     stompClient.deactivate();
     setConnected(false);
     console.log("Disconnected");
@@ -77,7 +111,7 @@ function showMessage(message) {
         $("#content").append("<div class=\"w-100 d-flex justify-content-end mb-2\"><div class=\"bg-warning-subtle p-1 rounded\">" + message.content + "</div></div>");
     } else {
 
-        $("#content").append("<div class=\"w-100 d-flex justify-content-end mb-2\"><div class=\"bg-light p-1 rounded\">" + message.content + "</div></div>");
+        $("#content").append("<div class=\"w-100 d-flex justify-content-start mb-2\"><div class=\"bg-light p-1 rounded\">" + message.content + "</div></div>");
     }
 
     // 최하단일 경우 스크롤 고정
@@ -94,31 +128,3 @@ function showRecentMessage(history) {
     historyFetched = true;
 }
 
-$(function () {
-    $("form").on('submit', (e) => e.preventDefault());
-    $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendChat());
-    $("#chat").keypress((e) => {
-        if(e.code == "Enter"){
-            sendChat();
-        }
-    });
-
-    // 스크롤 최하단 체크
-    $("#content-frame").on("scroll", ()=>{
-        const frame = $("#content-frame")[0];
-        if(frame.scrollTop == frame.scrollHeight-frame.clientHeight){
-            isBottom = true;
-        } else {
-            isBottom = false;
-        }
-    });
-});
-
-$(window).on("load", function(){
-    connect();
-});
-
-$(window).on("beforeunload", function(){
-    disconnect();
-});

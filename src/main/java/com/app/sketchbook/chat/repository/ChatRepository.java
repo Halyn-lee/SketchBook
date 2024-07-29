@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ChatRepository extends MongoRepository<ChatLog,String> {
     public List<ChatLog> findAllByRoomAndSendTimeAfterOrderBySendTimeAsc(String room, Date startDate);
+    public ChatLog findByRoomOrderBySendTimeDesc(String room);
 }
