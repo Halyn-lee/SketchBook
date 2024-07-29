@@ -21,8 +21,7 @@ public class FriendService {
     private UserRepository userRepository;
 
     //친구 목록 가져오기
-    public List<Friend> getFriends(Long userId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public List<Friend> getFriends(SketchUser user) {
         return friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
     }
 
@@ -49,8 +48,7 @@ public class FriendService {
     }
 
     //친구 찾기
-    public List<SketchUser> searchFriends(Long userId, String keyword) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public List<SketchUser> searchFriends(SketchUser user, String keyword) {
         List<SketchUser> usersByUsername = userRepository.findByUsernameContainingIgnoreCase(keyword);
         List<SketchUser> usersByEmail = userRepository.findByEmailContainingIgnoreCase(keyword);
         Set<SketchUser> uniqueUsers = new HashSet<>(usersByUsername);
@@ -59,14 +57,13 @@ public class FriendService {
     }
 
     //사용자 검색
-    public Map<SketchUser, FriendStatus> searchAllUsers(Long userId, String keyword) {
+    public Map<SketchUser, FriendStatus> searchAllUsers(SketchUser user, String keyword) {
         List<SketchUser> usersByUsername = userRepository.findByUsernameContainingIgnoreCase(keyword);
         List<SketchUser> usersByEmail = userRepository.findByEmailContainingIgnoreCase(keyword);
         Set<SketchUser> uniqueUsers = new HashSet<>(usersByUsername);
         uniqueUsers.addAll(usersByEmail);
 
         Map<SketchUser, FriendStatus> result = new HashMap<>();
-        SketchUser user = userRepository.findById(userId).orElseThrow();
         for (SketchUser sketchUser : uniqueUsers) {
             Optional<Friend> existingStatus = checkFriend(user, sketchUser);
             result.put(sketchUser, existingStatus.isPresent() ? existingStatus.get().getStatus() : FriendStatus.NOT_FRIEND);
@@ -76,12 +73,11 @@ public class FriendService {
 
     //친구 요청
     @Transactional
-    public String requestFriend(Long userId, Long friendId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
-        if (friendId.equals(userId)) {
+    public String requestFriend(SketchUser user, Long friendId) {
+        SketchUser friend = userRepository.findById(friendId).orElseThrow();
+        if (friend.equals(user)){
             return "나 자신은 영원한 인생의 친구입니다.";
         }
-        SketchUser friend = userRepository.findById(friendId).orElseThrow();
         Optional<Friend> existingStatus = checkFriend(user, friend);
         if (existingStatus.isPresent()) {
             Friend friendStatus = existingStatus.get();
@@ -124,8 +120,7 @@ public class FriendService {
 
     //친구 요청 취소
     @Transactional
-    public String cancelFriendRequest(Long userId, Long friendId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public String cancelFriendRequest(SketchUser user, Long friendId) {
         SketchUser friend = userRepository.findById(friendId).orElseThrow();
         Optional<Friend> pendingStatus = friendRepository.findByFromAndToAndStatus(user, friend, FriendStatus.PENDING);
         if(pendingStatus.isPresent()){
@@ -138,8 +133,7 @@ public class FriendService {
 
     //친구 수락
     @Transactional
-    public String acceptFriendRequest(Long userId, Long friendId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public String acceptFriendRequest(SketchUser user, Long friendId) {
         SketchUser friend = userRepository.findById(friendId).orElseThrow();
         Optional<Friend> pendingStatus = friendRepository.findByFromAndToAndStatus(friend, user, FriendStatus.PENDING);
         if (pendingStatus.isPresent()) {
@@ -153,8 +147,7 @@ public class FriendService {
 
     //친구 거절
     @Transactional
-    public String rejectFriendRequest(Long userId, Long friendId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public String rejectFriendRequest(SketchUser user, Long friendId) {
         SketchUser friend = userRepository.findById(friendId).orElseThrow();
         Optional<Friend> pendingStatus = friendRepository.findByFromAndToAndStatus(friend, user, FriendStatus.PENDING);
         if(pendingStatus.isPresent()){
@@ -168,8 +161,7 @@ public class FriendService {
 
     //친구 삭제
     @Transactional
-    public String deleteFriend(Long userId, Long friendId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public String deleteFriend(SketchUser user, Long friendId) {
         SketchUser friend = userRepository.findById(friendId).orElseThrow();
         Optional<Friend> existingStatus = checkFriend(user, friend);
         if(existingStatus.isPresent()){
@@ -183,8 +175,7 @@ public class FriendService {
 
     //사용자 차단
     @Transactional
-    public String blockUser(Long userId, Long blockId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public String blockUser(SketchUser user, Long blockId) {
         SketchUser blacklist = userRepository.findById(blockId).orElseThrow();
         Optional<Friend> existingStatus = checkFriend(user, blacklist);
         if(existingStatus.isPresent()){
@@ -203,8 +194,7 @@ public class FriendService {
 
     //사용자 차단 해제
     @Transactional
-    public String unblockUser(Long userId, Long blockId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public String unblockUser(SketchUser user, Long blockId) {
         SketchUser blacklist = userRepository.findById(blockId).orElseThrow();
         Optional<Friend> existingStatus = checkFriend(user, blacklist);
         if(existingStatus.isPresent() && existingStatus.get().getStatus()==FriendStatus.BLOCKED){
@@ -216,8 +206,7 @@ public class FriendService {
     }
 
     //프로필 보기
-    public SketchUser getUserProfile(Long userId, Long profileOwnerId) {
-        SketchUser user = userRepository.findById(userId).orElseThrow();
+    public SketchUser getUserProfile(SketchUser user, Long profileOwnerId) {
         SketchUser profileOwner = userRepository.findById(profileOwnerId).orElseThrow();
         if(hasFriendStatus(user, profileOwner, FriendStatus.BLOCKED)){
             throw new AccessDeniedException("You are not allowed to view this profile.");
