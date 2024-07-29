@@ -1,19 +1,17 @@
 package com.app.sketchbook.user.service;
 
-import com.app.sketchbook.user.DTO.ConnectionLogDTO;
 import com.app.sketchbook.user.entity.ConnectionLog;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.ConnectionLogRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.InetAddress;
-import java.net.http.HttpRequest;
 import java.util.Date;
-import java.util.List;
 
 @Log
 @Service
@@ -41,8 +39,9 @@ public class ConnectionServiceImpl implements ConnectionLogService{
     }
 
     @Override
-    public List<ConnectionLogDTO> findAllLogsByUser(SketchUser user) {
-        return connectionLogRepository.findAllByUser(user);
+    public Page<ConnectionLog> findAllLogsByUser(int page, SketchUser user) {
+        PageRequest pageRequest = PageRequest.of(page,10);
+        return connectionLogRepository.findAllByUserOrderByConnectedTimeDesc(pageRequest, user);
     }
 
     private String getBrowser(String agent){
@@ -82,7 +81,7 @@ public class ConnectionServiceImpl implements ConnectionLogService{
         }
 
         // 로컬일 경우 공인 IP 획득
-        if(ip.equals("0:0:0:0:0:0:0:1")){
+        if(ip.equals("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")){
             try{
                 RestTemplate rest = new RestTemplate();
                 ip = rest.getForObject("https://checkip.amazonaws.com/", String.class);
