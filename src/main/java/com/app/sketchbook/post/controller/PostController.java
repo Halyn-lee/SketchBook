@@ -16,10 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Controller
@@ -82,7 +80,6 @@ public class PostController {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         Post savedPost = postService.create_post(post, user);
 
-        List<Image> images = new ArrayList<>();
         String[] imageDataArray = imageDataList.split("base64,");
 
         for (int i = 1; i < imageDataArray.length; i++) {
@@ -92,30 +89,14 @@ public class PostController {
                     // 공백 및 모든 공백 문자 제거
                     imageData = imageData.replaceAll("\\s+", "");
 
-                    // Base64 디코딩
-                    byte[] imageBytes = Base64.getDecoder().decode(imageData);
-
-                    // 파일 저장 경로 설정
-                    String filePath = "C:/images/" + UUID.randomUUID() + ".png";
-                    try (OutputStream stream = new FileOutputStream(filePath)) {
-                        stream.write(imageBytes);
-                    }
-
-                    // Image 엔티티 생성 및 저장
-                    Image image = new Image();
-                    image.setFile_path(filePath);
-                    image.setPost(savedPost);
-                    images.add(image);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    // Base64 디코딩 예외 발생 시 처리
+                    // 이미지 데이터 저장
+                    postService.saveImage(savedPost, imageData);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        postService.saveImages(images);
         return "redirect:/main";
     }
 
@@ -132,46 +113,26 @@ public class PostController {
     @PostMapping("/post/modify/{no}")
     public String modify_post(@PathVariable Long no, @RequestParam("content") String content,
                                                      @RequestParam("postImageData") String imageDataList) {
-        if (no != null) {
-            // Post 엔티티에 저장
-            Post modifiedPost = postService.modify_post(no, content);
+        // Post 엔티티에 저장
+        Post modifiedPost = postService.modify_post(no, content);
 
-            List<Image> images = new ArrayList<>();
-            String[] imageDataArray = imageDataList.split("base64,");
+        String[] imageDataArray = imageDataList.split("base64,");
 
-            for (int i = 1; i < imageDataArray.length; i++) {
-                String imageData = imageDataArray[i]; // base64 데이터만 가져옴
-                if (imageData != null && !imageData.isEmpty()) {
-                    try {
-                        // 공백 및 모든 공백 문자 제거
-                        imageData = imageData.replaceAll("\\s+", "");
+        for (int i = 1; i < imageDataArray.length; i++) {
+            String imageData = imageDataArray[i]; // base64 데이터만 가져옴
+            if (imageData != null && !imageData.isEmpty()) {
+                try {
+                    // 공백 및 모든 공백 문자 제거
+                    imageData = imageData.replaceAll("\\s+", "");
 
-                        // Base64 디코딩
-                        byte[] imageBytes = Base64.getDecoder().decode(imageData);
-
-                        // 파일 저장 경로 설정
-                        String filePath = "C:/images/" + UUID.randomUUID() + ".png";
-                        try (OutputStream stream = new FileOutputStream(filePath)) {
-                            stream.write(imageBytes);
-                        }
-
-                        // Image 엔티티 생성 및 저장
-                        Image image = new Image();
-                        image.setFile_path(filePath);
-                        image.setPost(modifiedPost);
-                        images.add(image);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
-                        // Base64 디코딩 예외 발생 시 처리
-                        e.printStackTrace();
-                    }
+                    // 이미지 데이터 저장
+                    postService.saveImage(modifiedPost, imageData);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-
-            postService.saveImages(images);
-            return "redirect:/main";
         }
+
         return "redirect:/main";
     }
 
