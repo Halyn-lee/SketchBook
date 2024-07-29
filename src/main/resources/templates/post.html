@@ -53,6 +53,27 @@
 
 
         <div class="fw-bold fs-5" th:text="${post.content}" th:data-content="${post.content}"></div>
+    
+        <hr>
+
+        <!-- postLike 리스트 순회 -->
+        <div th:each="postLike : ${post.like}">
+            <!-- 좋아요를 누른 ID가 현재 사용자 ID와 일치하는지를 확인 -->
+            <div th:if="${#lists.contains(postLike.id, user.id)}"
+                    th:id="'heart' + ${post.no}"
+                    class="like-btn"
+                    th:onclick="'cancelLikePost(' + ${post.no} + ')'"
+                    th:text="'❤️'"> <!-- 일치할 경우 '❤️'로 표시 -->
+            </div>
+        </div>
+        <div th:unless="${#lists.contains(post.like, user)}"
+             th:id="'heart' + ${post.no}"
+             class="like-btn"
+             th:onclick="'likePost(' + ${post.no} + ')'"
+             th:text="'🤍'"> <!-- 일치하지 않을 경우 '🤍'로 표시 -->
+        </div>
+        
+        <span th:id="'liked-count'+${post.no}" th:text="${#lists.size(post.like)}+'명이 좋아합니다'"></span>
 
 
     </div>
