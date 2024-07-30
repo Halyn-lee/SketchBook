@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" th:href="@{/css/join-style.css}">
     <title>Registration Success</title>
 </head>
 <body>
-<h1>Registration Successful</h1>
-<p>Please check your email for the verification code.</p>
-<a th:href = "@{/verify(email=${email})}">인증 하기</a>
+<div class="verify-container">
+    <h4>Registration Successful</h4>
+    <p>Please check your email for the verification code.</p>
+    <div class="auth-link">
+        <a th:href="@{/verify(email=${email})}" class="btn-link">인증 하기</a>
+    </div>
+</div>
 </form>
 </body>
 </html>

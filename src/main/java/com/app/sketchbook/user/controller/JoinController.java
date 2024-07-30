@@ -27,6 +27,7 @@ public class JoinController {
         return "join";
     }
 
+
     @PostMapping("/join")
     public String signup(@Valid CreateUserForm createUserForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {

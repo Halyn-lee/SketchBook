@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import java.io.IOException;
@@ -17,11 +18,17 @@ public class CustomLoginFailHandler implements AuthenticationFailureHandler {
                                         AuthenticationException exception) throws IOException, ServletException {
         String email = request.getParameter("username");
 
-        // 계정 비활성화 예외 처리
-        if (exception.getMessage().equals("메일 인증이 필요합니다.")) {
-            response.sendRedirect("/verify?email=" + email);
-        } else {
-            response.sendRedirect("/login?error");
+        //oAuth 로그인 시
+        if (exception instanceof OAuth2AuthenticationException) {
+            response.sendRedirect("/account/login?oAuthError");
+        } else { //일반 로그인 시
+
+            if (exception.getMessage().equals("메일 인증이 필요합니다.")) {
+                response.sendRedirect("/account/verify?email=" + email);
+            } else {
+                log.info(exception.getMessage());
+                response.sendRedirect("/account/login?error");
+            }
         }
     }
 }

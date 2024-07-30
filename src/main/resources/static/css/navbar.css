@@ -1,0 +1,48 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    z-index: 1000; /* Ensures the navbar stays on top */
+}
+
+.navbar a {
+    text-decoration: none;
+}
+
+.nav-logo {
+    height: 40px; /* Adjust size as needed */
+}
+
+.nav-icon {
+    height: 60px; /* Adjust size as needed */
+    margin: 0 10px;
+}
+
+.nav-left, .nav-center, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-center {
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-right {
+    justify-content: flex-end;
+}
+
+.content {
+    padding-top: 80px; /* Adjust this value based on the height of your navbar */
+}
