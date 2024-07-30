@@ -14,20 +14,71 @@
     <script crossorigin="anonymous" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="/css/post.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/navbar.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .main-container {
+            display: flex;
+            padding: 20px;
+            margin-top: 80px;
+            background-color: #f4f4f4;
+        }
+
+        .sidebar, .friends {
+            width: 20%;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 80px; /* 네비게이션 바 높이 */
+            left: 0;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+
+        }
+
+        .content {
+            margin: 0 20%;
+            padding: 20px;
+            flex: 1;
+            background-color: #f4f4f4;
+        }
+
+        .friends {
+            position: fixed;
+            top: 80px;
+            right: 0;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
 
-<a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
-<a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
-<a th:href="@{/join}">회원가입</a>
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+<main class="main-container">
+    <aside class="sidebar">
+        <h2>카테고리</h2>
+        <!-- 카테고리 목록 추가 -->
+    </aside>
+    <section class="content">
+        <div class="card">
+            <div class="card-body">
+                <div class="btn">무슨 생각 하세요?</div>
+            </div>
+        </div>
 
-<span class="border-bottom py-2" th:text="${user.username}"></span>
-
-<div class="card">
-    <div class="card-body text-center">
-        <div class="btn">무슨 생각 하세요?</div>
-    </div>
-</div>
+        <!-- 게시글 출력 영역 -->
+        <div id="postContainer" class="py-3">
+            <div hx-get="/getpost/0" hx-swap="outerHTML" hx-trigger="revealed"></div>
+        </div>
+    </section>
+    <aside class="friends">
+        <h2>친구 리스트</h2>
+        <!-- 친구 리스트 추가 -->
+    </aside>
+</main>
 
 <!-- 첫 번째 Modal -->
 <div class="modal" id="modal1">
@@ -35,7 +86,7 @@
     <div class="modal-content">
     <span class="close" id="close1">&times;</span>
         <form action="/post/create" method="post">
-            <textarea name="content"></textarea>
+            <textarea class="form-control" name="content"></textarea>
             <div id="attachedImagesContainer"></div>
             <input id="imageData" name="imageData" type="hidden">
             <input class="btn btn-primary my-2" type="submit" value="저장!">
@@ -82,7 +133,7 @@
     <span class="close" id="postModalClose">&times;</span>
     <div class="modal-content" id="postModalBody">
         <form id="modForm" method="post">
-            <textarea name="content"></textarea>
+            <textarea class="form-control" name="content"></textarea>
             <div class="post-image-list" id="postAttachedImagesContainer"></div>
             <input id="postImageData" name="postImageData" type="hidden">
             <button id="postModBtn" type="submit">수정 완료</button>
@@ -92,32 +143,13 @@
     </div>
 </div>
 
-
-<hr>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
-            <div id="postContainer" class="py-3">
-                <div hx-get="/getpost/0" hx-swap="outerHTML" hx-trigger="revealed"></div>
-            </div>
-        </div>
-        <div class="col-3"></div>
-    </div>
-</div>
-
 <script src="/js/post.js"></script>
 <script>
-    function modifyPost(postNo){
-
-    }
 
     function deletePost(postNo) {
         if(!confirm("정말 삭제하실래요?")){
             return;
         }
-
 
         const post = document.getElementById(`post-container-${postNo}`);
 
@@ -138,13 +170,29 @@
     }
 
     function modifyReply(replyNo) {
+        const replyContainer = document.getElementById(`reply-container-${replyNo}`);
         const replyContent = document.getElementById(`reply-content-${replyNo}`);
         const currentContent = replyContent.innerText;
-        replyContent.innerHTML = `<textarea id="modify-reply-content-${replyNo}">${currentContent}</textarea><button onclick="saveReply(${replyNo})">Save</button>`;
+
+        // 숨길 버튼 선택
+        const modifyButton = replyContainer.querySelector('.reply-modify-btn');
+        const deleteButton = replyContainer.querySelector('.reply-delete-btn');
+
+        // 버튼 숨기기
+        modifyButton.style.display = 'none';
+        deleteButton.style.display = 'none';
+
+        // 수정 textarea, 저장 버튼 추가
+        replyContent.innerHTML = `<textarea class="form-control id="modify-reply-content-${replyNo}">${currentContent}</textarea><br><button class="badge bg-success" onclick="(${replyNo})">✔</button>`;
     }
 
     function saveReply(replyNo) {
         const modifiedContent = document.getElementById(`modify-reply-content-${replyNo}`).value;
+        const replyContainer = document.getElementById(`reply-container-${replyNo}`);
+
+        // 원래 버튼 선택
+        const modifyButton = replyContainer.querySelector('.reply-modify-btn');
+        const deleteButton = replyContainer.querySelector('.reply-delete-btn');
 
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `/reply/modify/${replyNo}`, true);
@@ -155,6 +203,10 @@
                 if (response.success) {
                     const replyContent = document.getElementById(`reply-content-${replyNo}`);
                     replyContent.innerText = modifiedContent;
+
+                    // 버튼 다시 보이기
+                    modifyButton.style.display = 'inline';
+                    deleteButton.style.display = 'inline';
                 } else {
                     alert("댓글 수정 실패!");
                 }
@@ -183,7 +235,7 @@
     }
 
     function likePost(postNo) {
-        const heart = document.getElementById(`heart${postNo}`);
+        const postHeart = document.getElementById(`post-heart${postNo}`);
         let likedCount = document.getElementById(`liked-count${postNo}`);
         let currentCountText = likedCount.textContent;
         // 숫자 부분만 추출
@@ -196,8 +248,8 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 if (response.success) {
-                    heart.innerText = "❤";
-                    heart.setAttribute('onclick', `cancelLikePost(${postNo})`);
+                    postHeart.innerText = "좋아요 ❤";
+                    postHeart.setAttribute('onclick', `cancelLikePost(${postNo})`);
                     likedCount.innerText = (currentCount + 1) + '명이 좋아합니다';
                 } else {
                     alert("좋아요 누르기에 실패했어요.");
@@ -208,7 +260,7 @@
     }
 
     function cancelLikePost(postNo) {
-        const heart = document.getElementById(`heart${postNo}`);
+        const postHeart = document.getElementById(`post-heart${postNo}`);
         let likedCount = document.getElementById(`liked-count${postNo}`);
         let currentCountText = likedCount.textContent;
         let currentCount = parseInt(currentCountText.replace(/[^\d]/g, ''), 10);
@@ -220,9 +272,58 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 if (response.success) {
-                    heart.innerText = "🤍";
-                    heart.setAttribute('onclick', `likePost(${postNo})`);
+                    postHeart.innerText = "좋아요 🤍";
+                    postHeart.setAttribute('onclick', `likePost(${postNo})`);
                     likedCount.innerText = (currentCount - 1) + '명이 좋아합니다';
+                } else {
+                    alert("좋아요 취소에 실패했어요.");
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function likeReply(replyNo) {
+        const replyHeart = document.getElementById(`reply-heart${replyNo}`);
+        let likedCount = document.getElementById(`reply-liked-count${replyNo}`);
+        let currentCountText = likedCount.textContent;
+        // 숫자 부분만 추출
+        let currentCount = parseInt(currentCountText.replace(/[^\d]/g, ''), 10);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `/reply/like/${replyNo}`, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    replyHeart.innerText = "❤";
+                    replyHeart.setAttribute('onclick', `cancelLikeReply(${replyNo})`);
+                    likedCount.innerText = (currentCount + 1) + ' Liked!';
+                } else {
+                    alert("좋아요 누르기에 실패했어요.");
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function cancelLikeReply(replyNo) {
+        const replyHeart = document.getElementById(`reply-heart${replyNo}`);
+        let likedCount = document.getElementById(`reply-liked-count${replyNo}`);
+        let currentCountText = likedCount.textContent;
+        let currentCount = parseInt(currentCountText.replace(/[^\d]/g, ''), 10);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `/reply/cancel-like/${replyNo}`, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    replyHeart.innerText = "🤍";
+                    replyHeart.setAttribute('onclick', `likeReply(${replyNo})`);
+                    likedCount.innerText = (currentCount - 1) + ' Liked!';
                 } else {
                     alert("좋아요 취소에 실패했어요.");
                 }
