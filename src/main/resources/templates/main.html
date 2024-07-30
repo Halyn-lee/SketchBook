@@ -81,7 +81,7 @@
     <aside class="friends">
         <h2>친구 리스트</h2>
         <!-- 친구 리스트 추가 -->
-        <div th:replace="chat-list::chat-list(${rooms}, ${user.getUsername()})">
+        <div th:replace="chat-list::chat-list(${rooms}, ${user})">
 
         </div>
     </aside>
