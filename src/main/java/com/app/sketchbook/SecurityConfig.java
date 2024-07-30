@@ -71,7 +71,6 @@ public class SecurityConfig {
                         .requestMatchers("/css/**","/js/**","/img/**").permitAll()
                         .anyRequest().authenticated());
 
-
         return http.build();
     }
 

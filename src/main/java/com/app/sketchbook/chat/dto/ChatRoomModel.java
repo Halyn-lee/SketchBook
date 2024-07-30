@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ChatRoomModel {
-    private SketchUser opponent;
+    private Long room;
+    private String opponent;
     private boolean messagesExists;
 }

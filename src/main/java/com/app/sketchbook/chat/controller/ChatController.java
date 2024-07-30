@@ -1,5 +1,6 @@
 package com.app.sketchbook.chat.controller;
 
+import com.app.sketchbook.SecurityConfig;
 import com.app.sketchbook.chat.dto.Chat;
 import com.app.sketchbook.chat.entity.ChatLog;
 import com.app.sketchbook.chat.service.ChatLogService;
@@ -10,9 +11,13 @@ import lombok.extern.java.Log;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -30,6 +35,19 @@ public class ChatController {
         return "chat";
     }
 
+    @GetMapping("chat-list")
+    public String chatList(Model model){
+
+        var rooms = chatRoomService.getChatRoomList();
+        model.addAttribute("rooms", rooms);
+
+        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getName());
+
+        log.info(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        return "tempchat";
+    }
+
     @MessageMapping("/send")
     public void sendMessage(Chat chat) {
         producer.sendMessage(chat); // Kafka에 메시지 전송
@@ -42,9 +60,10 @@ public class ChatController {
         return chatLogService.getRecentLogs(room);
     }
 
-    @MessageMapping("/disconnect/{room}")
-    public void updateDisconnectTime(@DestinationVariable String room){
-        chatRoomService.updateDisconnectTime(Long.parseLong(room));
+    @GetMapping("/disconnect/{room}")
+    @ResponseBody
+    public void updateDisconnectTime(@PathVariable("room") Long room){
+        chatRoomService.updateDisconnectTime(room, SecurityContextHolder.getContext().getAuthentication());
     }
 
 }
