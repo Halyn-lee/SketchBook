@@ -43,7 +43,7 @@
         }
 
         .content {
-            margin: 0 20%;
+            margin: 0 28%;
             padding: 20px;
             flex: 1;
             background-color: #f4f4f4;
@@ -56,6 +56,93 @@
             height: calc(100vh - 60px);
             overflow-y: auto;
         }
+
+        .carousel {
+            display: flex !important;
+            flex-direction: row !important;
+        }
+
+        .carousel-inner {
+            width: 70% !important;
+        }
+
+        .carousel-control-next, .carousel-control-prev {
+            position: relative !important;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .post-header .profile-box {
+            display: flex;
+        }
+
+        .post-header .profile-box .profile-picture {
+            width: 48px;
+            height: 48px;
+            background-color: gray;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .post-header .profile-box .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-body .post-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .post-body .post-stats .like-count {
+
+        }
+
+        .post-body .post-stats .reply-count {
+
+        }
+
+        .post-footer {
+            display: flex;
+            border-top: 1px solid gray;
+        }
+
+        .post-footer .post-button-group {
+            display: flex;
+            margin: 0 auto;
+        }
+
+        .post-footer .post-button-group > div {
+            padding: 10px 20px;
+            margin: 6px;
+        }
+
+        .think {
+            display: flex;
+        }
+
+        .think .profile-picture {
+            width: 48px;
+            height: 48px;
+            background-color: gray;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .new-think {
+            border-radius: 1.5rem;
+            background-color: gray;
+            color: black;
+            padding: 12px 10px;
+            text-align: start;
+            width: 90%;
+        }
+
+
     </style>
 </head>
 <body>
@@ -69,12 +156,15 @@
     <section class="content">
         <div class="card">
             <div class="card-body">
-                <div class="btn">무슨 생각 하세요?</div>
+                <div class="think">
+                    <div class="profile-picture"></div>
+                    <div class="new-think">무슨 생각 하세요?</div>
+                </div>
             </div>
         </div>
 
         <!-- 게시글 출력 영역 -->
-        <div id="postContainer" class="py-3">
+        <div class="py-3" id="postContainer">
             <div hx-get="/getpost/0" hx-swap="outerHTML" hx-trigger="revealed"></div>
         </div>
     </section>
@@ -91,7 +181,7 @@
 <div class="modal" id="modal1">
     <!-- 첫 번째 모달 내용 -->
     <div class="modal-content">
-    <span class="close" id="close1">&times;</span>
+        <span class="close" id="close1">&times;</span>
         <form action="/post/create" method="post">
             <textarea class="form-control" name="content"></textarea>
             <div id="attachedImagesContainer"></div>
@@ -110,25 +200,25 @@
         <span class="close" id="close2">&times;</span>
 
         <!-- 색상 선택기 -->
-        <input type="color" id="color-picker" value="#000000">
+        <input id="color-picker" type="color" value="#000000">
 
         <!-- 브러시 크기 조절 -->
         <label for="brush-size">브러시 크기:</label>
-        <input type="range" id="brush-size" min="1" max="50" value="5">
+        <input id="brush-size" max="50" min="1" type="range" value="5">
 
         <!-- 지우개 크기 조절 -->
         <label for="eraser-size">지우개 크기:</label>
-        <input type="range" id="eraser-size" min="5" max="100" value="50">
+        <input id="eraser-size" max="100" min="5" type="range" value="50">
 
         <button id="erase">지우개</button>
-        <input id="filereader" type="file" accept="image/*" style="display:none;" />
+        <input accept="image/*" id="filereader" style="display:none;" type="file"/>
         <button id="add-image">이미지 추가</button>
         <button id="select-element">선택</button>
         <button id="delete-canvas-element">선택 요소 삭제</button>
         <br>
 
         <!-- 그림판 영역 -->
-        <canvas id="canvas" width="800" height="600" style="border: 2px dashed black;"></canvas>
+        <canvas height="600" id="canvas" style="border: 2px dashed black;" width="800"></canvas>
 
         <button id="attach">그림 첨부</button>
     </div>
@@ -146,7 +236,7 @@
             <button id="postModBtn" type="submit">수정 완료</button>
         </form>
         <button id="postAddBtn">그림 추가</button>
-        <button id="postDelBtn">삭제</button>
+        <button id="postDelBtn">그림 삭제</button>
     </div>
 </div>
 
@@ -154,7 +244,7 @@
 <script>
 
     function deletePost(postNo) {
-        if(!confirm("정말 삭제하실래요?")){
+        if (!confirm("정말 삭제하실래요?")) {
             return;
         }
 

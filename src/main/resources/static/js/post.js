@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // modal1 : 게시글 작성 모달
     let modal1 = document.getElementById("modal1");
-    let btn1 = document.getElementsByClassName("btn")[0];
+    let btn1 = document.querySelector(".new-think");
     let span1 = document.getElementById("close1");
 
     btn1.onclick = function () {
@@ -80,8 +80,8 @@ document.addEventListener("DOMContentLoaded", function () {
             let attachedImagesContainer;
             let attachedImage = document.createElement('img');
             attachedImage.src = dataURL;
-            attachedImage.style.maxWidth = '40%';
-            attachedImage.style.height = 'auto';
+            attachedImage.style.maxWidth = '30%';
+            attachedImage.style.height = '35%';
 
             if (!canvasIsModify) {
                 imageDataInput = document.getElementById('imageData');
@@ -140,6 +140,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // 크기 조절하는 동안에는 브러쉬모드 off
                         canvas.isDrawingMode = false;
+
+                        // 새로 추가된 이미지의 크기 조정
+                        fabricImage.scaleToWidth(canvas.width * 0.3); // 30%
+                        fabricImage.scaleToHeight(canvas.height * 0.35); // 35%
                         
                         canvas.renderAll();
                     }
@@ -188,7 +192,8 @@ document.addEventListener("DOMContentLoaded", function () {
             let postId = e.target.getAttribute('data-post-id');
             let modal = document.querySelector("#postModalContainer");
             let modalImageContainer = document.querySelector(".post-image-list");
-            let imageTags = e.target.querySelectorAll("img");
+            let carousel = e.target.closest('.btn-group').parentElement.parentElement.nextElementSibling.querySelector(".carousel-inner") // .btn-group 다음에 오는 .carousel slide
+            let imageTags = carousel.querySelectorAll('img');
             modalImageContainer.innerHTML = "";
 
             let postContent = document.querySelector("#post-container-" + postId + " .fw-bold.fs-5").getAttribute('data-content');
@@ -204,6 +209,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 newImageTag.dataset.id = image_no;
                 newImageTag.classList = ["d-block", "w-10"];
                 newImageTag.id = `image-${image_no}`;
+                newImageTag.style.width = '30%';
+                newImageTag.style.height = '35%';
                 modalImageContainer.appendChild(newImageTag)
             }
 
@@ -316,6 +323,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 let baseURL = "/post/modify/" + postId;
                 modForm.setAttribute("action", baseURL);
                 modForm.submit();
+            }
+        }
+
+        else if (e.target.classList.contains('reply-button')) {
+            const cardFooter = e.target.parentElement.parentElement.parentElement.nextElementSibling;
+            if (cardFooter.style.display == 'none') {
+                cardFooter.style.display = 'block';
+            } else {
+                cardFooter.style.display = 'none';
             }
         }
     });
