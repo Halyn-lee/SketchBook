@@ -10,6 +10,7 @@ import com.app.sketchbook.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Service;
@@ -49,15 +50,18 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     @Transactional
     @Override
-    public void updateDisconnectTime(Long room) {
+    public void updateDisconnectTime(Long room, Authentication auth) {
         var foundRoom = chatRoomRepository.findById(room);
 
         if(foundRoom.isEmpty()){
+            log.info("Empty Room");
             return;
         }
 
         var friend = foundRoom.get().getFriend();
-        var user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        var user = userService.principalUser(auth);
+
+        log.info("User ID: "+user.getId());
 
         if(friend.getFrom().getId().equals(user.getId())){
             foundRoom.get().setFromDisconnection(new Date());

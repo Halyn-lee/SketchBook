@@ -66,10 +66,10 @@ public class SecurityConfig {
                         ,"/find-account"
                         ,"/find-password"
                         ,"/updatepassword"
-                        ,"/send-pass-email").permitAll()
+                        ,"/send-pass-email"
+                        ,"/chat-socket/**").permitAll()
                         //.requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
-
 
         return http.build();
     }

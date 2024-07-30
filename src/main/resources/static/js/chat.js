@@ -77,10 +77,7 @@ function connect() {
 }
 
 function disconnect() {
-    stompClient.publish({
-    destination: "/app/disconnect/"+$("#room").val(),
-    body: $("#user").val()
-    });
+    fetch("http://localhost:8080/disconnect/"+$("#room").val());
     stompClient.deactivate();
     setConnected(false);
     console.log("Disconnected");
