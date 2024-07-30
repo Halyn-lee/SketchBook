@@ -40,6 +40,13 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
         room.setId(friendNo);
         room.setFriend(friend.get());
+
+        Date current = new Date();
+
+        room.setFromDisconnection(current);
+        room.setToDisconnection(current);
+        room.setLastSend(current);
+
         chatRoomRepository.save(room);
     }
 
