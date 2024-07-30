@@ -6,9 +6,12 @@ import com.app.sketchbook.chat.repository.ChatRoomRepository;
 import com.app.sketchbook.friend.repository.FriendRepository;
 import com.app.sketchbook.friend.service.FriendService;
 import com.app.sketchbook.user.repository.UserRepository;
+import com.app.sketchbook.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     private final ChatRoomRepository chatRoomRepository;
     private final FriendService friendService;
+    private final UserService userService;
 
     @Transactional
     @Override
@@ -45,7 +49,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     @Transactional
     @Override
-    public void updateDisconnectTime(Long room, Long user) {
+    public void updateDisconnectTime(Long room) {
         var foundRoom = chatRoomRepository.findById(room);
 
         if(foundRoom.isEmpty()){
@@ -53,8 +57,9 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         }
 
         var friend = foundRoom.get().getFriend();
+        var user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
 
-        if(friend.getFrom().getId().equals(user)){
+        if(friend.getFrom().getId().equals(user.getId())){
             foundRoom.get().setFromDisconnection(new Date());
         } else {
             foundRoom.get().setToDisconnection(new Date());
@@ -74,17 +79,23 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     }
 
     @Override
-    public List<ChatRoomModel> getChatRoomList(Long user) {
+    public List<ChatRoomModel> getChatRoomList() {
+
+        var user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+
+        if(user == null){
+            return List.of();
+        }
 
         var allRooms = friendService.getFriends(user);
-        var receivedRooms = chatRoomRepository.findAllByIdWithExistsMessage(user);
+        var receivedRooms = chatRoomRepository.findAllByIdWithExistsMessage(user.getId());
 
         List<ChatRoomModel> result = new ArrayList<>();
 
         for(var room : allRooms){
             ChatRoomModel model = new ChatRoomModel();
 
-            if(room.getFrom().getId().equals(user)){
+            if(room.getFrom().getId().equals(user.getId())){
                 model.setOpponent(room.getTo());
             } else {
                 model.setOpponent(room.getFrom());
