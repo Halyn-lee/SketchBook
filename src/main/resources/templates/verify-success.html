@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" th:href="@{/css/join-style.css}">
     <title>Verification Success</title>
 </head>
 <body>
-<h1>Verification Successful</h1>
-<p>Your email has been successfully verified.</p>
-<a href="/main">홈</a>
+<div class="verify-container">
+    <h1>Verification Successful</h1>
+    <p>Your email has been successfully verified.</p>
+    <div class="resend">
+        <input type="submit" th:href="@{/main}" value="홈">
+    </div>
+</div>
 </body>
 </html>

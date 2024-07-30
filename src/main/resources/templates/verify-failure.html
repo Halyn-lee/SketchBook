@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" th:href="@{/css/join-style.css}">
     <title>Verification Failed</title>
 </head>
 <body>
-<h1>Verification Failed</h1>
-<p>Invalid verification code. Please try again.</p>
+<div class="verify-container">
+    <h1>Verification Failed</h1>
+    <p>Invalid verification code. Please try again.</p>
+    <div class="resend">
+        <input type="submit" onclick="history.back()" value="뒤로가기">
+    </div>
+</div>
 </body>
 </html>

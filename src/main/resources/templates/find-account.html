@@ -2,16 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/join-style.css}">
     <title>Title</title>
 </head>
 <body>
+<div class="changepw-container">
 <form th:action="@{/find-account}" method="post">
-    <div class="mb-3">
-        <label for="email" class="form-label">이메일</label>
-        <input type="email" name="email" id="email" class="form-control">
-        <span id="emailError" style="color: red;"></span>
+
+    <label for="email" class="form-label">이메일</label>
+    <input type="email" name="email" id="email" class="form-control">
+    <span id="emailError" style="color: red;"></span>
+    <div class="account">
+        <input type="submit" id="submitBtn" value="찾기">
     </div>
-    <button type="submit" id="submitBtn" class="btn btn-primary">찾기</button>
 </form>
+</div>
 </body>
 </html>

@@ -45,6 +45,7 @@ public class SecurityConfig {
         http
                 .oauth2Login((oauth2) -> oauth2
                         .loginPage("/login")
+                        .failureHandler(new CustomLoginFailHandler())
                         .successHandler(new CustomOAuth2LoginSuccessHandler(connectionLogService, userService))
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(oAuth2UserService)));
@@ -66,8 +67,8 @@ public class SecurityConfig {
                         ,"/find-account"
                         ,"/find-password"
                         ,"/updatepassword"
-                        ,"/send-pass-email").permitAll()
-                        //.requestMatchers("/**").permitAll()
+                        ,"/send-pass-email","/joinform").permitAll()
+                        .requestMatchers("/css/**","/js/**","/img/**").permitAll()
                         .anyRequest().authenticated());
 
 
