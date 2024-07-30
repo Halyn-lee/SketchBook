@@ -112,18 +112,4 @@ public class FriendController {
         model.addAttribute("message", message);
         return "redirect:/friend/list";
     }
-
-    //프로필 보기
-    @GetMapping("/profile/{profileOwnerId}")
-    public String userProfile(@PathVariable Long profileOwnerId, Model model) {
-        try {
-            SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-            SketchUser profileOwner = friendService.getUserProfile(user, profileOwnerId);
-            model.addAttribute("profileOwner", profileOwner);
-            return "profile";
-        } catch (AccessDeniedException e) {
-            model.addAttribute("error", e.getMessage());
-            return "access_denied";
-        }
-    }
 }

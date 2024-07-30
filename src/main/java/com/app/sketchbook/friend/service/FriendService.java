@@ -211,7 +211,7 @@ public class FriendService {
         if(hasFriendStatus(user, profileOwner, FriendStatus.BLOCKED)){
             throw new AccessDeniedException("You are not allowed to view this profile.");
         }
-        if(!profileOwner.isProfile_public() && !hasFriendStatus(user, profileOwner, FriendStatus.ACCEPTED)){
+        if(!user.equals(profileOwner) && !profileOwner.isProfile_public() && !hasFriendStatus(user, profileOwner, FriendStatus.ACCEPTED)){
             throw new AccessDeniedException("You are not allowed to view this profile.");
         }
         return profileOwner;
