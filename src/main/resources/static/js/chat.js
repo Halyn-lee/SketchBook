@@ -30,11 +30,6 @@ $(function () {
     });
 });
 
-$(window).on("load", function(){
-    stompClient.connectHeaders.room = $("#room").val();
-    connect();
-});
-
 $(window).on("beforeunload", function(){
     disconnect();
 });
@@ -78,6 +73,9 @@ function connect() {
 
 function disconnect() {
     fetch("http://localhost:8080/disconnect/"+$("#room").val());
+    if($("#chat-container").css("display")=="block") {
+        $("#chat-container").css("display", "none");
+    }
     stompClient.deactivate();
     setConnected(false);
     console.log("Disconnected");
@@ -123,5 +121,22 @@ function showRecentMessage(history) {
     receiveQueue.forEach(item=>showMessage(item)); // 채팅 로딩 중 수신내용 출력
     receiveQueue = [];
     historyFetched = true;
+}
+
+function openChat(room, opponent, user) {
+    $("#room").val(room);
+    $("#room-name").text(opponent);
+    $("#user").val(user);
+
+    if($("#chat-container").css("display")=="block") {
+        if(room == $("#room").val()){
+            console.log("already opened");
+            return;
+        } else {
+            disconnect();
+        }
+    }
+    $("#chat-container").css("display", "block");
+    connect();
 }
 

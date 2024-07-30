@@ -92,17 +92,19 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         }
 
         var allRooms = friendService.getFriends(user);
-        var receivedRooms = chatRoomRepository.findAllByIdWithExistsMessage(user.getId());
+        var receivedRooms = chatRoomRepository.findAllByIdWithExistsMessage(user);
 
         List<ChatRoomModel> result = new ArrayList<>();
 
         for(var room : allRooms){
             ChatRoomModel model = new ChatRoomModel();
 
+            model.setRoom(room.getNo());
+
             if(room.getFrom().getId().equals(user.getId())){
-                model.setOpponent(room.getTo());
+                model.setOpponent(room.getTo().getUsername());
             } else {
-                model.setOpponent(room.getFrom());
+                model.setOpponent(room.getFrom().getUsername());
             }
 
             if(receivedRooms.contains(room.getNo())){

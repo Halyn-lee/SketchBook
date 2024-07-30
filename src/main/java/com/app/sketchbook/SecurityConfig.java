@@ -66,8 +66,7 @@ public class SecurityConfig {
                         ,"/find-account"
                         ,"/find-password"
                         ,"/updatepassword"
-                        ,"/send-pass-email"
-                        ,"/chat-socket/**").permitAll()
+                        ,"/send-pass-email").permitAll()
                         //.requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
 

@@ -14,6 +14,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +33,19 @@ public class ChatController {
     @GetMapping("/chat")
     public String chat() {
         return "chat";
+    }
+
+    @GetMapping("chat-list")
+    public String chatList(Model model){
+
+        var rooms = chatRoomService.getChatRoomList();
+        model.addAttribute("rooms", rooms);
+
+        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getName());
+
+        log.info(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        return "tempchat";
     }
 
     @MessageMapping("/send")
