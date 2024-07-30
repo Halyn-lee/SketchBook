@@ -3,7 +3,7 @@
     overflow-anchor:auto;
 }
 
-#chat-circle {
+.chat-circle {
     display:inline-block;
     width:25px;
     height:25px;

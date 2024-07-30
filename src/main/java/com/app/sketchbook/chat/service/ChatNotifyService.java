@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ChatNotifyService{
     void notifyChat(String room, String sender);
-    void addEmitter(String user, SseEmitter emitter);
+    void addEmitter(Long user, SseEmitter emitter);
 }

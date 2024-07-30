@@ -29,7 +29,7 @@ public class KafkaChatListener {
         messagingTemplate.convertAndSend("/topic/receive/"+chat.getRoom(), receivedChat);
 
         // 메시지 수신 시 알림 전송
-        // chatNotifyService.notifyChat(receivedChat.getRoom(), receivedChat.getUser());
+        chatNotifyService.notifyChat(receivedChat.getRoom(), receivedChat.getUser());
 
         // MongoDB에 저장
         try{

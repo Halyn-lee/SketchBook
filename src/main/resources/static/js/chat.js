@@ -127,6 +127,7 @@ function openChat(room, opponent, user) {
     $("#room").val(room);
     $("#room-name").text(opponent);
     $("#user").val(user);
+    $("#circle-"+room).css("display", "none");
 
     if($("#chat-container").css("display")=="block") {
         if(room == $("#room").val()){

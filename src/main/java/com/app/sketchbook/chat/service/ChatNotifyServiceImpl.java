@@ -16,11 +16,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 @RequiredArgsConstructor
 public class ChatNotifyServiceImpl implements ChatNotifyService {
-    Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     private final ChatRoomRepository chatRoomRepository;
 
-    public void addEmitter(String user, SseEmitter emitter){
+    public void addEmitter(Long user, SseEmitter emitter){
 
         emitters.put(user, emitter);
 
@@ -29,6 +29,12 @@ public class ChatNotifyServiceImpl implements ChatNotifyService {
         });
 
         emitter.onTimeout(emitter::complete);
+
+        try {
+            emitter.send(SseEmitter.event().name("connect").data("connected"));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -42,11 +48,17 @@ public class ChatNotifyServiceImpl implements ChatNotifyService {
 
         try{
             var friend = foundRoom.get().getFriend();
+            SseEmitter emitter = null;
 
-            if(friend.getFrom().getId() == Integer.parseInt(sender)){
-                emitters.get(friend.getTo().getId().toString()).send(SseEmitter.event().name("chat").data(room));
+            if(friend.getFrom().getId() == Long.parseLong(sender)){
+                emitter = emitters.get(friend.getTo().getId());
+
             } else {
-                emitters.get(friend.getFrom().getId().toString()).send(SseEmitter.event().name("chat").data(room));
+                emitter = emitters.get(friend.getFrom().getId());
+            }
+
+            if(emitter != null){
+                emitter.send(SseEmitter.event().name("chat").data(room));
             }
         } catch (IOException e){
             log.info(e.getMessage());
