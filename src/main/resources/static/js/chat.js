@@ -88,7 +88,8 @@ function sendChat() {
                 body: JSON.stringify({
                     'room' : $("#room").val(),
                     'user' : $("#chatUser").val(),
-                    'content' : $("#chat").val()
+                    'content' : $("#chat").val(),
+                    'userId' : $("#userId").val()
             })
         });
         $("#chat").val("");
@@ -123,10 +124,11 @@ function showRecentMessage(history) {
     historyFetched = true;
 }
 
-function openChat(room, opponent, user) {
+function openChat(room, opponent, userId, username) {
     $("#room").val(room);
     $("#room-name").text(opponent);
-    $("#chatUser").val(user);
+    $("#chatUser").val(username);
+    $("#userId").val(userId);
     $("#circle-"+room).css("display", "none");
 
     if($("#chat-container").css("display")=="block") {
