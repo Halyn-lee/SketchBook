@@ -30,24 +30,6 @@ public class ChatController {
     private final ChatLogService chatLogService;
     private final ChatRoomService chatRoomService;
 
-    @GetMapping("/chat")
-    public String chat() {
-        return "chat";
-    }
-
-    @GetMapping("chat-list")
-    public String chatList(Model model){
-
-        var rooms = chatRoomService.getChatRoomList();
-        model.addAttribute("rooms", rooms);
-
-        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getName());
-
-        log.info(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        return "tempchat";
-    }
-
     @MessageMapping("/send")
     public void sendMessage(Chat chat) {
         producer.sendMessage(chat); // Kafka에 메시지 전송

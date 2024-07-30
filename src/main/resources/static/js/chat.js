@@ -87,7 +87,7 @@ function sendChat() {
                 destination: "/app/send",
                 body: JSON.stringify({
                     'room' : $("#room").val(),
-                    'user' : $("#user").val(),
+                    'user' : $("#chatUser").val(),
                     'content' : $("#chat").val()
             })
         });
@@ -102,7 +102,7 @@ function fetchPreviousMessages() {
 }
 
 function showMessage(message) {
-    if($("#user").val()==message.user){
+    if($("#chatUser").val()==message.user){
         $("#content").append("<div class=\"w-100 d-flex justify-content-end mb-2\"><div class=\"bg-warning-subtle p-1 rounded\">" + message.content + "</div></div>");
     } else {
 
@@ -126,7 +126,7 @@ function showRecentMessage(history) {
 function openChat(room, opponent, user) {
     $("#room").val(room);
     $("#room-name").text(opponent);
-    $("#user").val(user);
+    $("#chatUser").val(user);
     $("#circle-"+room).css("display", "none");
 
     if($("#chat-container").css("display")=="block") {
