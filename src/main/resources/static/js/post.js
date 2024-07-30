@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let postId = e.target.getAttribute('data-post-id');
             let modal = document.querySelector("#postModalContainer");
             let modalImageContainer = document.querySelector(".post-image-list");
-            let imageTags = e.target.parentElement.nextElementSibling.querySelectorAll("img");
+            let imageTags = e.target.querySelectorAll("img");
             modalImageContainer.innerHTML = "";
 
             let postContent = document.querySelector("#post-container-" + postId + " .fw-bold.fs-5").getAttribute('data-content');
