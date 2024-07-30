@@ -1,5 +1,6 @@
 package com.app.sketchbook.post.controller;
 
+import com.app.sketchbook.chat.service.ChatRoomService;
 import com.app.sketchbook.post.DTO.ImageRequestDTO;
 import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
@@ -27,11 +28,14 @@ public class PostController {
     private final PostService postService;
     private final ImageRepository imageRepository;
     private final UserService userService;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("/main")
     public String main(Model model) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         model.addAttribute("user", user);
+        var rooms = chatRoomService.getChatRoomList();
+        model.addAttribute("rooms", rooms);
         return "main";
     }
 
