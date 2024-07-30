@@ -10,7 +10,7 @@ public interface ChatRoomService {
 
     void createRoom(Long friendNo);
     boolean checkRoomCreated(Long roomNo);
-    void updateDisconnectTime(Long room, Long user);
+    void updateDisconnectTime(Long room);
     void updateLastSend(Long room, Date time);
-    List<ChatRoomModel> getChatRoomList(Long user);
+    List<ChatRoomModel> getChatRoomList();
 }

@@ -2,3 +2,11 @@
     height:400px;
     overflow-anchor:auto;
 }
+
+#chat-circle {
+    display:inline-block;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    background-color:red;
+}

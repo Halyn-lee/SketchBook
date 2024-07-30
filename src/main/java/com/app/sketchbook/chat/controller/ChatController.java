@@ -10,6 +10,7 @@ import lombok.extern.java.Log;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -42,8 +43,8 @@ public class ChatController {
     }
 
     @MessageMapping("/disconnect/{room}")
-    public void updateDisconnectTime(String user, @DestinationVariable String room){
-        chatRoomService.updateDisconnectTime(Long.parseLong(room), Long.parseLong(user));
+    public void updateDisconnectTime(@DestinationVariable String room){
+        chatRoomService.updateDisconnectTime(Long.parseLong(room));
     }
 
 }
