@@ -3,7 +3,6 @@ package com.app.sketchbook.post.service;
 import com.app.sketchbook.friend.entity.Friend;
 import com.app.sketchbook.friend.entity.FriendStatus;
 import com.app.sketchbook.friend.repository.FriendRepository;
-import com.app.sketchbook.post.entity.Image;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.repository.PostRepository;
@@ -11,8 +10,9 @@ import com.app.sketchbook.reply.entity.Reply;
 import com.app.sketchbook.reply.repository.ReplyRepository;
 import com.app.sketchbook.reply.service.ReplyService;
 import com.app.sketchbook.user.entity.SketchUser;
-import com.app.sketchbook.user.repository.UserRepository;
 import com.app.sketchbook.user.service.UserService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.StoredProcedureQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -20,7 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -28,11 +29,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final ImageRepository imageRepository;
     private final ReplyRepository replyRepository;
     private final FriendRepository friendRepository;
     private final ReplyService replyService;
     private final UserService userService;
+    private final EntityManager entityManager;
+
 
     public Post create_post(Post post, SketchUser user) {
         post.setSketchUser(user);
@@ -40,8 +42,28 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public void saveImages(List<Image> images) {
-        imageRepository.saveAll(images);
+    public void saveImage(Post post, String base64ImageData) {
+        String filePath = "C:/images/" + UUID.randomUUID() + ".png";
+        try {
+            // Base64 디코딩
+            byte[] imageBytes = Base64.getDecoder().decode(base64ImageData);
+
+            // 파일 저장
+            try (OutputStream stream = new FileOutputStream(filePath)) {
+                stream.write(imageBytes);
+            }
+
+            // PL/SQL 저장 프로시저 호출
+            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("insert_image_metadata");
+            query.registerStoredProcedureParameter("p_post_no", Long.class, jakarta.persistence.ParameterMode.IN);
+            query.registerStoredProcedureParameter("p_file_path", String.class, jakarta.persistence.ParameterMode.IN);
+            query.setParameter("p_post_no", post.getNo());
+            query.setParameter("p_file_path", filePath);
+            query.execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Post getPost(Integer no) {

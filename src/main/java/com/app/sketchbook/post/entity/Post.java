@@ -43,5 +43,9 @@ public class Post {
     private SketchUser sketchUser;
 
     @ManyToMany
+    @JoinTable(
+            name = "post_like",
+            joinColumns = @JoinColumn(name = "no"),
+            inverseJoinColumns = @JoinColumn(name = "like_id"))
     private Set<SketchUser> like;
 }
