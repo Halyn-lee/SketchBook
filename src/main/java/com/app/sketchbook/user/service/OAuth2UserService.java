@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
             }
             else if(existData!=null && existData.getSocial()==null){
-                throw new OAuth2AuthenticationException("User already exists");
+                throw new OAuth2AuthenticationException(new OAuth2Error("user_already_exists"), "User already exists");
             }
 
             returnOauthUser = new CustomOAuth2User(oAuth2Response, role);

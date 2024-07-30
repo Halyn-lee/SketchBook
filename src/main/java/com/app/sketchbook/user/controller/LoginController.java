@@ -26,7 +26,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String UserLogin(){
-        return "gptlogin";
+        return "login";
     }
 
     @PostMapping("/resend-activation-email")
@@ -103,6 +103,5 @@ public class LoginController {
         //return "redirect:/main";
         return "redirect:/login";
     }
-//    @PostMapping("/login")
-//    public String loadLogin()
+
 }
