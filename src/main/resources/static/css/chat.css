@@ -5,8 +5,8 @@
 
 .chat-circle {
     display:inline-block;
-    width:25px;
-    height:25px;
+    width:15px;
+    height:15px;
     border-radius:50%;
     background-color:red;
 }
