@@ -68,6 +68,15 @@ public class FriendController {
         return "requested_list";
     }
 
+    //사용자 차단 목록
+    @GetMapping("/blacklist")
+    public String blackList(Model model){
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<Friend> blacklist = friendService.getBlacklist(user);
+        model.addAttribute("blacklist", blacklist);
+        return "blacklist";
+    }
+
     //친구 찾기
     @GetMapping("/search")
     public String friendSearch(@RequestParam("keyword") String keyword, Model model) {
