@@ -1,7 +1,7 @@
 <div class="friend-card" th:each="user : ${requestList}">
     <div class="user-image">
         <!--        <img th:src="@{/images/{filename}(filename=${#strings.substring(imgsrc)>  -->
-        <img th:src="${user.profile_img_url != null && !user.profile_img_url.isEmpty() ? user.profile_img_url : '/img/search-icon.png'}">
+        <img th:src="${user.profile_img_url != null && !user.profile_img_url.isEmpty() ? user.profile_img_url : '/img/default-profile.png'}">
     </div>
     <span class="user-name" th:text="${user.username}"></span>
     <div class="btn-group">

@@ -17,7 +17,7 @@
     <div class=" border-bottom p-2" th:each="item : ${chat_rooms}">
         <div class="friends-chat"
              th:onclick="openChat([[${item.room}]], [[${item.opponent}]],[[${user.getId()}]], [[${user.getUsername()}]], [[${item.profile_img_url != null && !item.profile_img_url.isEmpty() ? item.profile_img_url : '/img/navlogo.png'}]])">
-            <img th:src="${item.profile_img_url != null && !item.profile_img_url.isEmpty() ? item.profile_img_url : '/img/navlogo.png'}"/>
+            <img th:src="${item.profile_img_url != null && !item.profile_img_url.isEmpty() ? item.profile_img_url : '/img/default-profile.png'}"/>
             <input type="text" class="friends-input" th:value="${item.opponent}"></input>
             <div class="ms-2 chat-circle" th:id="'circle-'+${item.room}"
                  th:style="'display: '+${item.messagesExists ? 'block' : 'none'}"></div>

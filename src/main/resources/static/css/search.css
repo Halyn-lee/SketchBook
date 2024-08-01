@@ -297,7 +297,7 @@ body {
 .add-friend input[type="submit"] {
     width: 100%;
     padding: 10px;
-    background: #e0810d;
+    background: #00afff;
     color: #fff;
     border-radius: 4px;
     cursor: pointer;
@@ -329,7 +329,7 @@ body {
 .block-friend input[type="submit"] {
     width: 100%;
     padding: 10px;
-    background: #f949f9;
+    background: #f60000;
     color: #fff;
     border-radius: 4px;
     cursor: pointer;
