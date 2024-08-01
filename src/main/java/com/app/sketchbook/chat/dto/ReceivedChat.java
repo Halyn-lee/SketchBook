@@ -20,5 +20,6 @@ public class ReceivedChat extends Chat{
         setContent(chat.getContent());
         setSendTime(sendTime);
         setId(chat.getId());
+        setUserid(chat.getUserid());
     }
 }

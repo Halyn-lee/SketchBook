@@ -7,6 +7,7 @@ sse.addEventListener('connect', (e) => {
 
 sse.addEventListener('chat', (e) => {
 	const { data: room } = e;
+	console.log('received : ', room);
 	if($("#room").val()!=room){
 	    $("#circle-"+room).css("display", "block");
 	}
