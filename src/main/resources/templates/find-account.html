@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/join-style.css}">
+    <link href="/css/navbar.css" rel="stylesheet" type="text/css"/>
     <title>Title</title>
 </head>
 <body>
+
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+
 <div class="changepw-container">
 <form th:action="@{/find-account}" method="post">
 

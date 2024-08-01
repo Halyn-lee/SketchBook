@@ -276,3 +276,23 @@
     display: flex;
     gap: 3px;
 }
+
+.profile-details {
+    display: flex;
+    gap: 50px;
+    margin-left: 40px;
+}
+
+.profile-details .details-0 {
+    padding-top: 30px;
+}
+
+.profile-details .details-1 {
+    padding-top: 30px;
+}
+
+.profile-details .details-2 {
+    justify-self: center;
+    padding-top: 15px;
+    align-items: center;
+}
