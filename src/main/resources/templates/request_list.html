@@ -50,20 +50,17 @@
         </aside>
         <section class="content">
             <div class="main-container">
-            <a th:href="@{/friend/requested/list}">요청받은 목록</a>
-            <h2>친구 요청 신청</h2>
-            <ul>
-                <li th:each="request : ${friendRequest}">
-                    <img th:src="${request.to.profile_img_url}" alt="Profile Picture" class="profile-picture">
-                    <span th:text="${request.to.username}">Username</span>
-                    <form th:action="@{/friend/cancel}" method="post" class="action-form">
-                        <input type="hidden" name="friendId" th:value="${request.to.id}">
-                        <button type="submit">Cancel Request</button>
-                    </form>
-                </li>
-            </ul>
+                <div class="request-user">
+                    <input type="text" value="보낸 요청"/>
+                </div>
+                <div class="request-user">
+                    <a th:href="@{/friend/requested/list}"><input type="text" value="받은 요청 보기"/></a>
+                </div>
+                <div hx-get="/friend/request/list/0" hx-swap="outerHTML"
+                     hx-trigger="revealed"
+                     th:attr="hx-get=${'/friend/request/list/0'}"></div>
             </div>
-        </section>>
+        </section>
     </main>
 </div>
 <script src="js/searchnav.js"></script>

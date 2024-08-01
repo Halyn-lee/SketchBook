@@ -49,32 +49,61 @@ public class FriendController {
 
         return "next-friend-list";
     }
-
-    //친구 요청한 목록
     @GetMapping("/request/list")
-    public String friendRequestList(Model model) {
-        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-        List<Friend> friendRequest = friendService.getRequestFriend(user);
-        model.addAttribute("friendRequest", friendRequest);
+    public String friendRequestList(Model model){
         return "request_list";
+    }
+    //친구 요청한 목록
+    @GetMapping("/request/list/{pageNumber}")
+    public String friendRequestList(Model model, @PathVariable int pageNumber) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<List<SketchUser>> friends = friendService.getRequestFriend(user);
+        List<SketchUser>userlist = friends.get(pageNumber);
+        if (pageNumber<userlist.size()) {
+            log.info("enter");
+            model.addAttribute("nextPageNumber", pageNumber + 1);
+        }
+        model.addAttribute("requestList", userlist);
+        return "next-request-list";
     }
 
     //친구 요청받은 목록
     @GetMapping("/requested/list")
     public String friendRequestedList(Model model) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-        List<Friend> friendRequested = friendService.getRequestedFriend(user);
-        model.addAttribute("friendRequested", friendRequested);
         return "requested_list";
+    }
+
+    @GetMapping("/requested/list/{pageNumber}")
+    public String friendRequestedList(Model model, @PathVariable int pageNumber ) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<List<SketchUser>> friends = friendService.getRequestedFriend(user);
+        List<SketchUser>userlist = friends.get(pageNumber);
+        if (pageNumber<userlist.size()) {
+            log.info("enter");
+            model.addAttribute("nextPageNumber", pageNumber + 1);
+        }
+        model.addAttribute("requestedList", userlist);
+        return "next-requested-list";
     }
 
     //사용자 차단 목록
     @GetMapping("/blacklist")
     public String blackList(Model model){
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-        List<Friend> blacklist = friendService.getBlacklist(user);
-        model.addAttribute("blacklist", blacklist);
         return "blacklist";
+    }
+    @GetMapping("/blacklist/{pageNumber}")
+    public String blackList(Model model, @PathVariable int pageNumber){
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<List<SketchUser>> friends = friendService.getBlacklist(user);
+        List<SketchUser>userlist = friends.get(pageNumber);
+        if (pageNumber<userlist.size()) {
+            log.info("enter");
+            model.addAttribute("nextPageNumber", pageNumber + 1);
+        }
+        model.addAttribute("blackList", userlist);
+        return "next-black-list";
     }
 
     //친구 찾기

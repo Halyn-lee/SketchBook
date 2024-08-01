@@ -57,13 +57,33 @@ public class FriendService {
     }
 
     //친구 요청한 목록 가져오기
-    public List<Friend> getRequestFriend(SketchUser user) {
-        return friendRepository.findByFromAndStatus(user, FriendStatus.PENDING);
+    public List<List<SketchUser>> getRequestFriend(SketchUser user) {
+        List<Friend> from = friendRepository.findByFromAndStatus(user, FriendStatus.PENDING);
+        List<SketchUser> users = new ArrayList<>();
+        if(from!=null)
+        {
+           for(Friend friend:from)
+           {
+               users.add(friend.getTo());
+           }
+        }
+        List<List<SketchUser>> slice = sliceIn(users, 3);
+        return slice;
     }
 
     //친구 요청받은 목록 가져오기
-    public List<Friend> getRequestedFriend(SketchUser user) {
-        return friendRepository.findByToAndStatus(user, FriendStatus.PENDING);
+    public List<List<SketchUser>> getRequestedFriend(SketchUser user) {
+        List<Friend> to = friendRepository.findByToAndStatus(user, FriendStatus.PENDING);
+        List<SketchUser> users = new ArrayList<>();
+        if(to!=null)
+        {
+            for(Friend friend:to)
+            {
+                users.add(friend.getFrom());
+            }
+        }
+        List<List<SketchUser>> slice = sliceIn(users, 3);
+        return slice;
     }
 
     public static <T> List<List<T>> sliceIn(List<T> list, int chunkSize){
@@ -79,8 +99,18 @@ public class FriendService {
     }
 
     //사용자 차단 목록 가져오기
-    public List<Friend> getBlacklist(SketchUser user) {
-        return friendRepository.findByFromAndStatus(user, FriendStatus.BLOCKED);
+    public List<List<SketchUser>>  getBlacklist(SketchUser user) {
+        List<Friend> from = friendRepository.findByFromAndStatus(user, FriendStatus.BLOCKED);
+        List<SketchUser> users = new ArrayList<>();
+        if(from!=null)
+        {
+            for(Friend friend:from)
+            {
+                users.add(friend.getTo());
+            }
+        }
+        List<List<SketchUser>> slice = sliceIn(users, 3);
+        return slice;
     }
 
     //친구 상태에 존재하는지 확인
@@ -264,8 +294,8 @@ public class FriendService {
         SketchUser blacklist = userRepository.findById(blockId).orElseThrow();
         Optional<Friend> existingStatus = friendRepository.findByFromAndToAndStatus(user, blacklist, FriendStatus.BLOCKED);
         if(existingStatus.isPresent() && existingStatus.get().getStatus()==FriendStatus.BLOCKED){
-            Friend friendStatus = existingStatus.get();
-            friendRepository.delete(friendStatus);
+           // Friend friendStatus = existingStatus.get();
+            friendRepository.updateFriendStatus(blacklist,FriendStatus.BLOCKED,FriendStatus.NOT_FRIEND);
             return "사용자 차단을 해제하였습니다.";
         }
         return "";
