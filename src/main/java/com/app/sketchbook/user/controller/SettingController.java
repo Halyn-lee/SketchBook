@@ -1,30 +1,30 @@
 package com.app.sketchbook.user.controller;
 
+import com.app.sketchbook.user.DTO.ModifyUserForm;
 import com.app.sketchbook.user.service.ConnectionLogService;
 import com.app.sketchbook.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @Log
 @Controller
+@RequestMapping("/setting")
 @RequiredArgsConstructor
-public class ConnectionLogController {
+public class SettingController {
+
     private final UserService userService;
     private final ConnectionLogService connectionLogService;
 
-    @GetMapping("/connection-log")
+    @GetMapping("/log")
     public String connectionLogDefault(Model model) {
         return connectionLog(0, model);
     }
 
-    @GetMapping("/connection-log/{page}")
+    @GetMapping("/log/{page}")
     public String connectionLog(@PathVariable(value = "page") int page, Model model) {
 
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -51,5 +51,53 @@ public class ConnectionLogController {
         model.addAttribute("total_page", logs.getTotalPages()-1);
 
         return "connection-log";
+    }
+
+    @GetMapping("/user")
+    public String userSetting(Model model){
+
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(auth == null){
+            return "redirect:/login";
+        }
+
+        var user = userService.principalUser(auth);
+
+        if(user == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("user", user);
+
+        return "modify-user";
+    }
+
+    @PostMapping("/modify")
+    public String modify(@ModelAttribute ModifyUserForm userForm, Model model){
+
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(auth == null){
+            return "redirect:/login";
+        }
+
+        var user = userService.principalUser(auth);
+
+        if(user == null) {
+            return "redirect:/login";
+        }
+
+        user.setUsername(userForm.getName());
+        user.setBirth(userForm.getBirth());
+        user.setPhone(userForm.getTel());
+        user.setGender(userForm.getGender());
+        user.setAddress(userForm.getAddress());
+
+        userService.updateUser(user);
+
+        model.addAttribute("user", user);
+
+        return "modify-user";
     }
 }

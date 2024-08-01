@@ -147,12 +147,13 @@ function showRecentMessage(history) {
     historyFetched = true;
 }
 
-function openChat(room, opponent, userId, username) {
+function openChat(room, opponent, userId, username, profile) {
     $("#room").val(room);
     $("#room-name").text(opponent);
     $("#chatUser").val(username);
     $("#userId").val(userId);
     $("#circle-"+room).css("display", "none");
+    $("#chat-profile").attr("src", profile);
 
     if($("#chat-container").css("display")=="block") {
         if(room == $("#room").val()){

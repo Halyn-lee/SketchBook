@@ -8,8 +8,8 @@
 <body>
 <div th:fragment="chat-list (chat_rooms, user)">
     <div class="bg-warning bg-gradient bg-opacity-25 border-bottom border-2 border-dark p-2" th:each="item : ${chat_rooms}">
-        <div class="d-flex align-items-center" th:onclick="openChat([[${item.room}]], [[${item.opponent}]],[[${user.getId()}]], [[${user.getUsername()}]])">
-            <img class="me-2 rounded" src="https://picsum.photos/45/45"/>
+        <div class="d-flex align-items-center" th:onclick="openChat([[${item.room}]], [[${item.opponent}]],[[${user.getId()}]], [[${user.getUsername()}]], [[${item.profile_img_url != null && !item.profile_img_url.isEmpty() ? item.profile_img_url : '/img/navlogo.png'}]])">
+            <img class="me-2 rounded chat-logo" th:src="${item.profile_img_url != null && !item.profile_img_url.isEmpty() ? item.profile_img_url : '/img/navlogo.png'}"/>
             <span class="fw-semibold fs-4 d-flex align-items-center" th:text="${item.opponent}">홍길동</span>
             <div class="ms-2 chat-circle" th:id="'circle-'+${item.room}" th:style="'display: '+${item.messagesExists ? 'block' : 'none'}"></div>
         </div>
