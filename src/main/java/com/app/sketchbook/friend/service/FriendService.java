@@ -77,6 +77,12 @@ public class FriendService {
 
         return slices;
     }
+
+    //사용자 차단 목록 가져오기
+    public List<Friend> getBlacklist(SketchUser user) {
+        return friendRepository.findByFromAndStatus(user, FriendStatus.BLOCKED);
+    }
+
     //친구 상태에 존재하는지 확인
     private Optional<Friend> checkFriend(SketchUser user, SketchUser friend) {
         return friendRepository.findByFromAndToOrFromAndTo(user, friend, friend, user);
@@ -254,7 +260,7 @@ public class FriendService {
     @Transactional
     public String unblockUser(SketchUser user, Long blockId) {
         SketchUser blacklist = userRepository.findById(blockId).orElseThrow();
-        Optional<Friend> existingStatus = checkFriend(user, blacklist);
+        Optional<Friend> existingStatus = friendRepository.findByFromAndToAndStatus(user, blacklist, FriendStatus.BLOCKED);
         if(existingStatus.isPresent() && existingStatus.get().getStatus()==FriendStatus.BLOCKED){
             Friend friendStatus = existingStatus.get();
             friendRepository.delete(friendStatus);
