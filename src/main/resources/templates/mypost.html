@@ -3,7 +3,10 @@
 
         <div class="post-header">
             <div class="profile-box">
-                <div class="profile-picture">프사</div>
+                <div class="profile-picture">
+                    <img th:src="${user.profile_img_url != null && !user.profile_img_url.isEmpty() ? user.profile_img_url : '/img/default-profile.png'}"
+                         alt="Profile Image"/>
+                </div>
                 <div class="profile-info">
                     <div class="profile-name">
                         <span class="fw-bold" th:text="${post.sketchUser.username}"></span>
@@ -175,7 +178,7 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <form method="post" th:action="@{/reply/create/{no}(no=${post.no})}">
+            <form method="post" th:action="@{/reply/mycreate/{no}(no=${post.no})}">
                 <textarea class="form-control mb-2" name="content"></textarea>
                 <div class="d-flex justify-content-end">
                     <button class="badge bg-success" type="submit">✔</button>

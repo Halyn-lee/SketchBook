@@ -38,6 +38,22 @@ public class ReplyController {
 
         return "redirect:/main";
     }
+    @PostMapping("/mycreate/{no}")
+    public String mycreate_reply(Model model, @PathVariable("no") Integer no, String content) {
+        Post post = null;
+
+        try {
+            post = postService.getPost(no);
+        } catch (Exception e) {
+            return "error"; // 나중에 예외처리용
+        }
+
+        replyService.reply_create(post, content);
+
+        model.addAttribute("post", post);
+
+        return "redirect:/profile";
+    }
 
     @PostMapping("/modify/{no}")
     public ResponseEntity<?> modify_reply(@PathVariable("no") Integer no, @RequestBody Reply modifiedReply) {
