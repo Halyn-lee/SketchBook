@@ -114,7 +114,9 @@
         <div class="modal-body">
             <div class="writer-box">
                 <div class="profile">
-                    <div class="image"></div>
+                    <div class="image">
+                        <img th:src="${user.profile_img_url != null && !user.profile_img_url.isEmpty() ? user.profile_img_url : '/img/default-profile.png'}">
+                    </div>
                     <div class="name" th:text="${user.username}"></div>
                 </div>
                 <div class="d-flex">

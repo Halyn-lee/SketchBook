@@ -4,7 +4,7 @@
         <div class="post-header">
             <div class="profile-box">
                 <div class="profile-picture">
-                    <img th:src="${user.profile_img_url != null && !user.profile_img_url.isEmpty() ? user.profile_img_url : '/img/default-profile.png'}"
+                    <img th:src="${post.sketchUser.profile_img_url != null && ! post.sketchUser.profile_img_url.isEmpty() ? post.sketchUser.profile_img_url : '/img/default-profile.png'}"
                                                   alt="Profile Image"/>
                 </div>
                 <div class="profile-info">
@@ -125,7 +125,10 @@
         <div class="reply-box" th:each="reply : ${post.reply_list}" th:id="'reply-container-'+${reply.no}">
 
             <div class="reply-header">
-                <div class="avatar"></div> <!-- 사용자 프로필 사진 -->
+                <div class="avatar">
+                    <img th:src="${reply.user.profile_img_url != null && ! reply.user.profile_img_url.isEmpty() ? reply.user.profile_img_url : '/img/default-profile.png'}"
+                         alt="Profile Image"/>
+                </div>
             </div>
 
             <div class="reply-body">
