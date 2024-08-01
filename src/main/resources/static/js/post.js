@@ -153,8 +153,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         canvas.renderAll();
                     }
                     img.src = e.target.result;
+
                 }
                 reader.readAsDataURL(file);
+
             }
         });
 

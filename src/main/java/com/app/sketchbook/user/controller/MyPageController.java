@@ -48,7 +48,7 @@ public class MyPageController {
     @GetMapping("")
     public String userProfile(Model model) {
         SketchUser profileOwner = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-        model.addAttribute("profileOwner", profileOwner);
+        model.addAttribute("user", profileOwner);
         return "mypage";
     }
 

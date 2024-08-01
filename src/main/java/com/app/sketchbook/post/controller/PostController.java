@@ -77,6 +77,31 @@ public class PostController {
 
         return "mypost";
     }
+    @PostMapping("/mypost/create")
+    public String create_mypost(Post post, @RequestParam("imageData") String imageDataList) {
+        // Post 엔티티에 저장
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        Post savedPost = postService.create_post(post, user);
+
+        String[] imageDataArray = imageDataList.split("base64,");
+
+        for (int i = 1; i < imageDataArray.length; i++) {
+            String imageData = imageDataArray[i]; // base64 데이터만 가져옴
+            if (imageData != null && !imageData.isEmpty()) {
+                try {
+                    // 공백 및 모든 공백 문자 제거
+                    imageData = imageData.replaceAll("\\s+", "");
+
+                    // 이미지 데이터 저장
+                    postService.saveImage(savedPost, imageData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return "redirect:/profile";
+    }
 
     @PostMapping("/post/create")
     public String create_post(Post post, @RequestParam("imageData") String imageDataList) {

@@ -20,14 +20,14 @@ public class CustomLoginFailHandler implements AuthenticationFailureHandler {
 
         //oAuth 로그인 시
         if (exception instanceof OAuth2AuthenticationException) {
-            response.sendRedirect("/account/login?oAuthError");
+            response.sendRedirect("/login?oAuthError");
         } else { //일반 로그인 시
 
             if (exception.getMessage().equals("메일 인증이 필요합니다.")) {
-                response.sendRedirect("/account/verify?email=" + email);
+                response.sendRedirect("/verify?email=" + email);
             } else {
                 log.info(exception.getMessage());
-                response.sendRedirect("/account/login?error");
+                response.sendRedirect("/login?error");
             }
         }
     }
