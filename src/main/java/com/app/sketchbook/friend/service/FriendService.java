@@ -3,15 +3,22 @@ package com.app.sketchbook.friend.service;
 import com.app.sketchbook.friend.entity.Friend;
 import com.app.sketchbook.friend.entity.FriendStatus;
 import com.app.sketchbook.friend.repository.FriendRepository;
+import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.UserRepository;
+import com.app.sketchbook.user.service.UserService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+@Log4j2
 @Service
 public class FriendService {
     @Autowired
@@ -20,11 +27,44 @@ public class FriendService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
     //친구 목록 가져오기
     public List<Friend> getFriends(SketchUser user) {
         return friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
     }
+    public List<List<SketchUser>> testgetFriends(SketchUser user) {
+        List<Friend> friends = friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
+        System.out.print(friends);
+        List<SketchUser> users = new ArrayList<>();
+        if(friends!=null) {
+            for (Friend friend : friends) {
+                if (friend.getFrom() == user)
+                    users.add(friend.getTo());
+                else if (friend.getTo() == user)
+                    users.add(friend.getFrom());
+            }
+        }else {
+            return null;
+        }
+        List<List<SketchUser>> slice = sliceIn(users, 3);
+        return slice;
 
+
+        //return friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
+    }
+
+    public static <T> List<List<T>> sliceIn(List<T> list, int chunkSize){
+        List<List<T>> slices = new ArrayList<>();
+        int listSize = list.size();
+
+        for (int i = 0; i < listSize; i += chunkSize) {
+            int end = Math.min(listSize, i + chunkSize);
+            slices.add(list.subList(i, end));
+        }
+
+        return slices;
+    }
     //친구 상태에 존재하는지 확인
     private Optional<Friend> checkFriend(SketchUser user, SketchUser friend) {
         return friendRepository.findByFromAndToOrFromAndTo(user, friend, friend, user);
@@ -71,6 +111,12 @@ public class FriendService {
         return result;
     }
 
+    //사용자검색
+    public Slice<SketchUser> fetchUsersByPage(String query,int pageNumber) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, 3);
+        Slice<SketchUser> users = userRepository.findByUsername(query, pageRequest);
+        return users;
+    }
     //친구 요청
     @Transactional
     public String requestFriend(SketchUser user, Long friendId) {

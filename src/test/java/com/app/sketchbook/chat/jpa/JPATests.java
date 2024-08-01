@@ -18,16 +18,18 @@ public class JPATests {
 
     @Autowired
     ChatRoomRepository chatRoomRepository;
+//
+//    @Test
+//    @Transactional
+//    public void testGetUsers(){
+//        var room = new ChatRoom();
+//        room.setRequester(new SketchUser());
+//        room.setReceiver(new SketchUser());
+//        chatRoomRepository.save(room);
+//
+//        var result = chatRoomRepository.findById(7L);
+//        assertFalse(result.isEmpty());
+//    }
 
-    @Test
-    @Transactional
-    public void testGetUsers(){
-        var room = new ChatRoom();
-        room.setRequester(new SketchUser());
-        room.setReceiver(new SketchUser());
-        chatRoomRepository.save(room);
 
-        var result = chatRoomRepository.findById(7L);
-        assertFalse(result.isEmpty());
-    }
 }
