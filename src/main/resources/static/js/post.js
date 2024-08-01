@@ -32,12 +32,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     span2.onclick = function () {
         modal2.style.display = "none";
+        canvas.dispose();
+        canvas = null;
     }
 
     function canvasInit() {
         canvas = new fabric.Canvas("canvas", {
-            width: 800,
-            height: 600,
+            width: 550,
+            height: 550,
             isDrawingMode: true,
             backgroundColor: "white",
         });
@@ -47,11 +49,24 @@ document.addEventListener("DOMContentLoaded", function () {
         canvas.freeDrawingBrush.color = "black";
 
         // 버튼 클릭 이벤트 리스너
-        
-        // 지우개
+
+        // 색상 선택기
+        document.getElementById('color-picker').addEventListener('input', (e) => {
+            canvas.freeDrawingBrush.color = e.target.value;
+        });
+
+        // 브러시 버튼 클릭 이벤트 리스너
+        document.getElementById("brush").addEventListener("click", () => {
+            canvas.freeDrawingBrush.width = parseInt(document.getElementById('brush-size').value, 10);
+            canvas.freeDrawingBrush.color = document.getElementById('color-picker').value; // 색상 선택기에서 현재 색상 가져오기
+            canvas.isDrawingMode = true; // 그리기 모드 활성화
+        });
+
+        // 지우개 버튼 클릭 이벤트 리스너
         document.getElementById("erase").addEventListener("click", () => {
-            canvas.freeDrawingBrush.width = parseInt(document.getElementById('eraser-size').value, 10);
-            canvas.freeDrawingBrush.color = canvas.backgroundColor;
+            canvas.freeDrawingBrush.width = parseInt(document.getElementById('brush-size').value, 10);
+            canvas.freeDrawingBrush.color = canvas.backgroundColor; // 캔버스 배경색으로 설정
+            canvas.isDrawingMode = true; // 그리기 모드 활성화
         });
 
         // 브러시 크기 조절
@@ -59,21 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
             canvas.freeDrawingBrush.width = parseInt(e.target.value, 10);
         });
 
-        // 지우개 크기 조절
-        document.getElementById('eraser-size').addEventListener('input', (e) => {
-            canvas.freeDrawingBrush.width = parseInt(e.target.value, 10);
-        });
 
-        // 색상 선택기
-        document.getElementById('color-picker').addEventListener('input', (e) => {
-            canvas.freeDrawingBrush.color = e.target.value;
-        });
-
-        // "첨부" 버튼 클릭에 대한 이벤트 리스너
+        // "그림 첨부" 버튼 클릭에 대한 이벤트 리스너
         document.getElementById("attach").addEventListener("click", (e) => {
-            console.log("첨부이벤트");
-            console.log("false 떠야 됨" + canvasIsModify);
-
+            e.preventDefault();
             // Canvas 내용을 데이터 URL로 변환
             let dataURL = canvas.toDataURL({format: 'png'});
             let imageDataInput;
@@ -82,6 +86,9 @@ document.addEventListener("DOMContentLoaded", function () {
             attachedImage.src = dataURL;
             attachedImage.style.maxWidth = '30%';
             attachedImage.style.height = '35%';
+
+            // 고유한 ID 부여
+            attachedImage.id = `temp-image-${Date.now()}`;
 
             if (!canvasIsModify) {
                 imageDataInput = document.getElementById('imageData');
@@ -95,11 +102,9 @@ document.addEventListener("DOMContentLoaded", function () {
             let currentData = imageDataInput.value ? imageDataInput.value + "base64," + dataURL.split("base64,")[1] : dataURL;
             imageDataInput.value = currentData;
 
-            modal2.style.display = 'none';
             canvas.dispose();
             canvas = null;
-            console.log(canvas);
-            e.target.removeEventListener("click");
+            document.getElementById('modal2').style.display = 'none';
         });
 
         // "이미지 추가" 버튼 클릭 이벤트 리스너
@@ -116,10 +121,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     const img = new Image();
                     img.onload = function() {
                         const fabricImage = new fabric.Image(img, {
-                            left: 100,
-                            top: 100,
-                            scaleX: 1,
-                            scaleY: 1
+                            left: 170,
+                            top: 180,
+                            scaleX: 2,
+                            scaleY: 2
                         });
 
                         canvas.add(fabricImage);
@@ -189,48 +194,54 @@ document.addEventListener("DOMContentLoaded", function () {
     // 게시물 수정 버튼 이벤트 리스너
     document.body.addEventListener('click', function (e) {
         if (e.target.classList.contains('modifybtn')) {
+            e.preventDefault();
             let postId = e.target.getAttribute('data-post-id');
             let modal = document.querySelector("#postModalContainer");
             let modalImageContainer = document.querySelector(".post-image-list");
-            let carousel = e.target.closest('.btn-group').parentElement.parentElement.nextElementSibling.querySelector(".carousel-inner") // .btn-group 다음에 오는 .carousel slide
-            let imageTags = carousel.querySelectorAll('img');
+            let carousel = e.target.closest('.btn-group').parentElement.parentElement.nextElementSibling.querySelector(".carousel-inner"); // .btn-group 다음에 오는 .carousel slide
+            let imageTags = carousel ? carousel.querySelectorAll('img') : []; // carousel이 없는 경우 빈 배열로 처리
+
             modalImageContainer.innerHTML = "";
 
             let postContent = document.querySelector("#post-container-" + postId + " .fw-bold.fs-5").getAttribute('data-content');
             let textarea = modal.querySelector("textarea");
             textarea.value = postContent;
 
-            for (let image of imageTags) {
-                const image_no = image.dataset.id;
-                const image_src = image.src;
+            // 이미지가 존재할 경우에만 처리
+            if (imageTags.length > 0) {
+                for (let image of imageTags) {
+                    const image_no = image.dataset.id;
+                    const image_src = image.src;
 
-                let newImageTag = document.createElement("img");
-                newImageTag.src = image_src;
-                newImageTag.dataset.id = image_no;
-                newImageTag.classList = ["d-block", "w-10"];
-                newImageTag.id = `image-${image_no}`;
-                newImageTag.style.width = '30%';
-                newImageTag.style.height = '35%';
-                modalImageContainer.appendChild(newImageTag)
+                    let newImageTag = document.createElement("img");
+                    newImageTag.src = image_src;
+                    newImageTag.dataset.id = image_no;
+                    newImageTag.classList = ["d-block", "w-10"];
+                    newImageTag.id = `image-${image_no}`;
+                    newImageTag.style.width = '30%';
+                    newImageTag.style.height = '35%';
+                    modalImageContainer.appendChild(newImageTag);
+                }
             }
 
             let deleteBtn = document.getElementById("postDelBtn");
             let addBtn = document.getElementById("postAddBtn");
             let closeBtn = document.querySelector("#postModalClose");
             let submitBtn = document.querySelector("#postModBtn");
-            let modForm = document.querySelector("#modForm");
+            let modForm = document.querySelector(".modForm"); // 수정된 폼 클래스 이름
 
             modal.style.display = "block";
 
             if (deleteBtn) {
                 deleteBtn.onclick = function () {
+                    e.preventDefault();
                     deleteBtn.style.display = 'none';
 
                     // 각 이미지에 체크박스 생성
                     let images = modalImageContainer.querySelectorAll("img");
                     let imageCheckboxes = [];
                     images.forEach(image => {
-                        let imageId = image.dataset.id
+                        let imageId = image.dataset.id;
                         if (!document.getElementById(`checkbox-${imageId}`)) {
                             let checkbox = document.createElement("input");
                             checkbox.type = "checkbox";
@@ -251,56 +262,109 @@ document.addEventListener("DOMContentLoaded", function () {
                         let selectedImageIds = [];
                         for (let check of imageCheckboxes) {
                             if (check.checked) {
-                                selectedImageIds.push(check.previousSibling.dataset.id);
+                                // 'temp-image'로 시작하는 ID를 가진 이미지와 서버에 존재하는 이미지를 모두 처리
+                                selectedImageIds.push(check.previousSibling.id);
                             }
                         }
 
                         if (selectedImageIds.length > 0) {
+                            alert("바로 이미지가 삭제됩니다. 지우시겠어요?");
                             deleteSelectedImages(selectedImageIds);
                         } else {
                             alert("이미지가 선택되지 않았어요.");
                         }
+                        for (let check of imageCheckboxes) {
+                            check.remove();
+                        }
                     };
 
                     // 취소 버튼
-                    let cancelBtn = document.createElement("button")
-                    cancelBtn.type = "button"
-                    cancelBtn.innerText = "취소"
+                    let cancelBtn = document.createElement("button");
+                    cancelBtn.type = "button";
+                    cancelBtn.innerText = "취소";
                     modalContent.appendChild(cancelBtn);
-                    cancelBtn.addEventListener("click", function (e) {
+                    cancelBtn.addEventListener("click", function () {
                         for (let check of imageCheckboxes) {
                             check.remove();
                         }
                         cancelBtn.remove();
                         confirmDeleteBtn.remove();
                         document.querySelector("#postDelBtn").style.display = 'block';
-                        // e.target.removeEventListener("click");
-                    })
+                    });
                 };
             }
 
             // 게시글 수정 모달 내 이미지 삭제
             function deleteSelectedImages(imageIds) {
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", "/images/delete", true);
-                xhr.setRequestHeader("Content-Type", "application/json");
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            imageIds.forEach(id => {
-                                let checkbox = document.getElementById(`checkbox-${id}`);
-                                if (checkbox) checkbox.remove();
-                                let image = document.getElementById(`image-${id}`);
-                                console.log(image, id)
-                                if (image) image.remove();
-                            });
-                        } else {
-                            alert("이미지 삭제 실패");
+                let serverImageIds = [];
+                const postAttachedImagesContainer = document.getElementById('postAttachedImagesContainer'); // 수정 모달 내 이미지 컨테이너
+                const imageDataInput = document.getElementById('postImageData'); // 수정 캔버스
+
+                // 현재 imageDataInput의 값
+                let imageData = imageDataInput.value;
+
+                // 선택된 이미지 ID에 따라 클라이언트와 서버에서의 처리
+                imageIds.forEach(id => {
+                    if (id.startsWith('temp')) {
+                        // 'temp-image'로 시작하는 ID는 클라이언트에서 직접 제거
+                        const tempImage = document.getElementById(id);
+                        if (tempImage) {
+                            tempImage.remove();
+
+                            // postAttachedImagesContainer에서 제거
+                            if (postAttachedImagesContainer) {
+                                const containerImage = document.getElementById(id);
+                                if (containerImage) containerImage.remove();
+                            }
+
+                            // base64 데이터 제거
+                            const tempImageDataURL = tempImage.src;
+                            const base64Data = tempImageDataURL.split("base64,")[1];
+
+                            // base64 데이터를 정확히 찾아서 제거
+                            if (base64Data) {
+                                const base64Prefix = "base64," + base64Data;
+                                imageData = imageData.replace(base64Prefix, '');
+
+                                // 빈 문자열로 바뀐 경우 'base64,' 부분 제거
+                                if (imageData.startsWith("base64,")) {
+                                    imageData = imageData.substring("base64,".length);
+                                }
+                            }
                         }
+                    } else if (id.startsWith('image')) {
+                        // 서버에 존재하는 이미지는 서버 ID 배열에 추가
+                        const actualImageId = id.split('-')[1]; // "image-55"에서 "55"를 추출
+                        serverImageIds.push(Number(actualImageId)); // Number 함수로 숫자로 변환
                     }
-                };
-                xhr.send(JSON.stringify({selectedImageIds: imageIds}));
+                });
+
+                // 업데이트된 imageData를 다시 입력 필드에 설정
+                imageDataInput.value = imageData;
+
+                // 서버에 존재하는 이미지가 있을 경우 삭제 요청
+                if (serverImageIds.length > 0) {
+                    fetch('/images/delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ selectedImageIds: serverImageIds })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // 서버에서 삭제 성공 시 클라이언트에서도 이미지 제거
+                                serverImageIds.forEach(id => {
+                                    const image = document.getElementById(`image-${id}`);
+                                    if (image) image.remove();
+                                });
+                            } else {
+                                alert("이미지 삭제 실패");
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
             }
 
             closeBtn.onclick = function () {
@@ -308,6 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             addBtn.onclick = function () {
+                e.preventDefault();
                 if (canvas == null) {
                     console.log("init canvas")
                     canvasInit();
@@ -329,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function () {
         else if (e.target.classList.contains('reply-button')) {
             const cardFooter = e.target.parentElement.parentElement.parentElement.nextElementSibling;
             if (cardFooter.style.display == 'none') {
-                cardFooter.style.display = 'block';
+                cardFooter.style.display = 'flex';
             } else {
                 cardFooter.style.display = 'none';
             }

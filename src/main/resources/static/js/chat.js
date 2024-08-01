@@ -10,7 +10,7 @@ const stompClient = new StompJs.Client({
 });
 
 $(function () {
-    $("form").on('submit', (e) => e.preventDefault());
+    $("#chatform").on('submit', (e) => e.preventDefault());
     $( "#disconnect" ).click(() => disconnect());
     $( "#send" ).click(() => sendChat());
     $("#chat").keypress((e) => {
