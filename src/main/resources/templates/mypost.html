@@ -133,5 +133,5 @@
         </div>
     </div>
 </div>
-<div th:attr="hx-get='/getmypost/'+ ${nextPageNumber}, hx-swap='afterend', hx-trigger='revealed'"
+<div th:attr="hx-get='/profile/getmypost/'+ ${nextPageNumber}, hx-swap='afterend', hx-trigger='revealed'"
      th:if="${nextPageNumber} != null"></div>
