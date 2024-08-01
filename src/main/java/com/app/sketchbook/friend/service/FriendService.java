@@ -244,6 +244,8 @@ public class FriendService {
         Optional<Friend> existingStatus = checkFriend(user, blacklist);
         if(existingStatus.isPresent()){
             Friend friendStatus = existingStatus.get();
+            friendStatus.setFrom(user);
+            friendStatus.setTo(blacklist);
             friendStatus.setStatus(FriendStatus.BLOCKED);
             friendRepository.save(friendStatus);
             return "친구를 차단하였습니다.";
