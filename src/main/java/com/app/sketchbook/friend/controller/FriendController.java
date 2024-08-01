@@ -34,6 +34,7 @@ public class FriendController {
         //List<Friend> friends = friendService.getFriends(user);
         return "friend_list";
     }
+
     @GetMapping("/list/{pageNumber}")
     public String list_user(Model model, @PathVariable int pageNumber) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
@@ -49,6 +50,33 @@ public class FriendController {
         return "next-friend-list";
     }
 
+    //친구 요청한 목록
+    @GetMapping("/request/list")
+    public String friendRequestList(Model model) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<Friend> friendRequest = friendService.getRequestFriend(user);
+        model.addAttribute("friendRequest", friendRequest);
+        return "request_list";
+    }
+
+    //친구 요청받은 목록
+    @GetMapping("/requested/list")
+    public String friendRequestedList(Model model) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<Friend> friendRequested = friendService.getRequestedFriend(user);
+        model.addAttribute("friendRequested", friendRequested);
+        return "requested_list";
+    }
+
+    //사용자 차단 목록
+    @GetMapping("/blacklist")
+    public String blackList(Model model){
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<Friend> blacklist = friendService.getBlacklist(user);
+        model.addAttribute("blacklist", blacklist);
+        return "blacklist";
+    }
+
     //친구 찾기
     @GetMapping("/search")
     public String friendSearch(@RequestParam("keyword") String keyword, Model model) {
@@ -58,7 +86,7 @@ public class FriendController {
         return "friend_search";
     }
 
-        //사용자 검색
+    //사용자 검색
     @GetMapping("/usersearch")
     public String userSearch(@RequestParam("keyword") String keyword, Model model) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
@@ -88,7 +116,7 @@ public class FriendController {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         String message = friendService.requestFriend(user, friendId);
         model.addAttribute("message", message);
-        return "redirect:/friend/list";
+        return "redirect:/friend/request/list";
     }
 
     //친구 요청 취소
@@ -97,7 +125,7 @@ public class FriendController {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         String message = friendService.cancelFriendRequest(user, friendId);
         model.addAttribute("message", message);
-        return "redirect:/friend/list";
+        return "redirect:/friend/request/list";
     }
 
     //친구 수락
@@ -115,7 +143,7 @@ public class FriendController {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         String message = friendService.rejectFriendRequest(user, friendId);
         model.addAttribute("message", message);
-        return "redirect:/friend/list";
+        return "redirect:/friend/request/list";
     }
 
     //친구 삭제

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>친구 목록 페이지</title>
+    <title>친구 요청받은 목록</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
     <script crossorigin="anonymous"
             integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
@@ -48,23 +48,28 @@
                 </li>
             </ul>
         </aside>
-
         <section class="content">
             <div class="main-container">
-                <!--        <div th:with="query=${query}">-->
-                <!--            <div hx-get="/friend/user_search/{query}/0" hx-swap="outerHTML" hx-trigger="revealed"-->
-                <!--                 th:attr="hx-get=${'/friend/user_search/' + query + '/0'}"></div>-->
-                <!--        </div>-->
-
-                <div hx-get="/friend/list/0" hx-swap="outerHTML"
-                     hx-trigger="revealed"
-                     th:attr="hx-get=${'/friend/list/0'}"></div>
+            <a th:href="@{/friend/request/list}">요청한 목록</a>
+            <h2>친구 요청 수락</h2>
+            <ul>
+                <li th:each="request : ${friendRequested}">
+                    <img th:src="${request.from.profile_img_url}" alt="Profile Picture" class="profile-picture">
+                    <span th:text="${request.from.username}">Username</span>
+                    <form th:action="@{/friend/accept}" method="post" class="action-form">
+                        <input type="hidden" name="friendId" th:value="${request.from.id}">
+                        <button type="submit">Accept</button>
+                    </form>
+                    <form th:action="@{/friend/reject}" method="post" class="action-form">
+                        <input type="hidden" name="friendId" th:value="${request.from.id}">
+                        <button type="submit">Reject</button>
+                    </form>
+                </li>
+            </ul>
             </div>
         </section>
     </main>
 </div>
-
 <script src="js/searchnav.js"></script>
-
 </body>
 </html>

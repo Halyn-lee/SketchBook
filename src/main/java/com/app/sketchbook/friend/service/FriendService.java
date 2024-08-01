@@ -31,27 +31,39 @@ public class FriendService {
     private UserService userService;
     //친구 목록 가져오기
     public List<Friend> getFriends(SketchUser user) {
-        return friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
+        List<Friend> from = friendRepository.findByToAndStatus(user, FriendStatus.ACCEPTED);
+        List<Friend> to = friendRepository.findByFromAndStatus(user, FriendStatus.ACCEPTED);
+        Set<Friend> friends = new HashSet<>();
+        friends.addAll(from);
+        friends.addAll(to);
+        return new ArrayList<>(friends);
     }
+
     public List<List<SketchUser>> testgetFriends(SketchUser user) {
-        List<Friend> friends = friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
-        System.out.print(friends);
+        List<Friend> from = friendRepository.findByToAndStatus(user, FriendStatus.ACCEPTED);
+        List<Friend> to = friendRepository.findByFromAndStatus(user, FriendStatus.ACCEPTED);
         List<SketchUser> users = new ArrayList<>();
-        if(friends!=null) {
-            for (Friend friend : friends) {
-                if (friend.getFrom() == user)
-                    users.add(friend.getTo());
-                else if (friend.getTo() == user)
-                    users.add(friend.getFrom());
-            }
-        }else {
-            return null;
+        for(Friend friend : from) {
+            users.add(friend.getFrom());
+        }
+        for(Friend friend : to) {
+            users.add(friend.getTo());
         }
         List<List<SketchUser>> slice = sliceIn(users, 3);
         return slice;
 
 
         //return friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
+    }
+
+    //친구 요청한 목록 가져오기
+    public List<Friend> getRequestFriend(SketchUser user) {
+        return friendRepository.findByFromAndStatus(user, FriendStatus.PENDING);
+    }
+
+    //친구 요청받은 목록 가져오기
+    public List<Friend> getRequestedFriend(SketchUser user) {
+        return friendRepository.findByToAndStatus(user, FriendStatus.PENDING);
     }
 
     public static <T> List<List<T>> sliceIn(List<T> list, int chunkSize){
@@ -65,6 +77,12 @@ public class FriendService {
 
         return slices;
     }
+
+    //사용자 차단 목록 가져오기
+    public List<Friend> getBlacklist(SketchUser user) {
+        return friendRepository.findByFromAndStatus(user, FriendStatus.BLOCKED);
+    }
+
     //친구 상태에 존재하는지 확인
     private Optional<Friend> checkFriend(SketchUser user, SketchUser friend) {
         return friendRepository.findByFromAndToOrFromAndTo(user, friend, friend, user);
@@ -242,7 +260,7 @@ public class FriendService {
     @Transactional
     public String unblockUser(SketchUser user, Long blockId) {
         SketchUser blacklist = userRepository.findById(blockId).orElseThrow();
-        Optional<Friend> existingStatus = checkFriend(user, blacklist);
+        Optional<Friend> existingStatus = friendRepository.findByFromAndToAndStatus(user, blacklist, FriendStatus.BLOCKED);
         if(existingStatus.isPresent() && existingStatus.get().getStatus()==FriendStatus.BLOCKED){
             Friend friendStatus = existingStatus.get();
             friendRepository.delete(friendStatus);

@@ -3,6 +3,7 @@ package com.app.sketchbook.post.service;
 import com.app.sketchbook.friend.entity.Friend;
 import com.app.sketchbook.friend.entity.FriendStatus;
 import com.app.sketchbook.friend.repository.FriendRepository;
+import com.app.sketchbook.friend.service.FriendService;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.repository.PostRepository;
@@ -30,10 +31,10 @@ import java.util.*;
 public class PostService {
     private final PostRepository postRepository;
     private final ReplyRepository replyRepository;
-    private final FriendRepository friendRepository;
     private final ReplyService replyService;
     private final UserService userService;
     private final EntityManager entityManager;
+    private final FriendService friendService;
 
 
     public Post create_post(Post post, SketchUser user) {
@@ -88,7 +89,7 @@ public class PostService {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
 
         // 로그인한 사용자와 친구인 사용자들 조회
-        List<Friend> friendsFrom = friendRepository.findByFromOrToAndStatus(user, user, FriendStatus.ACCEPTED);
+        List<Friend> friendsFrom = friendService.getFriends(user);
 
         Set<SketchUser> friendUsers = new HashSet<>();
         for (Friend friend : friendsFrom) {
