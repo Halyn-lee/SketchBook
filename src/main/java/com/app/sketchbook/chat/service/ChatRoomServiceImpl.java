@@ -3,8 +3,10 @@ package com.app.sketchbook.chat.service;
 import com.app.sketchbook.chat.dto.ChatRoomModel;
 import com.app.sketchbook.chat.entity.ChatRoom;
 import com.app.sketchbook.chat.repository.ChatRoomRepository;
+import com.app.sketchbook.friend.entity.Friend;
 import com.app.sketchbook.friend.repository.FriendRepository;
 import com.app.sketchbook.friend.service.FriendService;
+import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.repository.UserRepository;
 import com.app.sketchbook.user.service.UserService;
 import jakarta.transaction.Transactional;
@@ -104,23 +106,30 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         List<ChatRoomModel> result = new ArrayList<>();
 
         for(var room : allRooms){
-            ChatRoomModel model = new ChatRoomModel();
-
-            model.setRoom(room.getNo());
-
-            if(room.getFrom().getId().equals(user.getId())){
-                model.setOpponent(room.getTo().getUsername());
-            } else {
-                model.setOpponent(room.getFrom().getUsername());
-            }
-
-            if(receivedRooms.contains(room.getNo())){
-                model.setMessagesExists(true);
-            }
+            ChatRoomModel model = getChatRoomModel(room, user, receivedRooms);
 
             result.add(model);
         }
 
         return result;
+    }
+
+    private static ChatRoomModel getChatRoomModel(Friend room, SketchUser user, List<Long> receivedRooms) {
+        ChatRoomModel model = new ChatRoomModel();
+
+        model.setRoom(room.getNo());
+
+        if(room.getFrom().getId().equals(user.getId())){
+            model.setOpponent(room.getTo().getUsername());
+            model.setProfile_img_url(room.getTo().getProfile_img_url());
+        } else {
+            model.setOpponent(room.getFrom().getUsername());
+            model.setProfile_img_url(room.getFrom().getProfile_img_url());
+        }
+
+        if(receivedRooms.contains(room.getNo())){
+            model.setMessagesExists(true);
+        }
+        return model;
     }
 }

@@ -163,4 +163,8 @@ public class UserService {
         }
         return userRepository.findByEmail(email);
     }
+
+    public void updateUser(SketchUser user){
+        userRepository.save(user);
+    }
 }

@@ -41,7 +41,7 @@
 
 <!-- 프로필 섹션 -->
 <div class="profile-section">
-    <div class="profile-card">
+    <div class="profile-card position-relative">
         <div class="profile-image" id="changeProfileImageButton">
             <img th:src="${profileOwner.profile_img_url != null && !profileOwner.profile_img_url.isEmpty() ? profileOwner.profile_img_url : '/img/default-profile.png'}"
                  alt="Profile Image"/>
@@ -50,6 +50,11 @@
             <h2 class="profile-name" th:text="${profileOwner.username}">사용자 이름</h2>
             <h5 class="profile-info" th:text="${profileOwner.email}">사용자 이메일</h5>
             <h6 class="profile-info" th:text="${profileOwner.address}">사용자 주소</h6>
+        </div>
+        <div class="d-flex align-items-center position-absolute end-0 me-5 mt-3">
+            <a href="/setting/user">
+                <img id="setting-btn" th:src="${'/img/setting.png'}"/>
+            </a>
         </div>
     </div>
 </div>
@@ -70,10 +75,6 @@
 <!-- 컨테이너 너비 설정 -->
 <div class="container">
     <main class="main-container">
-        <aside class="sidebar">
-            <h2>카테고리</h2>
-            <!-- 카테고리 목록 추가 -->
-        </aside>
         <section class="content">
             <div class="card">
                 <div class="card-body text-center">
