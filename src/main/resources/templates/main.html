@@ -44,7 +44,7 @@
         }
 
         .content {
-            margin: 0 20%;
+            margin: 0 28%;
             padding: 20px;
             flex: 1;
             background-color: #f4f4f4;
@@ -57,6 +57,247 @@
             height: calc(100vh - 60px);
             overflow-y: auto;
         }
+
+        .carousel {
+            display: flex !important;
+            flex-direction: row !important;
+        }
+
+        .carousel-inner {
+            width: 70% !important;
+        }
+
+        .carousel-control-next, .carousel-control-prev {
+            position: relative !important;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .post-header .profile-box {
+            display: flex;
+        }
+
+        .post-header .profile-box .profile-picture {
+            width: 48px;
+            height: 48px;
+            background-color: gray;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .post-header .profile-box .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-body .post-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .post-body .post-stats .like-count {
+
+        }
+
+        .post-body .post-stats .reply-count {
+
+        }
+
+        .post-footer {
+            display: flex;
+            border-top: 1px solid gray;
+        }
+
+        .post-footer .post-button-group {
+            display: flex;
+            margin: 0 auto;
+        }
+
+        .post-footer .post-button-group > div {
+            padding: 10px 20px;
+            margin: 6px;
+        }
+
+        .think {
+            display: flex;
+        }
+
+        .think .profile-picture {
+            width: 48px;
+            height: 48px;
+            background-color: gray;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .new-think {
+            border-radius: 1.5rem;
+            background-color: #EAEAEA;
+            color: black;
+            padding: 12px 10px;
+            text-align: start;
+            width: 90%;
+        }
+
+        /*.modal-content {*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    align-items: center; !* Center align items *!*/
+        /*}*/
+
+        .content-body {
+            display: flex;
+            width: 100%;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align items to the start of the container */
+            gap: 10px; /* Optional: Adds some space between the elements */
+        }
+
+        .button-container-wrapper {
+            width: 25%; /* Take up 25% of the width */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Space between buttons */
+        }
+
+        #canvas {
+            width: 75%; /* Take up 75% of the width */
+            border: 2px dashed black;
+        }
+
+        .modForm {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-group {
+            align-self: end;
+            margin: 5px;
+        }
+
+        .modal-header {
+            display: flex;
+            width: 100%;
+        }
+
+        .modal-header .create-post {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-submit {
+            align-self: end;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        #attachedImagesContainer {
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        img {
+            margin: 10px;
+        }
+
+        .btn2 {
+            align-self: end;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+        }
+
+        .btn2:hover {
+            background-color: white !important;
+        }
+
+        .modal-header .create-post {
+            text-align: center;
+        }
+
+        .modal-body .writer-box {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .writer-box .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .writer-box .profile .image {
+            width: 48px;
+            height: 48px;
+            background-color: gray;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .reply-box {
+            display: flex;
+        }
+
+        .reply-box .reply-header {
+            height: 100%;
+        }
+
+        .reply-header .avatar {
+            width: 48px;
+            height: 48px;
+            background-color: gray;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .reply-box .reply-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reply-body .reply-content {
+            display: flex;
+            flex-direction: column;
+            background-color: lightgray;
+            border-radius: 16px;
+            padding: 6px 12px;
+            color: black;
+        }
+
+        .reply-content .author {
+            font-weight: bolder;
+        }
+
+        .reply-body .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .reply-box .reply-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .reply-footer .like {
+            font-weight: bolder;
+            display: flex;
+            gap: 3px;
+        }
+
     </style>
 </head>
 <body>
@@ -72,12 +313,15 @@
     <section class="content">
         <div class="card">
             <div class="card-body">
-                <div class="btn">무슨 생각 하세요?</div>
+                <div class="think">
+                    <div class="profile-picture"></div>
+                    <div class="new-think">무슨 생각 하세요?</div>
+                </div>
             </div>
         </div>
 
         <!-- 게시글 출력 영역 -->
-        <div id="postContainer" class="py-3">
+        <div class="py-3" id="postContainer">
             <div hx-get="/getpost/0" hx-swap="outerHTML" hx-trigger="revealed"></div>
         </div>
     </section>
@@ -93,14 +337,36 @@
 <div class="modal" id="modal1">
     <!-- 첫 번째 모달 내용 -->
     <div class="modal-content">
-    <span class="close" id="close1">&times;</span>
-        <form action="/post/create" method="post">
-            <textarea class="form-control" name="content"></textarea>
-            <div id="attachedImagesContainer"></div>
-            <input id="imageData" name="imageData" type="hidden">
-            <input class="btn btn-primary my-2" type="submit" value="저장!">
-        </form>
-        <button class="btn2">🖌</button>
+        <div class="modal-header">
+            <div class="create-post">게시물 만들기</div>
+            <div class="close">
+                <span class="close" id="close1">&times;</span>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="writer-box">
+                <div class="profile">
+                    <div class="image"></div>
+                    <div class="name" th:text="${user.username}"></div>
+                </div>
+                <div class="d-flex">
+                    <button class="btn2 btn btn-warning badge rounded-pill">🖌</button>
+                </div>
+            </div>
+            <form action="/post/create" method="post">
+
+                <div class="text-box">
+                    <textarea class="form-control" name="content" placeholder="무슨 생각 하세요?"
+                              style="height: 90px"></textarea>
+                </div>
+                <div class="image-box">
+                    <div id="attachedImagesContainer"></div>
+                    <input id="imageData" name="imageData" type="hidden">
+                </div>
+                <button class="btn btn-primary badge rounded-pill my-2 btn-submit" type="submit">저장</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -108,47 +374,57 @@
 <div class="modal" id="modal2">
     <!-- 그림판 모달 내용 -->
     <div class="modal-content">
-
         <span class="close" id="close2">&times;</span>
+        <div class="content-body">
+            <div class="button-container-wrapper">
+                <div class="button-container">
+                    <input id="color-picker" type="color" value="#000000">
+                    <label for="brush-size">브러시 크기:</label>
+                    <input id="brush-size" max="50" min="1" type="range" value="5">
+                    <button class="btn btn-secondary" id="erase">지우개</button>
+                    <button class="btn btn-secondary"  id="brush">브러시</button>
+                    <input accept="image/*" id="filereader" style="display:none;" type="file"/>
+                    <button class="btn btn-secondary" id="add-image">이미지 추가</button>
+                    <button class="btn btn-secondary"  id="select-element">선택</button>
+                    <button class="btn btn-secondary"  id="delete-canvas-element">선택 요소 삭제</button>
+                </div>
+            </div>
 
-        <!-- 색상 선택기 -->
-        <input type="color" id="color-picker" value="#000000">
+            <canvas id="canvas"></canvas>
+        </div>
 
-        <!-- 브러시 크기 조절 -->
-        <label for="brush-size">브러시 크기:</label>
-        <input type="range" id="brush-size" min="1" max="50" value="5">
-
-        <!-- 지우개 크기 조절 -->
-        <label for="eraser-size">지우개 크기:</label>
-        <input type="range" id="eraser-size" min="5" max="100" value="50">
-
-        <button id="erase">지우개</button>
-        <input id="filereader" type="file" accept="image/*" style="display:none;" />
-        <button id="add-image">이미지 추가</button>
-        <button id="select-element">선택</button>
-        <button id="delete-canvas-element">선택 요소 삭제</button>
-        <br>
-
-        <!-- 그림판 영역 -->
-        <canvas id="canvas" width="800" height="600" style="border: 2px dashed black;"></canvas>
-
-        <button id="attach">그림 첨부</button>
+        <button class="btn btn-success mt-3"  id="attach">그림 첨부</button>
     </div>
 </div>
 
-<!--게시물 수정 Modal -->
+<!-- 게시물 수정 Modal -->
 <div class="modal modal-container" id="postModalContainer">
     <!-- 게시물 수정 모달 내용 -->
-    <span class="close" id="postModalClose">&times;</span>
     <div class="modal-content" id="postModalBody">
-        <form id="modForm" method="post">
+        <span class="close" id="postModalClose">&times;</span>
+
+        <div class="btn-group">
+            <button aria-expanded="false" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" type="button">
+                <span>•••</span>
+            </button>
+
+            <ul aria-labelledby="dropdownMenuButton" class="dropdown-menu ">
+                <li>
+                    <button class="dropdown-item" id="postAddBtn">그림 추가</button>
+                </li>
+                <li>
+                    <button class="dropdown-item" id="postDelBtn">그림 삭제</button>
+                </li>
+            </ul>
+        </div>
+
+        <form class="modForm" method="post">
             <textarea class="form-control" name="content"></textarea>
-            <div class="post-image-list" id="postAttachedImagesContainer"></div>
+            <div class="post-image-list m-3" id="postAttachedImagesContainer"></div>
             <input id="postImageData" name="postImageData" type="hidden">
-            <button id="postModBtn" type="submit">수정 완료</button>
         </form>
-        <button id="postAddBtn">그림 추가</button>
-        <button id="postDelBtn">삭제</button>
+        <button class="btn btn-success" id="postModBtn" type="submit">수정 완료</button>
     </div>
 </div>
 
@@ -156,7 +432,7 @@
 <script>
 
     function deletePost(postNo) {
-        if(!confirm("정말 삭제하실래요?")){
+        if (!confirm("정말 삭제하실래요?")) {
             return;
         }
 
@@ -192,7 +468,7 @@
         deleteButton.style.display = 'none';
 
         // 수정 textarea, 저장 버튼 추가
-        replyContent.innerHTML = `<textarea class="form-control id="modify-reply-content-${replyNo}">${currentContent}</textarea><br><button class="badge bg-success" onclick="(${replyNo})">✔</button>`;
+        replyContent.innerHTML = `<textarea class="form-control" id="modify-reply-content-${replyNo}">${currentContent}</textarea><br><button class="badge bg-success" onclick="saveReply(${replyNo})">✔</button>`;
     }
 
     function saveReply(replyNo) {
@@ -308,7 +584,7 @@
                 if (response.success) {
                     replyHeart.innerText = "❤";
                     replyHeart.setAttribute('onclick', `cancelLikeReply(${replyNo})`);
-                    likedCount.innerText = (currentCount + 1) + ' Liked!';
+                    likedCount.innerText = (currentCount + 1) + ' like ';
                 } else {
                     alert("좋아요 누르기에 실패했어요.");
                 }
@@ -332,7 +608,7 @@
                 if (response.success) {
                     replyHeart.innerText = "🤍";
                     replyHeart.setAttribute('onclick', `likeReply(${replyNo})`);
-                    likedCount.innerText = (currentCount - 1) + ' Liked!';
+                    likedCount.innerText = (currentCount - 1) + ' like ';
                 } else {
                     alert("좋아요 취소에 실패했어요.");
                 }
