@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
     List<Friend> findByFromOrToAndStatus(SketchUser from, SketchUser to, FriendStatus status);
+
     Optional<Friend> findByFromAndToAndStatus(SketchUser from, SketchUser to, FriendStatus status);
     Optional<Friend> findByFromAndToOrFromAndTo(SketchUser from1, SketchUser to1, SketchUser from2, SketchUser to2);
     boolean existsByFromAndToAndStatus(SketchUser from, SketchUser to, FriendStatus status);
