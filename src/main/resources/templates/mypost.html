@@ -139,5 +139,7 @@
         </div>
     </div>
 </div>
+
 <div th:attr="hx-get='/getmypost/'+ ${nextPageNumber}, hx-swap='outerHTML', hx-trigger='revealed'"
+
      th:if="${nextPageNumber} != null"></div>
