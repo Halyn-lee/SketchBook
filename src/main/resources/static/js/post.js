@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.style.display = "block";
 
             if (deleteBtn) {
-                deleteBtn.onclick = function () {
+                deleteBtn.onclick = function (e) {
                     e.preventDefault();
                     deleteBtn.style.display = 'none';
 
@@ -252,8 +252,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     let modalContent = modal.querySelector('.modal-content');
                     let confirmDeleteBtn = document.createElement("button");
-                    confirmDeleteBtn.innerText = "확인";
+                    confirmDeleteBtn.innerText = "선택 삭제";
                     confirmDeleteBtn.id = 'confirm-delete-btn';
+                    confirmDeleteBtn.classList.add('btn', 'btn-primary', 'mt-1');
                     modalContent.appendChild(confirmDeleteBtn);
 
                     // 이미지 체크 박스 선택 후 삭제 확인 버튼 핸들러
@@ -272,23 +273,30 @@ document.addEventListener("DOMContentLoaded", function () {
                         } else {
                             alert("이미지가 선택되지 않았어요.");
                         }
+
+                        // 버튼과 체크박스 숨기기
                         for (let check of imageCheckboxes) {
                             check.remove();
                         }
+                        confirmDeleteBtn.style.display = 'none';
+                        cancelBtn.style.display = 'none';
+                        deleteBtn.style.display = 'block'; // 삭제 버튼을 다시 보이게 함
                     };
 
                     // 취소 버튼
                     let cancelBtn = document.createElement("button");
                     cancelBtn.type = "button";
-                    cancelBtn.innerText = "취소";
+                    cancelBtn.innerText = "선택 취소";
+                    cancelBtn.classList.add('btn', 'btn-outline-dark', 'mt-1');
                     modalContent.appendChild(cancelBtn);
                     cancelBtn.addEventListener("click", function () {
+                        // 체크박스와 버튼 숨기기
                         for (let check of imageCheckboxes) {
                             check.remove();
                         }
-                        cancelBtn.remove();
-                        confirmDeleteBtn.remove();
-                        document.querySelector("#postDelBtn").style.display = 'block';
+                        cancelBtn.style.display = 'none';
+                        confirmDeleteBtn.style.display = 'none';
+                        deleteBtn.style.display = 'block'; // 삭제 버튼을 다시 보이게 함
                     });
                 };
             }
