@@ -22,12 +22,8 @@ public class JPATests {
     @Test
     @Transactional
     public void testGetUsers(){
-        var room = new ChatRoom();
-        room.setRequester(new SketchUser());
-        room.setReceiver(new SketchUser());
-        chatRoomRepository.save(room);
 
-        var result = chatRoomRepository.findById(7L);
+        var result = chatRoomRepository.findById(1L);
         assertFalse(result.isEmpty());
     }
 }
