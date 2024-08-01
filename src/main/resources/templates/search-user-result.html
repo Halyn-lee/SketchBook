@@ -7,13 +7,13 @@
     <div class="btn-group">
         <div class="add-friend">
             <form th:action="@{/friend/request}" method="post">
-                <input type="hidden" th:name="friendid" th:id="friendid" th:value="${user.id}">
+                <input type="hidden" name="friendId" th:value="${user.id}">
                 <input type="submit" name="request" value="친구신청">
             </form>
         </div>
         <div class="block-friend">
             <form th:action="@{/friend/block}" method="post">
-                <input type="hidden" th:name="friendid" th:id="friendid" th:value="${user.id}">
+                <input type="hidden" name="blockId" th:value="${user.id}">
                 <input type="submit" name="block" value="차단">
             </form>
         </div>
