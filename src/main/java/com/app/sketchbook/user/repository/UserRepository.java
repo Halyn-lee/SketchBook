@@ -1,7 +1,11 @@
 package com.app.sketchbook.user.repository;
 
 import com.app.sketchbook.user.entity.SketchUser;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,4 +17,12 @@ public interface UserRepository extends JpaRepository<SketchUser, Long> {
 
     List<SketchUser> findByUsernameContainingIgnoreCase(String keyword);
     List<SketchUser> findByEmailContainingIgnoreCase(String keyword);
+
+    @Query("SELECT u FROM SketchUser u WHERE u.username LIKE %:query%")
+    Slice<SketchUser> findByUsername(@Param("query") String query, Pageable pageable);
+
+//    @Query("select u from sketchuser u where u.username = (SELECT f.friend FROM Friend f WHERE f.user.id = :userId and f.)")
+//    Slice<SketchUser> findByFriend(@Param("query") String query, Pageable pageable);
+
+
 }

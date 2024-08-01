@@ -19,6 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="/js/chat.js"></script>
     <script src="/js/chat-notify.js"></script>
+    <script src="/js/searchnav.js"></script>
     <style>
         .main-container {
             display: flex;
@@ -305,7 +306,9 @@
 <main class="main-container">
     <aside class="sidebar">
         <h2>카테고리</h2>
-        <!-- 카테고리 목록 추가 -->
+        <div th:replace="category::category">
+            <!-- 카테고리 목록 추가 -->
+        </div>
     </aside>
     <section class="content">
         <div class="card">
@@ -324,9 +327,8 @@
     </section>
     <aside class="friends">
         <h2>친구 리스트</h2>
-        <!-- 친구 리스트 추가 -->
-        <div th:replace="chat-list::chat-list(${rooms}, ${user.getUsername()})">
-
+        <div th:replace="chat-list::chat-list(${rooms}, ${user})">
+            <!-- 친구 리스트 추가 -->
         </div>
     </aside>
 </main>
