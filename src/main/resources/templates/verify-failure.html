@@ -2,9 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/css/join-style.css}">
+    <link href="/css/navbar.css" rel="stylesheet" type="text/css"/>
     <title>Verification Failed</title>
 </head>
 <body>
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
 <div class="verify-container">
     <h1>Verification Failed</h1>
     <p>Invalid verification code. Please try again.</p>

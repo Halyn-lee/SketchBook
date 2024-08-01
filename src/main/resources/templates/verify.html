@@ -2,9 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/css/join-style.css}">
+    <link href="/css/navbar.css" rel="stylesheet" type="text/css"/>
     <title>Verify Email</title>
 </head>
 <body>
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
 <div class="verify-container">
     <h1>Verify Email</h1>
     <form th:action="@{/verify}" method="post">

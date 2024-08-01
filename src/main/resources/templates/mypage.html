@@ -21,9 +21,10 @@
 <body>
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
 <!-- 상단 이미지 배너 -->
+<!-- 상단 이미지 배너 -->
 <div class="user-banner">
     <div class="image-banner" id="changeCoverImageButton">
-        <img th:src="${user.cover_img_url != null && !user.cover_img_url.isEmpty() ? user.cover_img_url : '/img/logo.png'}"
+        <img th:src="${user.cover_img_url != null && !user.cover_img_url.isEmpty() ? user.cover_img_url : '/img/default-banner-image.jpg'}"
              alt="Cover Image">
     </div>
 </div>

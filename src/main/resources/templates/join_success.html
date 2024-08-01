@@ -2,9 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/css/join-style.css}">
+    <link href="/css/navbar.css" rel="stylesheet" type="text/css"/>
     <title>Registration Success</title>
 </head>
 <body>
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
 <div class="verify-container">
     <h4>Registration Successful</h4>
     <p>Please check your email for the verification code.</p>
