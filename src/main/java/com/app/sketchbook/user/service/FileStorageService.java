@@ -6,13 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import com.app.sketchbook.user.exception.FileStorageException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.StringUtils;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class FileStorageService {
 
     private final Path fileStorageLocation;
@@ -30,15 +29,15 @@ public class FileStorageService {
     public String storeFile(MultipartFile file, Long userId, String fileType) {
         String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         if(fileExtension==null || !isAllowedFileType(fileExtension)) {
-            throw new RuntimeException("파일 확장자는 JPG, JPEG, PNG만 가능합니다.");
+            throw new FileStorageException("파일 확장자는 JPG, JPEG, PNG만 가능합니다.");
         }
-        String fileName = userId + "_" + fileType + "." + fileExtension;
+        String fileName = userId + "_" + fileType + "_" + System.nanoTime() + "." + fileExtension;
         try {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return "/images/" + fileName + "?timestamp=" + System.currentTimeMillis();
         } catch (IOException e) {
-            throw new RuntimeException("파일 저장 불가", e);
+            throw new FileStorageException("파일 저장 불가");
         }
     }
 
