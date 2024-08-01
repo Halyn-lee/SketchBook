@@ -31,5 +31,12 @@ public class JPATests {
 //        assertFalse(result.isEmpty());
 //    }
 
+    @Test
+    @Transactional
+    public void testGetUsers(){
+
+        var result = chatRoomRepository.findById(1L);
+        assertFalse(result.isEmpty());
+    }
 
 }

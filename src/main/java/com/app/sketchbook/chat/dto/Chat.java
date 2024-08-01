@@ -12,6 +12,6 @@ public class Chat {
     private String id;
     private String room;
     private String user;
-    private String userId;
+    private String userid;
     private String content;
 }

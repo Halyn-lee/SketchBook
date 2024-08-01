@@ -3,14 +3,19 @@ package com.app.sketchbook.chat.controller;
 import com.app.sketchbook.chat.service.ChatNotifyService;
 import com.app.sketchbook.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+
+@Log
 @Controller
 @RequiredArgsConstructor
 public class NotifyController {
