@@ -1,4 +1,4 @@
-    .carousel {
+.carousel {
     display: flex !important;
     flex-direction: row !important;
 }
@@ -75,7 +75,36 @@
 }
 
 
-.profile-picture img{
+.profile .image {
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border: 3px solid white;
+    margin-right: 8px;
+}
+
+.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reply-header .avatar {
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border: 3px solid white;
+    margin-right: 8px;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.profile-picture img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -248,3 +277,4 @@
     font-weight: bolder;
     display: flex;
     gap: 3px;
+}
