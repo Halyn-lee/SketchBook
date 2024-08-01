@@ -37,6 +37,7 @@ body {
     margin: 0 auto; /* 화면 중앙 정렬 */
     padding: 20px; /* 여백 추가 */
     margin-top : 90px;
+    height: 100vh;
 }
 
 .friend-container {

@@ -98,6 +98,6 @@ public class SettingController {
 
         model.addAttribute("user", user);
 
-        return "modify-user";
+        return "redirect:/main";
     }
 }
