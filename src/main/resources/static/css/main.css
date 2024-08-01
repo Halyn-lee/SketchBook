@@ -1,40 +1,121 @@
 .main-container {
+    width:100%;
     display: flex;
-    padding: 20px;
-    margin-top: 80px;
+    margin-top: 90px;
     background-color: #f4f4f4;
 }
 
-.sidebar, .friends {
+.main-sidebar, .friends {
     width: 20%;
     padding: 20px;
-    background-color: #f4f4f4;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar {
+.main-sidebar {
     position: fixed;
-    top: 80px; /* 네비게이션 바 높이 */
-    left: 0;
-    height: calc(100vh - 60px);
+    height: 100vh;
+    background-color: #fff;
+    box-sizing: border-box; /* 패딩 포함하여 사이즈 계산 */
     overflow-y: auto;
 
+}
+.main-sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.main-sidebar ul {
+    list-style: none; /* li의 marker를 숨깁니다 */
+    padding: 0;
+}
+
+.main-sidebar li {
+    margin-bottom: 10px;
+}
+
+.main-sidebar input[type="text"] {
+     border: none;
+     background: none;
+     color: inherit; /* 부모 요소의 글자 색상 사용 */
+        font: inherit; /* 부모 요소의 글꼴 스타일 사용 */
+        pointer-events: none; /* 입력 불가능하게 설정 */
+        width: auto; /* 값에 따라 너비 자동 조절 */
+        padding: 0;
+        margin: 0;
+}
+.main-sidebar a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.main-sidebar a:hover {
+    background-color: #f0f0f0;
+}
+
+.main-sidebar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.main-sidebar .arrow-icon {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+}
+
+.main-sidebar a:hover .arrow-icon {
+    opacity: 1;
 }
 
 .content {
-    margin: 0 28%;
+    max-width:60%;
+    margin-left:20%;
     padding: 20px;
     flex: 1;
-    background-color: #f4f4f4;
+    background-color: #faf4c0
 }
 
 .friends {
-    position: fixed;
-    top: 80px;
-    right: 0;
-    height: calc(100vh - 60px);
+    position: fixed;;
+    height: 100vh;
+    background-color: #fff;
+    box-sizing: border-box; /* 패딩 포함하여 사이즈 계산 */
     overflow-y: auto;
+    margin-left : 80%;
 }
 
+.friends .friends-chat img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.friends .friends-chat .arrow-icon {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+}
+
+.friends-chat input[type="text"] {
+     border: none;
+     background: none;
+     color: inherit; /* 부모 요소의 글자 색상 사용 */
+     font: inherit; /* 부모 요소의 글꼴 스타일 사용 */
+     pointer-events: none; /* 입력 불가능하게 설정 */
+     width: auto; /* 값에 따라 너비 자동 조절 */
+     padding: 0;
+     margin: 0;
+}
 .carousel {
     display: flex !important;
     flex-direction: row !important;
@@ -60,7 +141,6 @@
 .post-header .profile-box .profile-picture {
     width: 48px;
     height: 48px;
-    background-color: gray;
     border-radius: 50%;
     margin-right: 8px;
 }
@@ -104,10 +184,23 @@
 }
 
 .think .profile-picture {
+     width: 48px;
+     height: 48px;
+     overflow: hidden;
+     border: 3px solid white;
+     margin-right: 8px;
+}
+.profile-picture img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-box .profile-picture {
     width: 48px;
     height: 48px;
-    background-color: gray;
-    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid white;
     margin-right: 8px;
 }
 
@@ -188,9 +281,6 @@
     overflow-y: auto;
 }
 
-img {
-    margin: 10px;
-}
 
 .btn2 {
     align-self: end;

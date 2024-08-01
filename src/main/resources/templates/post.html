@@ -3,7 +3,10 @@
 
         <div class="post-header">
             <div class="profile-box">
-                <div class="profile-picture">프사</div>
+                <div class="profile-picture">
+                    <img th:src="${user.profile_img_url != null && !user.profile_img_url.isEmpty() ? user.profile_img_url : '/img/default-profile.png'}"
+                                                  alt="Profile Image"/>
+                </div>
                 <div class="profile-info">
                     <div class="profile-name">
                         <span class="fw-bold" th:text="${post.sketchUser.username}"></span>
