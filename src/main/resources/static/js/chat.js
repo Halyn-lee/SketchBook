@@ -6,7 +6,7 @@ let start = 0;
 
 let lastChatId = "";
 
-let stompClient;
+let stompClient = null;
 
 $(function () {
     $("#chatform").on('submit', (e) => e.preventDefault());
@@ -30,7 +30,9 @@ $(function () {
 });
 
 $(window).on("beforeunload", function(){
-    disconnect();
+    if(stompClient != null){
+        disconnect();
+    }
 });
 
 

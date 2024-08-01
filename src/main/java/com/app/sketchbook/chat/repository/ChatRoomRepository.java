@@ -11,6 +11,6 @@ import java.util.Optional;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
-    @Query("SELECT C.id FROM ChatRoom C, Friend F WHERE C.id = F.no AND (F.from = :id OR F.to = :id) AND (C.fromDisconnection < C.lastSend OR C.toDisconnection < C.lastSend)")
+    @Query("SELECT C.id FROM ChatRoom C, Friend F WHERE C.id = F.no AND ((F.from = :id AND C.fromDisconnection < C.lastSend) OR ( F.to = :id AND C.toDisconnection < C.lastSend))")
     public List<Long> findAllByIdWithExistsMessage(@Param(value = "id") SketchUser id);
 }
