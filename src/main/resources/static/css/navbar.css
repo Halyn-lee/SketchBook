@@ -14,6 +14,7 @@ body, html {
     padding: 10px 20px;
     background-color: #fff;
     z-index: 1000; /* Ensures the navbar stays on top */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar a {
@@ -51,7 +52,7 @@ body, html {
 }
 
 .content {
-    padding-top: 80px; /* Adjust this value based on the height of your navbar */
+    padding-top: 20px; /* Adjust this value based on the height of your navbar */
 }
 
 .navbar .search-nav {
