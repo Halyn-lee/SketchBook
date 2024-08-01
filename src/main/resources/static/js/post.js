@@ -36,6 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
         canvas = null;
     }
 
+    // "이미지 추가" 버튼 클릭 이벤트 리스너
+    document.getElementById("add-image").addEventListener("click", () => {
+        document.getElementById("filereader").click(); // 파일 선택기 열기
+    });
+
     function canvasInit() {
         canvas = new fabric.Canvas("canvas", {
             width: 550,
@@ -107,11 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('modal2').style.display = 'none';
         });
 
-        // "이미지 추가" 버튼 클릭 이벤트 리스너
-        document.getElementById("add-image").addEventListener("click", () => {
-            document.getElementById("filereader").click(); // 파일 선택기 열기
-        });
-
         // 파일 선택기 변경 이벤트 리스너
         document.getElementById("filereader").addEventListener("change", (event) => {
             const file = event.target.files[0];
@@ -149,14 +149,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         // 새로 추가된 이미지의 크기 조정
                         fabricImage.scaleToWidth(canvas.width * 0.3); // 30%
                         fabricImage.scaleToHeight(canvas.height * 0.35); // 35%
-                        
                         canvas.renderAll();
                     }
                     img.src = e.target.result;
 
                 }
                 reader.readAsDataURL(file);
-
+                event.target.value = ''; // file 내용 초기화
             }
         });
 
@@ -186,8 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 선택된 객체 모두 삭제한 뒤 렌더링
                 canvas.discardActiveObject();
                 canvas.renderAll();
-            } else {
-                alert("삭제할 요소가 선택되지 않았어요.");
             }
         });
     }
