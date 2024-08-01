@@ -1,14 +1,23 @@
-
 <nav class="navbar" th:fragment="navbarFragment">
     <div class="nav-left">
-        <a href="/"><img src="/img/logo.png" alt="Logo" class="nav-logo"></a>
+        <a href="/main"><img src="/img/navlogo.png" alt="Logo" class="nav-logo"></a>
+        <div class="search-nav">
+            <form id="searchForm" action="/friend/usersearch" method="GET">
+                <div class="search-icon">
+                    <img src="/img/search-icon.png" alt="Search Icon">
+                    <input type="text" name="keyword" placeholder="검색" id="searchInput">
+                </div>
+            </form>
+        </div>
     </div>
     <div class="nav-center">
-        <a href="#"><img src="/img/friends.png" alt="Friends" class="nav-icon"></a>
-        <a href="/profile"><img src="/img/mypage.png" alt="My Page" class="nav-icon"></a>
+
+        <a th:href="@{/friend/list}"><img src="/img/friends.png" alt="Friends" class="nav-icon"></a>
+        <a th:href="@{/profile}"><img src="/img/mypage.png" alt="My Page" class="nav-icon"></a>
     </div>
     <div class="nav-right">
-        <a href="/logout" onclick="alert('로그아웃')"><img src="/img/logout.png" alt="Logout" class="nav-icon" ></a>
+
+        <a href="/logout" onclick="alert('로그아웃')"><img src="/img/logout.png" alt="Logout" class="nav-icon"></a>
 
     </div>
 </nav>

@@ -4,13 +4,12 @@ let isBottom = true;
 let receiveQueue = [];
 let start = 0;
 
-// 웹 소켓 생성, localhost:8080 부분이 Spring 서버 IP
-const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/chat-socket'
-});
+let lastChatId = "";
+
+let stompClient = null;
 
 $(function () {
-    $("form").on('submit', (e) => e.preventDefault());
+    $("#chatform").on('submit', (e) => e.preventDefault());
     $( "#disconnect" ).click(() => disconnect());
     $( "#send" ).click(() => sendChat());
     $("#chat").keypress((e) => {
@@ -31,35 +30,13 @@ $(function () {
 });
 
 $(window).on("beforeunload", function(){
-    disconnect();
+    if(stompClient != null){
+        disconnect();
+    }
 });
 
-stompClient.onConnect = (frame) => {
-    setConnected(true);
-    console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/receive/'+$("#room").val(), (chat) => {
-        if(historyFetched) {
-            showMessage(JSON.parse(chat.body));
-        } else {
-            receiveQueue.push(JSON.parse(chat.body));
-        }
-    });
 
-    stompClient.subscribe('/topic/history/'+$("#room").val(), (history) => {
-        showRecentMessage(JSON.parse(history.body));
-    });
 
-    fetchPreviousMessages();
-};
-
-stompClient.onWebSocketError = (error) => {
-    console.error('Error with websocket', error);
-};
-
-stompClient.onStompError = (frame) => {
-    console.error('Broker reported error: ' + frame.headers['message']);
-    console.error('Additional details: ' + frame.body);
-};
 
 function setConnected(connected) {
     $("#disconnect").prop("disabled", !connected);
@@ -68,6 +45,45 @@ function setConnected(connected) {
 }
 
 function connect() {
+    // 웹 소켓 생성, localhost:8080 부분이 Spring 서버 IP
+    stompClient = new StompJs.Client({
+        brokerURL: 'ws://localhost:8080/chat-socket',
+        //brokerURL: 'ws://192.168.210.78:8080/chat-socket',
+        connectHeaders: {
+            room: $("#room").val()
+        }
+    });
+
+    stompClient.onConnect = (frame) => {
+
+        setConnected(true);
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe('/topic/receive/'+$("#room").val(), (chat) => {
+            if(historyFetched) {
+                showMessage(JSON.parse(chat.body));
+            } else {
+                receiveQueue.push(JSON.parse(chat.body));
+            }
+        });
+
+        stompClient.subscribe('/topic/history/'+$("#room").val(), (history) => {
+            showRecentMessage(JSON.parse(history.body));
+        });
+
+        fetchPreviousMessages();
+    };
+
+
+    stompClient.onWebSocketError = (error) => {
+            console.error('Error with websocket', error);
+        };
+
+    stompClient.onStompError = (frame) => {
+            console.error('Broker reported error: ' + frame.headers['message']);
+            console.error('Additional details: ' + frame.body);
+        };
+
     stompClient.activate();
 }
 
@@ -89,7 +105,7 @@ function sendChat() {
                     'room' : $("#room").val(),
                     'user' : $("#chatUser").val(),
                     'content' : $("#chat").val(),
-                    'userId' : $("#userId").val()
+                    'userid' : $("#userId").val()
             })
         });
         $("#chat").val("");
@@ -103,6 +119,13 @@ function fetchPreviousMessages() {
 }
 
 function showMessage(message) {
+
+    if(lastChatId == message.id){
+        return;
+    }
+
+    lastChatId = message.id;
+
     if($("#chatUser").val()==message.user){
         $("#content").append("<div class=\"w-100 d-flex justify-content-end mb-2\"><div class=\"bg-warning-subtle p-1 rounded\">" + message.content + "</div></div>");
     } else {
@@ -142,4 +165,3 @@ function openChat(room, opponent, userId, username) {
     $("#chat-container").css("display", "block");
     connect();
 }
-

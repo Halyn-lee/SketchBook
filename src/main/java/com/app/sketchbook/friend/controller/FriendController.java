@@ -3,9 +3,12 @@ package com.app.sketchbook.friend.controller;
 import com.app.sketchbook.friend.entity.Friend;
 import com.app.sketchbook.friend.entity.FriendStatus;
 import com.app.sketchbook.friend.service.FriendService;
+import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.user.entity.SketchUser;
 import com.app.sketchbook.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Log4j2
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/friend")
@@ -27,27 +31,55 @@ public class FriendController {
     @GetMapping("/list")
     public String friendList(Model model) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-        List<Friend> friends = friendService.getFriends(user);
-        model.addAttribute("friends", friends);
+        //List<Friend> friends = friendService.getFriends(user);
         return "friend_list";
+    }
+    @GetMapping("/list/{pageNumber}")
+    public String list_user(Model model, @PathVariable int pageNumber) {
+        SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
+        List<List<SketchUser>> friends = friendService.testgetFriends(user);
+        List<SketchUser>userlist = friends.get(pageNumber);
+        if (pageNumber<userlist.size()) {
+            log.info("enter");
+            model.addAttribute("nextPageNumber", pageNumber + 1);
+        }
+        model.addAttribute("userList", userlist);
+
+
+        return "next-friend-list";
     }
 
     //친구 찾기
     @GetMapping("/search")
-    public String friendSearch(@RequestParam String keyword, Model model) {
+    public String friendSearch(@RequestParam("keyword") String keyword, Model model) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
         List<SketchUser> friends = friendService.searchFriends(user, keyword);
         model.addAttribute("friends", friends);
         return "friend_search";
     }
 
-    //사용자 검색
-    @GetMapping("/userSearch")
-    public String userSearch(@RequestParam String keyword, Model model) {
+        //사용자 검색
+    @GetMapping("/usersearch")
+    public String userSearch(@RequestParam("keyword") String keyword, Model model) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-        Map<SketchUser, FriendStatus> users = friendService.searchAllUsers(user, keyword);
-        model.addAttribute("users", users);
+       // Map<SketchUser, FriendStatus> users = friendService.searchAllUsers(user, keyword);
+        model.addAttribute("query", keyword);
         return "user_search";
+    }
+
+    @GetMapping("/user_search/{query}/{pageNumber}")
+    public String search_userlist(@PathVariable String query,Model model, @PathVariable int pageNumber) {
+        Slice<SketchUser> users = friendService.fetchUsersByPage(query,pageNumber);
+        List<SketchUser>userlist = users.getContent();
+        if (users.hasNext()) {
+            log.info("enter");
+            model.addAttribute("nextPageNumber", pageNumber + 1);
+            model.addAttribute("query", query);
+        }
+        model.addAttribute("userList", userlist);
+
+
+        return "search-user-result";
     }
 
     //친구 요청

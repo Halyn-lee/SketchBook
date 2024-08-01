@@ -21,7 +21,7 @@ public class KafkaChatListener {
     private final ChatRoomService chatRoomService;
     private final ChatNotifyService chatNotifyService;
 
-    @KafkaListener(topics = "chat", groupId = "chat-group", containerFactory = "kafkaChatContainerFactory", autoStartup = "false")
+    @KafkaListener(topics = "chat", groupId = "chat-group", containerFactory = "kafkaChatContainerFactory", autoStartup = "true")
     public void listen(Chat chat) {
         ReceivedChat receivedChat = new ReceivedChat(chat, new Date());
 
@@ -29,7 +29,7 @@ public class KafkaChatListener {
         messagingTemplate.convertAndSend("/topic/receive/"+chat.getRoom(), receivedChat);
 
         // 메시지 수신 시 알림 전송
-        chatNotifyService.notifyChat(receivedChat.getRoom(), receivedChat.getUserId());
+        chatNotifyService.notifyChat(receivedChat.getRoom(), receivedChat.getUserid());
 
         // MongoDB에 저장
         try{

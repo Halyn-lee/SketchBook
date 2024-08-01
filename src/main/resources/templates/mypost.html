@@ -4,23 +4,26 @@
         프사 / <span class="fw-bold" th:text="${post.sketchUser.username}"></span>
         <p th:text="${#strings.substring(post.created_date, 0, 10)}"></p>
 
-        <div th:if="${post.sketchUser.id == user.id}" class="btn-group">
-            <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="btn-group" th:if="${post.sketchUser.id == user.id}">
+            <button aria-expanded="false" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" type="button">
                 <span>•••</span>
             </button>
 
-            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+            <ul aria-labelledby="dropdownMenuButton" class="dropdown-menu ">
                 <li>
-                    <button sec:authorize="isAuthenticated()"
-                            th:if="${post.sketchUser.id == user.id}"
-                            class="modifybtn dropdown-item text-warning"
-                            th:data-post-id="${post.no}">수정</button>
+                    <button class="modifybtn dropdown-item text-warning"
+                            sec:authorize="isAuthenticated()"
+                            th:data-post-id="${post.no}"
+                            th:if="${post.sketchUser.id == user.id}">수정
+                    </button>
                 </li>
                 <li>
-                    <button sec:authorize="isAuthenticated()"
+                    <button class="dropdown-item text-danger"
+                            sec:authorize="isAuthenticated()"
                             th:if="${post.sketchUser.id == user.id}"
-                            class="dropdown-item text-danger"
-                            th:onclick="'deletePost(' + ${post.no} + ')'">삭제</button>
+                            th:onclick="'deletePost(' + ${post.no} + ')'">삭제
+                    </button>
                 </li>
             </ul>
         </div>
@@ -28,7 +31,7 @@
         <hr>
         <!--        캐러셀 시작-->
         <div th:if="${post.image_list != null && post.image_list.size() > 0}">
-            <div class="carousel slide" th:id="'carousel-' + ${post.no}" style="width: 300px; height: 300px;">
+            <div class="carousel slide" style="width: 300px; height: 300px;" th:id="'carousel-' + ${post.no}">
                 <div class="carousel-indicators">
                     <div th:each="image, imageStat : ${post.image_list}">
                         <button th:aria-current="${imageStat.index == 0} ? 'true' : 'false'"
@@ -50,12 +53,14 @@
                         </div>
                     </div>
                 </div>
-                <button class="carousel-control-prev" data-bs-slide="prev" th:data-bs-target="'#carousel-' + ${post.no}"
+                <button class="carousel-control-prev" data-bs-slide="prev"
+                        th:data-bs-target="'#carousel-' + ${post.no}"
                         type="button">
                     <span aria-hidden="true" class="carousel-control-prev-icon"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" data-bs-slide="next" th:data-bs-target="'#carousel-' + ${post.no}"
+                <button class="carousel-control-next" data-bs-slide="next"
+                        th:data-bs-target="'#carousel-' + ${post.no}"
                         type="button">
                     <span aria-hidden="true" class="carousel-control-next-icon"></span>
                     <span class="visually-hidden">Next</span>
@@ -64,25 +69,25 @@
         </div>
         <!--        캐러셀 끝-->
 
-        <div class="fw-bold fs-5" th:text="${post.content}" th:data-content="${post.content}"></div>
+        <div class="fw-bold fs-5" th:data-content="${post.content}" th:text="${post.content}"></div>
 
         <hr>
 
         <!-- postLike 리스트 순회 -->
         <div th:each="postLike : ${post.like}">
             <!-- 좋아요를 누른 ID가 현재 사용자 ID와 일치하는지를 확인 -->
-            <div th:if="${#lists.contains(postLike.id, user.id)}"
+            <div class="like-btn"
                  th:id="'post-heart' + ${post.no}"
-                 class="like-btn"
+                 th:if="${#lists.contains(postLike.id, user.id)}"
                  th:onclick="'cancelLikePost(' + ${post.no} + ')'"
                  th:text="'좋아요 ❤️'"> <!-- 일치할 경우 '❤️'로 표시 -->
             </div>
         </div>
-        <div th:unless="${#lists.contains(post.like, user)}"
+        <div class="like-btn"
              th:id="'post-heart' + ${post.no}"
-             class="like-btn"
              th:onclick="'likePost(' + ${post.no} + ')'"
-             th:text="'🤍'"> <!-- 일치하지 않을 경우 '🤍'로 표시 -->
+             th:text="'🤍'"
+             th:unless="${#lists.contains(post.like, user)}"> <!-- 일치하지 않을 경우 '🤍'로 표시 -->
         </div>
 
         <span th:id="'liked-count'+${post.no}" th:text="${#lists.size(post.like)}+'명이 좋아합니다'"></span>
@@ -92,35 +97,36 @@
         <div th:each="reply : ${post.reply_list}" th:id="'reply-container-'+${reply.no}">
             <span class="fw-bold" th:text="${reply.user.username}"> </span>
             <div class="bg-secondary bg-opacity-10">
-                <p th:attr="data-reply-id=${reply.no}" th:id="'reply-content-' + ${reply.no}" th:text="${reply.content}"></p>
+                <p th:attr="data-reply-id=${reply.no}" th:id="'reply-content-' + ${reply.no}"
+                   th:text="${reply.content}"></p>
 
-                <p sec:authorize="isAuthenticated()"
+                <p class="badge bg-warning reply-modify-btn"
+                   sec:authorize="isAuthenticated()"
                    th:if="${reply.user.id == user.id}"
-                   th:onclick="'modifyReply(' + ${reply.no} + ')'"
-                   type="button" class="badge bg-warning reply-modify-btn">🛠</p>
+                   th:onclick="'modifyReply(' + ${reply.no} + ')'" type="button">🛠</p>
 
-                <p sec:authorize="isAuthenticated()"
+                <p class="badge bg-danger reply-delete-btn"
+                   sec:authorize="isAuthenticated()"
                    th:if="${reply.user.id == user.id}"
-                   th:onclick="'deleteReply(' + ${reply.no} + ')'"
-                   type="button" class="badge bg-danger reply-delete-btn">✖</p>
+                   th:onclick="'deleteReply(' + ${reply.no} + ')'" type="button">✖</p>
 
                 <div th:id="'reply-liked-count'+${reply.no}" th:text="${#lists.size(reply.like)}+' Liked!'"></div>
 
                 <!-- replyLike 리스트 순회 -->
                 <div th:each="replyLike : ${reply.like}">
                     <!-- 좋아요를 누른 ID가 현재 사용자 ID와 일치하는지를 확인 -->
-                    <div th:if="${#lists.contains(replyLike, user)}"
+                    <div class="like-btn"
                          th:id="'reply-heart' + ${reply.no}"
-                         class="like-btn"
+                         th:if="${#lists.contains(replyLike, user)}"
                          th:onclick="'cancelLikeReply(' + ${reply.no} + ')'"
                          th:text="'❤️'"> <!-- 일치할 경우 '❤️'로 표시 -->
                     </div>
                 </div>
-                <div th:unless="${#lists.contains(reply.like, user)}"
+                <div class="like-btn"
                      th:id="'reply-heart' + ${reply.no}"
-                     class="like-btn"
                      th:onclick="'likeReply(' + ${reply.no} + ')'"
-                     th:text="'🤍'"> <!-- 일치하지 않을 경우 '🤍'로 표시 -->
+                     th:text="'🤍'"
+                     th:unless="${#lists.contains(reply.like, user)}"> <!-- 일치하지 않을 경우 '🤍'로 표시 -->
                 </div>
             </div>
         </div>
@@ -133,5 +139,7 @@
         </div>
     </div>
 </div>
-<div th:attr="hx-get='/profile/getmypost/'+ ${nextPageNumber}, hx-swap='afterend', hx-trigger='revealed'"
+
+<div th:attr="hx-get='/getmypost/'+ ${nextPageNumber}, hx-swap='outerHTML', hx-trigger='revealed'"
+
      th:if="${nextPageNumber} != null"></div>
