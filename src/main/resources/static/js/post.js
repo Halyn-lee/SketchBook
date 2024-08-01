@@ -152,6 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         canvas.renderAll();
                     }
                     img.src = e.target.result;
+
                 }
                 reader.readAsDataURL(file);
                 event.target.value = ''; // file 내용 초기화

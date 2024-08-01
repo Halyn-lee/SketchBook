@@ -9,5 +9,6 @@ import lombok.Setter;
 public class ChatRoomModel {
     private Long room;
     private String opponent;
+    private String profile_img_url;
     private boolean messagesExists;
 }
