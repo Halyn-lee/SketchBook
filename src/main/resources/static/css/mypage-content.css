@@ -224,7 +224,6 @@
 .writer-box .profile .image {
     width: 48px;
     height: 48px;
-    background-color: gray;
     border-radius: 50%;
     margin-right: 8px;
 }
@@ -240,7 +239,6 @@
 .reply-header .avatar {
     width: 48px;
     height: 48px;
-    background-color: gray;
     border-radius: 50%;
     margin-right: 8px;
 }
