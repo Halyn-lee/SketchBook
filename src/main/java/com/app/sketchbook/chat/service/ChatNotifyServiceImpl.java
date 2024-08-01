@@ -22,6 +22,10 @@ public class ChatNotifyServiceImpl implements ChatNotifyService {
 
     public void addEmitter(Long user, SseEmitter emitter){
 
+        if(emitters.containsKey(user)){
+            return;
+        }
+
         emitters.put(user, emitter);
 
         emitter.onCompletion(() -> {
