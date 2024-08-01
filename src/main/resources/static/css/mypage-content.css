@@ -1,4 +1,4 @@
-.carousel {
+    .carousel {
     display: flex !important;
     flex-direction: row !important;
 }
