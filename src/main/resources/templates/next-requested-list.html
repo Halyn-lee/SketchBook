@@ -13,7 +13,7 @@
         </div>
         <div class="block-friend">
             <form th:action="@{/friend/reject}" method="post">
-                <input type="hidden" name="blockId" th:value="${user.id}">
+                <input type="hidden" name="friendId" th:value="${user.id}">
                 <input type="submit" name="block" value="거절">
             </form>
         </div>

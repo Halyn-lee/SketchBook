@@ -78,6 +78,7 @@
 .content {
     max-width:60%;
     margin-left:20%;
+    height : 100vh;
     padding: 20px;
     flex: 1;
     background-color: #faf4c0

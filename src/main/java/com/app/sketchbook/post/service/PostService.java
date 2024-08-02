@@ -16,7 +16,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.StoredProcedureQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,8 +81,8 @@ public class PostService {
     // 마이 페이지 - 내 게시물만 출력
     public Slice<Post> fetchPostsByPage(int pageNumber) {
         SketchUser user = userService.principalUser(SecurityContextHolder.getContext().getAuthentication());
-        PageRequest pageRequest = PageRequest.of(pageNumber, 3);
-        Slice<Post> posts = postRepository.findBySketchUserId(user.getId(), pageRequest);
+        Pageable pageable = PageRequest.of(pageNumber, 3, Sort.by(Sort.Direction.DESC, "no"));
+        Slice<Post> posts = postRepository.findBySketchUserId(user.getId(), pageable);
         return posts;
     }
 
@@ -104,8 +106,8 @@ public class PostService {
         friendUsers.add(user);
 
         // 로그인한 사용자와 친구인 사용자들의 게시물 조회
-        PageRequest pageRequest = PageRequest.of(pageNumber, 3);
-        Slice<Post> posts = postRepository.findBySketchUserIn(friendUsers, pageRequest);
+        Pageable pageable = PageRequest.of(pageNumber, 3, Sort.by(Sort.Direction.DESC, "no"));
+        Slice<Post> posts = postRepository.findBySketchUserIn(friendUsers, pageable);
 
         return posts;
     }
