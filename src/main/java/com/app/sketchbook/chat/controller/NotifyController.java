@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 
+//작업자 : 홍제기
 @Log
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class NotifyController {
     private final ChatNotifyService chatNotifyService;
     private final UserService userService;
 
+    // SSE 연결 메소드
     @GetMapping("/connect-chat-notify")
     public ResponseEntity<SseEmitter> connect(){
         SseEmitter emitter = new SseEmitter();

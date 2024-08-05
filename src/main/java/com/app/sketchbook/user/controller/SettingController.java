@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+//작업자 : 홍제기
 @Log
 @Controller
 @RequestMapping("/setting")
@@ -24,6 +25,7 @@ public class SettingController {
         return connectionLog(0, model);
     }
 
+    //접속 로그 페이지
     @GetMapping("/log/{page}")
     public String connectionLog(@PathVariable(value = "page") int page, Model model) {
 
@@ -53,6 +55,7 @@ public class SettingController {
         return "connection-log";
     }
 
+    // 정보 수정 페이지
     @GetMapping("/user")
     public String userSetting(Model model){
 
@@ -73,6 +76,7 @@ public class SettingController {
         return "modify-user";
     }
 
+    // 정보 수정 요청
     @PostMapping("/modify")
     public String modify(@ModelAttribute ModifyUserForm userForm, Model model){
 

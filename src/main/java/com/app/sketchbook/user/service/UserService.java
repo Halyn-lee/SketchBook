@@ -164,6 +164,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    //작업자 : 홍제기
     public void updateUser(SketchUser user){
         userRepository.save(user);
     }
