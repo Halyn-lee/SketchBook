@@ -1,3 +1,5 @@
+// 작업자 : 이하린
+
 package com.app.sketchbook.configuration;
 
 import org.springframework.context.annotation.Configuration;

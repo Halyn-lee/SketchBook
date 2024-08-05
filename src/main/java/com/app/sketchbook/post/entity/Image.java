@@ -1,7 +1,8 @@
+// 작업자 : 이하린
+
 package com.app.sketchbook.post.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
