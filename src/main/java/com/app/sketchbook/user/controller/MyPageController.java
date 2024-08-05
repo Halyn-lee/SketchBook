@@ -1,3 +1,5 @@
+//작업자 : 한수민
+
 package com.app.sketchbook.user.controller;
 
 import com.app.sketchbook.friend.service.FriendService;
@@ -29,7 +31,7 @@ public class MyPageController {
     private final FileStorageService fileStorageService;
     private final PostService postService;
 
-    // 마이 페이지 게시글 로드 요청 경로
+    // 마이 페이지 게시글 로드 요청 경로-이하린
     @GetMapping("/getmypost/{pageNumber}")
     public String my_post_list(Model model, @PathVariable int pageNumber) {
         Slice<Post> posts = postService.fetchPostsByPage(pageNumber);

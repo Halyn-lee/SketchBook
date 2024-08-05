@@ -1,3 +1,5 @@
+//작업자 : 한수민
+
 package com.app.sketchbook.user.service;
 
 import java.io.IOException;
@@ -16,6 +18,7 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
+    //경로 지정
     public FileStorageService() {
         this.fileStorageLocation = Paths.get("C:/images/").toAbsolutePath().normalize();
         try {

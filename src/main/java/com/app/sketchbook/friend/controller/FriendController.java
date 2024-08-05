@@ -24,6 +24,7 @@ import java.util.Map;
 @RequestMapping("/friend")
 public class FriendController {
     //무한 스크롤 개발 담당 : 김범철
+    //친구 관리 : 한수민
     private final FriendService friendService;
     private final UserService userService;
 
