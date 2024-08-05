@@ -18,6 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+//사용자 인증 관리를위한 스프링시큐리티 필터체인
+//개발 담당 : 김범철
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity

@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.Random;
-
+//사용자 전체 서비스 관련 파일
+//개발 담당 : 김범철
 @Service
 @RequiredArgsConstructor
 public class UserService {

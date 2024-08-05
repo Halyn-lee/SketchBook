@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+//사용자 OAuth2 로그인 처리 서비스
+//개발 담당 : 김범철
 @RequiredArgsConstructor
 @Service
 @Log4j2

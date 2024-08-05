@@ -23,7 +23,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/friend")
 public class FriendController {
-
+    //무한 스크롤 개발 담당 : 김범철
     private final FriendService friendService;
     private final UserService userService;
 
@@ -124,6 +124,7 @@ public class FriendController {
         return "user_search";
     }
 
+    //사용자 검색후 무한 스크롤 표현
     @GetMapping("/user_search/{query}/{pageNumber}")
     public String search_userlist(@PathVariable String query,Model model, @PathVariable int pageNumber) {
         Slice<SketchUser> users = friendService.fetchUsersByPage(query,pageNumber);

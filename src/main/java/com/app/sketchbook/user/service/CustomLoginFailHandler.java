@@ -11,6 +11,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import java.io.IOException;
 
+//로그인 실패시 경우에 따른 처리를 위한 핸들러
+//개발 담당 : 김범철
 @Log4j2
 public class CustomLoginFailHandler implements AuthenticationFailureHandler {
     @Override

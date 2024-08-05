@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-
+//개발 담당 : 김범철
 public interface UserRepository extends JpaRepository<SketchUser, Long> {
     SketchUser findByEmailAndSocial(String email, String social);
     SketchUser findByEmail(String email);
