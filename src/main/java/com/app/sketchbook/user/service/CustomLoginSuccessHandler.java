@@ -11,6 +11,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 
+//로컬 로그인 성공시 처리를 위한 핸들러
+//개발 담당 : 김범철
 @RequiredArgsConstructor
 @Component
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {

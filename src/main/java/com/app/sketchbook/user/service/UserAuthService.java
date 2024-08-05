@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+//사용자 로컬 로그인 관련 처리 서비스
+//개발 담당 : 김범철
 @RequiredArgsConstructor
 @Service
 public class UserAuthService implements UserDetailsService {

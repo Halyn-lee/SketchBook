@@ -21,15 +21,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 @Controller
 public class LoginController {
-
+    //개발 담당 : 김범철
     private final UserService userService;
 
-    @GetMapping("/login")
+    @GetMapping("/login") //로그인 화면
     public String UserLogin(){
         return "login";
     }
 
-    @PostMapping("/resend-activation-email")
+    @PostMapping("/resend-activation-email") // 이메일 인증메일 재전송기능
     public String resendActivationEmail(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
         SketchUser user = userService.findUser(email);
         try {
@@ -41,18 +41,18 @@ public class LoginController {
         return "redirect:/verify";
     }
 
-    @GetMapping("/find-account")
+    @GetMapping("/find-account") //패스워드 분실시 아이디를 통한 임시 패스워드 발급
     public String findAccount(){
         return "find-account";
     }
 
-    @PostMapping("/find-account")
+    @PostMapping("/find-account") //아이디입력받은후 임시패스워드 발급 단계로 전달
     public String findAccountPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes){
         redirectAttributes.addAttribute(email);
         return "redirect:/find-password";
     }
 
-    @GetMapping("/find-password")
+    @GetMapping("/find-password") //아이디 존재 여부 체크후 패스워드 발급 단계로 전달
     public String joinSuccess(@RequestParam(value = "email", required = false) String email, Model model) {
         if (email != null) {
             SketchUser user = userService.findUser(email);
@@ -75,7 +75,7 @@ public class LoginController {
         return "redirect:/find-password";
     }
 
-    @GetMapping("/updatepassword")
+    @GetMapping("/updatepassword") //임시패스워드로 로그인한 계정의 패스워드 변경
     public String insertUpdatePw(HttpSession session, Model model, PasswordUpdate passwordUpdate) {
         String username = session.getAttribute("username").toString();
         if (username != null) {
@@ -84,7 +84,7 @@ public class LoginController {
         return "updatepassword";
     }
 
-    @PostMapping("/updatepassword")
+    @PostMapping("/updatepassword")//패스워드 검증 및 데이터 update
     public String updatePass(@Valid PasswordUpdate passwordUpdate, BindingResult bindingResult,
                              HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam("email") String email) {
         if (bindingResult.hasErrors()) {

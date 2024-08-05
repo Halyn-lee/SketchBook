@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+//OAuth2 로그인 성공시 처리를 위한 핸들러
+//개발 담당 : 김범철
 import java.io.IOException;
 
 public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {

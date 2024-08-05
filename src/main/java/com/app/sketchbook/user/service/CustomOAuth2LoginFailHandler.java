@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+//OAuth2 로그인 실패시 처리를 위한 핸들러
+//개발 담당 : 김범철
 @Component
 public class CustomOAuth2LoginFailHandler implements AuthenticationFailureHandler {
 
