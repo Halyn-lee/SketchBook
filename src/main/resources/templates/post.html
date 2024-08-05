@@ -1,3 +1,5 @@
+<!-- 작업자 : 이하린 -->
+
 <div class="card mb-4" th:each="post : ${postList}" th:id="'post-container-' + ${post.no}">
     <div class="card-body">
 
@@ -48,19 +50,8 @@
             <div class="post-content mb-3">
                 <div class="row" th:if="${post.image_list != null && post.image_list.size() > 0}">
                     <div class="col-8 mx-auto my-4">
-                        <!--                style="width: 300px; height: 300px;"-->
                         <div class="carousel slide" data-bs-theme="dark"
                              th:id="'carousel-' + ${post.no}">
-                            <!--                <div class="carousel-indicators">-->
-                            <!--                    <div th:each="image, imageStat : ${post.image_list}" class="pagination-container">-->
-                            <!--                        <button th:aria-current="${imageStat.index == 0} ? 'true' : 'false'"-->
-                            <!--                                th:aria-label="'Slide ' + ${imageStat.index + 1}"-->
-                            <!--                                th:classappend="${imageStat.index == 0} ? 'active' : ''"-->
-                            <!--                                th:data-bs-slide-to="${imageStat.index}"-->
-                            <!--                                th:data-bs-target="'#carousel-' + ${post.no}"-->
-                            <!--                                type="button" class="pagination-button"></button>-->
-                            <!--                    </div>-->
-                            <!--                </div>-->
 
                             <button class="carousel-control-prev" data-bs-slide="prev"
                                     th:data-bs-target="'#carousel-' + ${post.no}"

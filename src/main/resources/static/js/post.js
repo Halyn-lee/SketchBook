@@ -1,3 +1,5 @@
+// 작업자 : 이하린
+
 // HTML 문서가 완전히 로드될 때까지 기다린 후 코드를 실행
 document.addEventListener("DOMContentLoaded", function () {
     let canvas;

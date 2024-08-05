@@ -1,11 +1,10 @@
+// 작업자 : 이하린
+
 package com.app.sketchbook.post.service;
 
 import com.app.sketchbook.friend.entity.Friend;
-import com.app.sketchbook.friend.entity.FriendStatus;
-import com.app.sketchbook.friend.repository.FriendRepository;
 import com.app.sketchbook.friend.service.FriendService;
 import com.app.sketchbook.post.entity.Post;
-import com.app.sketchbook.post.repository.ImageRepository;
 import com.app.sketchbook.post.repository.PostRepository;
 import com.app.sketchbook.reply.entity.Reply;
 import com.app.sketchbook.reply.repository.ReplyRepository;

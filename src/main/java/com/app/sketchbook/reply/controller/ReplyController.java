@@ -1,18 +1,22 @@
+// 작업자 : 이하린
+
 package com.app.sketchbook.reply.controller;
 
-import com.app.sketchbook.reply.entity.Reply;
-import com.app.sketchbook.reply.service.ReplyService;
 import com.app.sketchbook.post.entity.Post;
 import com.app.sketchbook.post.service.PostService;
+import com.app.sketchbook.reply.entity.Reply;
+import com.app.sketchbook.reply.service.ReplyService;
 import com.app.sketchbook.user.entity.SketchUser;
-import com.app.sketchbook.user.repository.UserRepository;
 import com.app.sketchbook.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/reply")
 @RequiredArgsConstructor
@@ -24,30 +28,17 @@ public class ReplyController {
 
     @PostMapping("/create/{no}")
     public String create_reply(Model model, @PathVariable("no") Integer no, String content) {
-        Post post = null;
-
-        try {
-            post = postService.getPost(no);
-        } catch (Exception e) {
-            return "error"; // 나중에 예외처리용
-        }
-
+        Post post = postService.getPost(no);
         replyService.reply_create(post, content);
 
         model.addAttribute("post", post);
 
         return "redirect:/main";
     }
+
     @PostMapping("/mycreate/{no}")
     public String mycreate_reply(Model model, @PathVariable("no") Integer no, String content) {
-        Post post = null;
-
-        try {
-            post = postService.getPost(no);
-        } catch (Exception e) {
-            return "error"; // 나중에 예외처리용
-        }
-
+        Post post = postService.getPost(no);
         replyService.reply_create(post, content);
 
         model.addAttribute("post", post);
