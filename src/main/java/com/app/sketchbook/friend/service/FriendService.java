@@ -1,3 +1,5 @@
+//친구 관리 작업자 : 한수민
+
 package com.app.sketchbook.friend.service;
 
 import com.app.sketchbook.friend.entity.Friend;
@@ -294,8 +296,9 @@ public class FriendService {
         SketchUser blacklist = userRepository.findById(blockId).orElseThrow();
         Optional<Friend> existingStatus = friendRepository.findByFromAndToAndStatus(user, blacklist, FriendStatus.BLOCKED);
         if(existingStatus.isPresent() && existingStatus.get().getStatus()==FriendStatus.BLOCKED){
-           // Friend friendStatus = existingStatus.get();
-            friendRepository.updateFriendStatus(blacklist,FriendStatus.BLOCKED,FriendStatus.NOT_FRIEND);
+            Friend friendStatus = existingStatus.get();
+            friendRepository.delete(friendStatus);
+            friendRepository.save(friendStatus);
             return "사용자 차단을 해제하였습니다.";
         }
         return "";

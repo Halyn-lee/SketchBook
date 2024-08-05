@@ -1,3 +1,5 @@
+//작업자 : 한수민
+
 package com.app.sketchbook.friend.entity;
 
 public enum FriendStatus {
