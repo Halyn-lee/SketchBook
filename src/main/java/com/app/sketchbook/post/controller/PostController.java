@@ -1,3 +1,5 @@
+// 작업자 : 이하린
+
 package com.app.sketchbook.post.controller;
 
 import com.app.sketchbook.chat.service.ChatRoomService;

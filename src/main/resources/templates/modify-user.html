@@ -1,3 +1,5 @@
+<!-- 작업자 : 홍제기 / CSS 작업자 : 이하린 -->
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -7,99 +9,7 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
     <link href="/css/navbar.css" rel="stylesheet" type="text/css"/>
     <link href="/css/search.css" rel="stylesheet" type="text/css"/>
-
-    <style>
-        .setting-container {
-            max-width: 1200px;
-            margin: 0 auto; /* 화면 중앙 정렬 */
-            padding: 20px; /* 여백 추가 */
-            margin-top: 90px;
-            height: 100vh;
-        }
-
-        .setting-sidebar {
-            position: fixed;
-            width: 280px;
-            height: 100vh;
-            padding: 20px;
-            background-color: #fff;
-            box-sizing: border-box; /* 패딩 포함하여 사이즈 계산 */
-            overflow-y: auto;
-        }
-
-        .setting-sidebar h2 {
-            margin-bottom: 20px;
-        }
-
-        .setting-sidebar ul {
-            list-style: none; /* li의 marker를 숨깁니다 */
-            padding: 0;
-        }
-
-        .setting-sidebar li {
-            margin-bottom: 10px;
-        }
-
-        .setting-sidebar a {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: black;
-            padding: 10px;
-            transition: background-color 0.3s;
-        }
-
-        .setting-sidebar a:hover {
-            background-color: #f0f0f0;
-        }
-
-        .setting-sidebar img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .setting-sidebar .arrow-icon {
-            margin-left: auto;
-            width: 20px;
-            height: 20px;
-            opacity: 0.5;
-        }
-
-        .setting-sidebar a:hover .arrow-icon {
-            opacity: 1;
-        }
-
-        /* 스크롤 바를 숨깁니다 */
-        .setting-sidebar {
-            overflow: -moz-scrollbars-none;
-            -ms-overflow-style: none;
-        }
-
-        .setting-sidebar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .setting-content {
-            width: 800px;
-            margin-left: 280px;
-            padding: 20px;
-            background-color: #f8f4dd;
-            box-sizing: border-box; /* 패딩 포함하여 사이즈 계산 */
-            height: 100vh;
-        }
-
-        .setting-content .btn-container {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .setting-sidebar-header {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-        }
-    </style>
+    <link href="/css/mod-user.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>

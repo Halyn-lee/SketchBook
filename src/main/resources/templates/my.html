@@ -1,3 +1,5 @@
+<!-- 게시글, 댓글 관련 작업자 : 이하린 / CSS 작업자 : 김범철 -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,44 +17,7 @@
             src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="/css/post.css" rel="stylesheet" type="text/css"/>
     <link href="/css/navbar.css" rel="stylesheet" type="text/css"/>
-    <style>
-        .main-container {
-            display: flex;
-            padding: 20px;
-            margin-top: 80px;
-            background-color: #f4f4f4;
-        }
-
-        .sidebar, .friends {
-            width: 20%;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 80px; /* 네비게이션 바 높이 */
-            left: 0;
-            height: calc(100vh - 60px);
-            overflow-y: auto;
-
-        }
-
-        .content {
-            margin: 0 20%;
-            padding: 20px;
-            flex: 1;
-            background-color: #f4f4f4;
-        }
-
-        .friends {
-            position: fixed;
-            top: 80px;
-            right: 0;
-            height: calc(100vh - 60px);
-            overflow-y: auto;
-        }
-    </style>
+    <link href="/css/my.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 

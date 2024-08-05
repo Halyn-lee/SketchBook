@@ -1,3 +1,5 @@
+// 작업자 : 이하린
+
 package com.app.sketchbook.post.entity;
 
 import com.app.sketchbook.reply.entity.Reply;
