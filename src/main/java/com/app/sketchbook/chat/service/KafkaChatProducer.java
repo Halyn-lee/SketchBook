@@ -19,12 +19,14 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.Properties;
 
+//작업자 : 홍제기
 @Service
 @RequiredArgsConstructor
 public class KafkaChatProducer {
 
     private final KafkaTemplate<String, Chat> kafkaTemplate;
 
+    //Kafka를 통해 메시지 전송
     public void sendMessage(Chat message) {
         String topic = "chat";
         message.setId(UUID.randomUUID().toString());

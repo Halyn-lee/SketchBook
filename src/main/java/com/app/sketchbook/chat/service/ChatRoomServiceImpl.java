@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+//작업자 : 홍제기
 @Log
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     private final ChatRoomRepository chatRoomRepository;
     private final FriendService friendService;
     private final UserService userService;
-
+    
+    // 채팅방 생성
     @Transactional
     @Override
     public void createRoom(Long friendNo) {
@@ -51,12 +53,14 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
         chatRoomRepository.save(room);
     }
-
+    
+    // 채팅방 존재 여부 확인
     @Override
     public boolean checkRoomCreated(Long roomNo) {
         return chatRoomRepository.existsById(roomNo);
     }
-
+    
+    // 사용자가 채팅방에서 접속 종료한 시간 기록
     @Transactional
     @Override
     public void updateDisconnectTime(Long room, Authentication auth) {
@@ -78,7 +82,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
             foundRoom.get().setToDisconnection(new Date());
         }
     }
-
+    
+    // 채팅방의 마지막 전송시간 업데이트
     @Transactional
     @Override
     public void updateLastSend(Long room, Date time) {
@@ -90,7 +95,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
         foundRoom.get().setLastSend(time);
     }
-
+    
+    // 현재 접속중인 사용자의 채팅방 리스트를 가져온다.
     @Override
     public List<ChatRoomModel> getChatRoomList() {
 
@@ -113,7 +119,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
         return result;
     }
-
+    
+    // 채팅방 정보를 객체에 담음
     private static ChatRoomModel getChatRoomModel(Friend room, SketchUser user, List<Long> receivedRooms) {
         ChatRoomModel model = new ChatRoomModel();
 

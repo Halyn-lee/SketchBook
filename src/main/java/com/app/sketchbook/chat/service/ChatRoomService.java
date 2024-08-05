@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import java.util.Date;
 import java.util.List;
 
+//작업자 : 홍제기
 public interface ChatRoomService {
 
     void createRoom(Long friendNo);

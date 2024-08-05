@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+//작업자 : 홍제기
 @Log
 @Component
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class KafkaChatListener {
     private final ChatRoomService chatRoomService;
     private final ChatNotifyService chatNotifyService;
 
+    //Kafka의 메시지 수신 메소드
     @KafkaListener(topics = "chat", groupId = "chat-group", containerFactory = "kafkaChatContainerFactory", autoStartup = "true")
     public void listen(Chat chat) {
         ReceivedChat receivedChat = new ReceivedChat(chat, new Date());

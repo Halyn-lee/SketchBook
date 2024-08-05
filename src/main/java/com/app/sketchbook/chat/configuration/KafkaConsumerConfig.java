@@ -15,6 +15,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.Map;
 
+//작업자 : 홍제기
 @EnableKafka // Spring Kafka 활성화 -> Kafka Listener 사용 가능
 @Configuration
 public class KafkaConsumerConfig {
@@ -39,7 +40,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Chat> kafkaChatConsumer() {
-
+        // Kafka Consumer 설정
         Map<String, Object> consumerConfigurations =
                 ImmutableMap.<String, Object>builder()
                         .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer)
@@ -53,6 +54,7 @@ public class KafkaConsumerConfig {
                         .put(JsonDeserializer.VALUE_DEFAULT_TYPE, Chat.class.getName())
                         .build();
 
+        // 키는 문자열, 값은 Json에서 역직렬화
         return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), new JsonDeserializer<>(Chat.class));
     }
 }

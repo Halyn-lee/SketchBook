@@ -8,18 +8,20 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+//작업자 : 홍제기
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+        config.enableSimpleBroker("/topic"); // 서버->클라이언트 URI 설정
+        config.setApplicationDestinationPrefixes("/app"); //클라이언트->서버 URI 설정
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        //웹 소켓 접속 엔드 포인트
         registry.addEndpoint("/chat-socket").setAllowedOriginPatterns("*");
     }
 }

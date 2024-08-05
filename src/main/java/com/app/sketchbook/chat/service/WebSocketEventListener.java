@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+//작업자 : 홍제기
 @Log
 @Component
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class WebSocketEventListener {
 
     private final ChatRoomService chatRoomService;
 
+    // 웹 소켓 생성시 이벤트, 채팅방이 없으면 생성한다.
     @EventListener
     private void handleSessionConnected(SessionConnectEvent event) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(event.getMessage());

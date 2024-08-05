@@ -15,6 +15,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.Map;
 
+//작업자 : 홍제기
 @Configuration
 @EnableKafka
 public class KafkaProducerConfig {
@@ -31,6 +32,7 @@ public class KafkaProducerConfig {
     // Kafka Producer 구성을 위한 설정값들을 포함한 맵을 반환하는 메서드
     @Bean
     public Map<String, Object> chatProducerConfigurations() {
+        // 키는 문자열, 값은 Json으로 직렬화
         return ImmutableMap.<String, Object>builder()
                 .put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer)
                 .put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
